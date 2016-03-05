@@ -12,13 +12,11 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
-import mantisbtsync.core.jobs.enums.EnumsWritersConfiguration;
 import mantisbtsync.core.junit.AbstractSqlWriterTest;
 
 import org.junit.Test;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 
 import biz.futureware.mantis.rpc.soap.client.ObjectRef;
@@ -29,7 +27,6 @@ import com.ninja_squad.dbsetup.operation.Operation;
  * @author jdevarulrajah
  *
  */
-@SpringApplicationConfiguration({EnumsWritersConfiguration.class})
 public class EnumsWritersTest extends AbstractSqlWriterTest {
 
 	@Autowired

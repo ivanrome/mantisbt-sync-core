@@ -42,8 +42,7 @@ import biz.futureware.mantis.rpc.soap.client.ObjectRef;
  */
 @Transactional
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration({Application.class, JunitTestConfiguration.class,
-	EnumsReadersConfiguration.class})
+@SpringApplicationConfiguration({Application.class, JunitTestConfiguration.class})
 @TestExecutionListeners( { DependencyInjectionTestExecutionListener.class,
 	StepScopeTestExecutionListener.class })
 public class EnumsReadersTest {
