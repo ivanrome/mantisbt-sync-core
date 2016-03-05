@@ -3,9 +3,12 @@
  */
 package mantisbtsync.core;
 
+import mantisbtsync.core.common.CommonConfiguration;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 
 /**
  * Entry point for the application.
@@ -15,6 +18,7 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 @EnableAutoConfiguration
+@Import(CommonConfiguration.class)
 public class Application {
 
 	/**
