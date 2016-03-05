@@ -1,0 +1,75 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>mantisbt-sync</groupId>
+	<artifactId>core</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>mantisbt-sync-core</name>
+	<description>Batch to synchronize a local database from a remote instance of Mantis Bug Tracker with Soap calls</description>
+	<url>https://github.com/jrrdev/mantisbt-sync-core</url>
+
+	<scm>
+		<connection>scm:git:https://github.com/jrrdev/mantisbt-sync-core.git</connection>
+		<url>https://github.com/jrrdev/mantisbt-sync-core</url>
+	</scm>
+
+	<properties>
+		<project.build.sourceEncoding>ISO-8859-1</project.build.sourceEncoding>
+		<java.version>1.7</java.version>
+	</properties>
+
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>1.3.2.RELEASE</version>
+		<relativePath /> <!-- lookup parent from repository -->
+	</parent>
+
+
+	<dependencies>
+		<dependency>
+			<groupId>de.codecentric</groupId>
+			<artifactId>spring-boot-starter-batch-web</artifactId>
+			<version>1.3.7.RELEASE</version>
+		</dependency>
+
+		<dependency>
+			<groupId>biz.futureware.mantis</groupId>
+			<artifactId>mantis-axis-soap-client</artifactId>
+			<version>1.2.19</version>
+		</dependency>
+
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.batch</groupId>
+			<artifactId>spring-batch-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>com.ninja-squad</groupId>
+			<artifactId>DbSetup</artifactId>
+			<version>1.6.0</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<source>1.7</source>
+					<target>1.7</target>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>
