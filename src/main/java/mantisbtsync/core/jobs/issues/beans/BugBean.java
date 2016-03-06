@@ -4,8 +4,8 @@
 package mantisbtsync.core.jobs.issues.beans;
 
 import java.math.BigInteger;
+import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -48,9 +48,9 @@ public class BugBean {
 
 	private String category;
 
-	private Date dateSubmitted;
+	private Timestamp dateSubmitted;
 
-	private Date lastUpdated;
+	private Timestamp lastUpdated;
 
 	private final List<BugNoteBean> notes = new ArrayList<BugNoteBean>();
 
@@ -305,28 +305,28 @@ public class BugBean {
 	/**
 	 * @return the dateSubmitted
 	 */
-	public Date getDateSubmitted() {
+	public Timestamp getDateSubmitted() {
 		return dateSubmitted;
 	}
 
 	/**
 	 * @param dateSubmitted the dateSubmitted to set
 	 */
-	public void setDateSubmitted(final Date dateSubmitted) {
+	public void setDateSubmitted(final Timestamp dateSubmitted) {
 		this.dateSubmitted = dateSubmitted;
 	}
 
 	/**
 	 * @return the lastUpdated
 	 */
-	public Date getLastUpdated() {
+	public Timestamp getLastUpdated() {
 		return lastUpdated;
 	}
 
 	/**
 	 * @param lastUpdated the lastUpdated to set
 	 */
-	public void setLastUpdated(final Date lastUpdated) {
+	public void setLastUpdated(final Timestamp lastUpdated) {
 		this.lastUpdated = lastUpdated;
 	}
 

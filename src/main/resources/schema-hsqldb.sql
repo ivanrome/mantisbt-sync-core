@@ -140,8 +140,8 @@ CREATE TABLE mantis_bug_table (
 	target_version varchar(64),
 	summary varchar(128) NOT NULL,
 	category varchar(128),
-	date_submitted date,
-	last_updated date,
+	date_submitted datetime,
+	last_updated datetime,
 	
 	FOREIGN KEY (project_id) REFERENCES mantis_project_table(id),
 	FOREIGN KEY (reporter_id) REFERENCES mantis_user_table(id),
@@ -157,8 +157,8 @@ CREATE TABLE mantis_bugnote_table (
 	bug_id int NOT NULL,
 	reporter_id int NOT NULL,
 	text varchar(500),
-	date_submitted date,
-	last_modified date,
+	date_submitted datetime,
+	last_modified datetime,
 	
 	FOREIGN KEY (bug_id) REFERENCES mantis_bug_table(id),
 	FOREIGN KEY (reporter_id) REFERENCES mantis_user_table(id)
@@ -182,7 +182,7 @@ CREATE TABLE mantis_bug_history_table (
 	old_value varchar(255),
 	new_value varchar(255),
 	history_type int,
-	date_modified date NOT NULL,
+	date_modified datetime NOT NULL,
 	
 	FOREIGN KEY (user_id) REFERENCES mantis_user_table(id),
 	FOREIGN KEY (bug_id) REFERENCES mantis_bug_table(id)

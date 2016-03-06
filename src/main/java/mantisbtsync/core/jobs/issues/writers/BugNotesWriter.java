@@ -22,7 +22,7 @@ public class BugNotesWriter implements ItemWriter<BugBean> {
 
 	private final JdbcBatchItemWriter<BugNoteBean> writer;
 
-	private static final String SQL_QUERY = "MERGE INTO mantis_bugnote_table\n"
+	private static final String SQL_QUERY = "MERGE INTO mantis_bugnote_table dest\n"
 			+ " USING (SELECT :id as id, :bugId as bug_id, :reporterId as reporter_id,\n"
 			+ " 	:text as text, :dateSubmitted as date_submitted, :lastModified as last_modified FROM dual) src\n"
 			+ " ON (dest.id = src.id)\n"

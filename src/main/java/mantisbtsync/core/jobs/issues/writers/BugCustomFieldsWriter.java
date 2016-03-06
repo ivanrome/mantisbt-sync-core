@@ -22,7 +22,7 @@ public class BugCustomFieldsWriter implements ItemWriter<BugBean> {
 
 	private final JdbcBatchItemWriter<BugCustomFieldValue> writer;
 
-	private static final String SQL_QUERY = "MERGE INTO mantis_custom_field_string_table\n"
+	private static final String SQL_QUERY = "MERGE INTO mantis_custom_field_string_table dest\n"
 			+ " USING (SELECT :fieldId as field_id, :bugId as bug_id, :fieldValue as field_value FROM dual) src\n"
 			+ " ON (dest.field_id = src.field_id AND dest.bug_id = src.bug_id)\n"
 			+ " WHEN NOT MATCHED THEN INSERT (field_id, bug_id, field_value)\n"

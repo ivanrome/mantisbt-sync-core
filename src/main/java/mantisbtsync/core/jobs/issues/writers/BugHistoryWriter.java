@@ -22,13 +22,13 @@ public class BugHistoryWriter implements ItemWriter<BugBean> {
 
 	private final JdbcBatchItemWriter<BugHistoryBean> writer;
 
-	private static final String SQL_QUERY = "MERGE INTO mantis_custom_field_string_table\n"
+	private static final String SQL_QUERY = "MERGE INTO mantis_bug_history_table dest\n"
 			+ " USING (SELECT :bugId as bug_id, :userId as user_id, :fieldName as field_name,\n"
 			+ " 		:oldValue as old_value, :newValue as new_value, :historyType as history_type,\n"
 			+ " 		:dateModified as date_modified FROM dual) src\n"
 			+ " ON (dest.bug_id = src.bug_id AND dest.user_id = src.user_id AND dest.history_type = src.history_type\n"
 			+ "   AND dest.field_name = src.field_name AND dest.old_value = src.old_value AND dest.new_value = src.new_value\n"
-			+ "   AND dest.date_modified = src.date_modified)\n"
+			+ "   AND cast(dest.date_modified as datetime) = cast(src.date_modified as datetime))\n"
 			+ " WHEN NOT MATCHED THEN INSERT (bug_id, user_id, field_name, old_value, new_value, history_type, date_modified)\n"
 			+ " 	VALUES (src.bug_id, src.user_id, src.field_name, src.old_value, src.new_value, src.history_type, src.date_modified)";
 

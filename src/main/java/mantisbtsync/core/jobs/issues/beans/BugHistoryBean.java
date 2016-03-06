@@ -4,7 +4,7 @@
 package mantisbtsync.core.jobs.issues.beans;
 
 import java.math.BigInteger;
-import java.util.Date;
+import java.sql.Timestamp;
 
 /**
  * @author jdevarulrajah
@@ -24,7 +24,7 @@ public final class BugHistoryBean {
 
 	private BigInteger historyType;
 
-	private Date dateModified;
+	private java.sql.Timestamp dateModified;
 
 	/**
 	 * Default constructor.
@@ -119,14 +119,14 @@ public final class BugHistoryBean {
 	/**
 	 * @return the dateModified
 	 */
-	public Date getDateModified() {
+	public Timestamp getDateModified() {
 		return dateModified;
 	}
 
 	/**
 	 * @param dateModified the dateModified to set
 	 */
-	public void setDateModified(final Date dateModified) {
+	public void setDateModified(final Timestamp dateModified) {
 		this.dateModified = dateModified;
 	}
 }

@@ -32,18 +32,11 @@ public class IssuesWritersConfiguration {
 	@StepScope
 	public CompositeItemWriter<BugBean> compositeIssuesWriter(final JdbcBatchItemWriter<BugBean> bugsWriter,
 			final BugNotesWriter bugNotesWriter, final BugCustomFieldsWriter bugCustomFieldsWriter,
-			final BugHistoryWriter bugHistoryWriter, final DataSource dataSource) {
+			final BugHistoryWriter bugHistoryWriter) {
 
-		bugsWriter.setDataSource(dataSource);
 		bugsWriter.afterPropertiesSet();
-
-		bugNotesWriter.setDataSource(dataSource);
 		bugNotesWriter.afterPropertiesSet();
-
-		bugCustomFieldsWriter.setDataSource(dataSource);
 		bugCustomFieldsWriter.afterPropertiesSet();
-
-		bugHistoryWriter.setDataSource(dataSource);
 		bugHistoryWriter.afterPropertiesSet();
 
 		final CompositeItemWriter<BugBean> compositeWriter = new CompositeItemWriter<BugBean>();
@@ -59,11 +52,11 @@ public class IssuesWritersConfiguration {
 
 	@Bean
 	@StepScope
-	public JdbcBatchItemWriter<BugBean> bugsWriter() {
+	public JdbcBatchItemWriter<BugBean> bugsWriter(final DataSource dataSource) {
 
 		final JdbcBatchItemWriter<BugBean> writer = new JdbcBatchItemWriter<BugBean>();
 		writer.setItemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<BugBean>());
-		writer.setSql("MERGE INTO mantis_bug_table\n"
+		writer.setSql("MERGE INTO mantis_bug_table dest\n"
 				+ " USING (SELECT :id as id, :projectId as project_id, :reporterId as reporter_id,\n"
 				+ " 		:handlerId as handler_id, :priorityId as priority_id,\n"
 				+ " 		:severityId as severity_id, :statusId as status_id,\n"
@@ -78,11 +71,11 @@ public class IssuesWritersConfiguration {
 				+ " 		severity_id, status_id, resolution_id, description, steps_to_reproduce, \n"
 				+ " 		additional_information, platform, version, fixed_in_version, target_version, \n"
 				+ " 		summary, category, date_submitted, last_updated) \n"
-				+ " 		      VALUES (src.id, src.projectId, src.reporterId, src.handlerId, src.priorityId, \n"
-				+ " 				src.severityId, src.statusId, src.resolutionId, src.description, \n"
-				+ " 				src.stepsToReproduce, src.additionalInformation, src.platform, src.version,\n"
-				+ " 				src.fixedInVersion, src.targetVersion, src.summary, src.category, \n"
-				+ " 				src.dateSubmitted, src.lastUpdated)\n"
+				+ " 		      VALUES (src.id, src.project_id, src.reporter_id, src.handler_id, src.priority_id,\n"
+				+ " 				src.severity_id, src.status_id, src.resolution_id, src.description, \n"
+				+ " 				src.steps_to_reproduce, src.additional_information, src.platform, src.version,\n"
+				+ " 				src.fixed_in_version, src.target_version, src.summary, src.category, \n"
+				+ " 				src.date_submitted, src.last_updated)\n"
 				+ " WHEN MATCHED THEN UPDATE SET dest.project_id = src.project_id, dest.reporter_id = src.reporter_id, \n"
 				+ " 	dest.handler_id = src.handler_id, dest.priority_id = src.priority_id, dest.severity_id = src.severity_id,\n"
 				+ " 	dest.status_id = src.status_id, dest.resolution_id = src.resolution_id, dest.description = src.description,\n"
@@ -90,6 +83,7 @@ public class IssuesWritersConfiguration {
 				+ " 	dest.platform = src.platform, dest.version = src.version, dest.fixed_in_version = src.fixed_in_version,\n"
 				+ " 	dest.target_version = src.target_version, dest.summary = src.summary, dest.category = src.category,\n"
 				+ " 	dest.date_submitted = src.date_submitted, dest.last_updated = src.last_updated");
+		writer.setDataSource(dataSource);
 		writer.setAssertUpdates(false);
 		return writer;
 	}
@@ -98,6 +92,7 @@ public class IssuesWritersConfiguration {
 	@StepScope
 	public BugNotesWriter bugNotesWriter(final DataSource dataSource) {
 		final BugNotesWriter writer = new BugNotesWriter();
+		writer.setDataSource(dataSource);
 		return writer;
 	}
 
@@ -105,6 +100,7 @@ public class IssuesWritersConfiguration {
 	@StepScope
 	public BugCustomFieldsWriter bugCustomFieldsWriter(final DataSource dataSource) {
 		final BugCustomFieldsWriter writer = new BugCustomFieldsWriter();
+		writer.setDataSource(dataSource);
 		return writer;
 	}
 
@@ -112,6 +108,7 @@ public class IssuesWritersConfiguration {
 	@StepScope
 	public BugHistoryWriter bugHistoryWriter(final DataSource dataSource) {
 		final BugHistoryWriter writer = new BugHistoryWriter();
+		writer.setDataSource(dataSource);
 		return writer;
 	}
 }

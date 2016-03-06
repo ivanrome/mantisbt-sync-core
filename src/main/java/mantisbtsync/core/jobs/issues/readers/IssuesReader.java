@@ -243,11 +243,11 @@ public class IssuesReader implements ItemReader<BugBean> {
 		bean.setCategory(data.getCategory());
 
 		if (data.getDate_submitted() != null) {
-			bean.setDateSubmitted(data.getDate_submitted().getTime());
+			bean.setDateSubmitted(getSqlDate(data.getDate_submitted()));
 		}
 
 		if (data.getLast_updated() != null) {
-			bean.setLastUpdated(data.getLast_updated().getTime());
+			bean.setLastUpdated(getSqlDate(data.getLast_updated()));
 		}
 
 		fillNotes(bean, data);
@@ -269,10 +269,10 @@ public class IssuesReader implements ItemReader<BugBean> {
 				}
 				noteBean.setText(noteData.getText());
 				if (noteData.getDate_submitted() != null) {
-					noteBean.setDateSubmitted(noteData.getDate_submitted().getTime());
+					noteBean.setDateSubmitted(getSqlDate(noteData.getDate_submitted()));
 				}
 				if (noteData.getLast_modified() != null) {
-					noteBean.setLastModified(noteData.getLast_modified().getTime());
+					noteBean.setLastModified(getSqlDate(noteData.getLast_modified()));
 				}
 
 				bean.getNotes().add(noteBean);
@@ -314,9 +314,13 @@ public class IssuesReader implements ItemReader<BugBean> {
 				histBean.setHistoryType(histData.getType());
 				if (histData.getDate() != null) {
 					cal.setTimeInMillis(histData.getDate().longValue() * 1000L);
-					histBean.setDateModified(cal.getTime());
+					histBean.setDateModified(getSqlDate(cal));
 				}
 			}
 		}
+	}
+
+	private java.sql.Timestamp getSqlDate(final Calendar cal) {
+		return new java.sql.Timestamp(cal.getTimeInMillis());
 	}
 }

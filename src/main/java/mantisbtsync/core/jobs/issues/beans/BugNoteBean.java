@@ -4,7 +4,7 @@
 package mantisbtsync.core.jobs.issues.beans;
 
 import java.math.BigInteger;
-import java.util.Date;
+import java.sql.Timestamp;
 
 /**
  * @author jdevarulrajah
@@ -20,9 +20,9 @@ public class BugNoteBean {
 
 	private String text;
 
-	private Date dateSubmitted;
+	private Timestamp dateSubmitted;
 
-	private Date lastModified;
+	private Timestamp lastModified;
 
 	/**
 	 * Default constructor.
@@ -89,28 +89,28 @@ public class BugNoteBean {
 	/**
 	 * @return the dateSubmitted
 	 */
-	public Date getDateSubmitted() {
+	public Timestamp getDateSubmitted() {
 		return dateSubmitted;
 	}
 
 	/**
 	 * @param dateSubmitted the dateSubmitted to set
 	 */
-	public void setDateSubmitted(final Date dateSubmitted) {
+	public void setDateSubmitted(final Timestamp dateSubmitted) {
 		this.dateSubmitted = dateSubmitted;
 	}
 
 	/**
 	 * @return the lastModified
 	 */
-	public Date getLastModified() {
+	public Timestamp getLastModified() {
 		return lastModified;
 	}
 
 	/**
 	 * @param lastModified the lastModified to set
 	 */
-	public void setLastModified(final Date lastModified) {
+	public void setLastModified(final Timestamp lastModified) {
 		this.lastModified = lastModified;
 	}
 }
