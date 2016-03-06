@@ -6,6 +6,7 @@ package mantisbtsync.core.jobs.issues;
 import mantisbtsync.core.jobs.issues.tasklets.IssuesLastRunExtractorTasklet;
 
 import org.springframework.batch.core.configuration.annotation.StepScope;
+import org.springframework.batch.core.explore.JobExplorer;
 import org.springframework.batch.core.listener.ExecutionContextPromotionListener;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.context.annotation.Bean;
@@ -20,9 +21,11 @@ public class IssuesTaskletsConfiguration {
 
 	@Bean
 	@StepScope
-	public IssuesLastRunExtractorTasklet mantisLastRunExtractorTasklet(final JobRepository jobRepository) {
+	public IssuesLastRunExtractorTasklet mantisLastRunExtractorTasklet(final JobRepository jobRepository,
+			final JobExplorer jobExplorer) {
 		final IssuesLastRunExtractorTasklet tasklet = new IssuesLastRunExtractorTasklet();
 		tasklet.setJobRepository(jobRepository);
+		tasklet.setJobExplorer(jobExplorer);
 		return tasklet;
 	}
 
