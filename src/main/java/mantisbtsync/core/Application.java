@@ -21,7 +21,7 @@ import org.springframework.context.annotation.Import;
 @EnableAutoConfiguration
 @Import(CommonConfiguration.class)
 @ComponentScan({"mantisbtsync.core.jobs.enums",
-"mantisbtsync.core.jobs.projects"})
+	"mantisbtsync.core.jobs.projects", "mantisbtsync.core.jobs.issues"})
 public class Application {
 
 	/**

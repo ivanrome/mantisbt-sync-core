@@ -34,9 +34,15 @@ public class JobEnumsConfiguration {
 
 		return jobs.get("syncEnumsJob")
 				.incrementer(new RunIdIncrementer())
-				.flow(customFieldTypesStep).next(etasStep).next(prioritiesStep)
-				.next(projectionsStep).next(projectStatusStep).next(projectViewStatesStep)
-				.next(reproducibilitiesStep).next(resolutionsStep).next(severitiesStep)
+				.flow(customFieldTypesStep)
+				.next(etasStep)
+				.next(prioritiesStep)
+				.next(projectionsStep)
+				.next(projectStatusStep)
+				.next(projectViewStatesStep)
+				.next(reproducibilitiesStep)
+				.next(resolutionsStep)
+				.next(severitiesStep)
 				.end()
 				.build();
 	}

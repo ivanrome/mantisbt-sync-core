@@ -42,28 +42,28 @@ AbstractMethodInvokingDelegator<T[]> implements ItemReader<T> {
 	/**
 	 * @return the authManager
 	 */
-	public final PortalAuthManager getAuthManager() {
+	public PortalAuthManager getAuthManager() {
 		return authManager;
 	}
 
 	/**
 	 * @param authManager the authManager to set
 	 */
-	public final void setAuthManager(final PortalAuthManager authManager) {
+	public void setAuthManager(final PortalAuthManager authManager) {
 		this.authManager = authManager;
 	}
 
 	/**
 	 * @return the clientStub
 	 */
-	public final Stub getClientStub() {
+	public Stub getClientStub() {
 		return clientStub;
 	}
 
 	/**
 	 * @param clientStub the clientStub to set
 	 */
-	public final void setClientStub(final Stub clientStub) {
+	public void setClientStub(final Stub clientStub) {
 		this.clientStub = clientStub;
 		setTargetObject(clientStub);
 	}
