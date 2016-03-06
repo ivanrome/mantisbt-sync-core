@@ -32,6 +32,10 @@ import biz.futureware.mantis.rpc.soap.client.ProjectVersionData;
 
 /**
  * Configuration for the job of Mantis projects syncing.
+ * Parameters for this job are :
+ * 	- mantis.username
+ *  - mantis.password
+ *  - mantis.project_id
  *
  * @author jdevarulrajah
  *

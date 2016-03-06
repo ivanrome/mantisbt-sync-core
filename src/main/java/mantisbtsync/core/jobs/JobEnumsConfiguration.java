@@ -17,6 +17,9 @@ import biz.futureware.mantis.rpc.soap.client.ObjectRef;
 
 /**
  * Configuration for the job of Mantis enumerations syncing.
+ * Parameters for this job are :
+ * 	- mantis.username
+ *  - mantis.password
  *
  * @author jdevarulrajah
  *
