@@ -77,6 +77,12 @@ public class EnumsWritersConfiguration {
 		return getEnumWriter("mantis_enum_severities", dataSource);
 	}
 
+	@Bean
+	@StepScope
+	public JdbcBatchItemWriter<ObjectRef> statusWriter(final DataSource dataSource) {
+		return getEnumWriter("mantis_enum_status", dataSource);
+	}
+
 	private JdbcBatchItemWriter<ObjectRef> getEnumWriter(final String tableName, final DataSource dataSource) {
 		final JdbcBatchItemWriter<ObjectRef> writer = new JdbcBatchItemWriter<ObjectRef>();
 		writer.setItemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<ObjectRef>());

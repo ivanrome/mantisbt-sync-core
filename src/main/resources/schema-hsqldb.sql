@@ -51,6 +51,11 @@ CREATE TABLE mantis_enum_severities  (
     name varchar(32) NOT NULL
 );
 
+CREATE TABLE mantis_enum_status  (
+    id int NOT NULL PRIMARY KEY,
+    name varchar(32) NOT NULL
+);
+
 -- Tables for data related to projects
 
 CREATE TABLE mantis_project_table  (
@@ -148,7 +153,7 @@ CREATE TABLE mantis_bug_table (
 	CONSTRAINT FK_BUG_HDR FOREIGN KEY (handler_id) REFERENCES mantis_user_table(id),
 	CONSTRAINT FK_BUG_PRI FOREIGN KEY (priority_id) REFERENCES mantis_enum_priorities(id),
 	CONSTRAINT FK_BUG_SEV FOREIGN KEY (severity_id) REFERENCES mantis_enum_severities(id),
-	CONSTRAINT FK_BUG_STA FOREIGN KEY (status_id) REFERENCES mantis_enum_project_status(id),
+	CONSTRAINT FK_BUG_STA FOREIGN KEY (status_id) REFERENCES mantis_enum_status(id),
 	CONSTRAINT FK_BUG_RES FOREIGN KEY (resolution_id) REFERENCES mantis_enum_resolutions(id)
 );
 

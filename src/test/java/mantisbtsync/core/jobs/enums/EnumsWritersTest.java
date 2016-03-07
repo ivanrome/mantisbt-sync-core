@@ -56,6 +56,9 @@ public class EnumsWritersTest extends AbstractSqlWriterTest {
 	@Autowired
 	private ItemWriter<ObjectRef> severitiesWriter;
 
+	@Autowired
+	private ItemWriter<ObjectRef> statusWriter;
+
 
 	/**
 	 * Test for the writer of the table mantis_enum_custom_field_types.
@@ -202,8 +205,21 @@ public class EnumsWritersTest extends AbstractSqlWriterTest {
 		checkResults(resultItems);
 	}
 
+	/**
+	 * Test for the writer of the table mantis_enum_status.
+	 *
+	 * @throws Exception
+	 * 			Technical exception
+	 */
+	@Test
+	public void testStatusWriter() throws Exception {
+		final String tableName = "mantis_enum_status";
 
-
+		insertInitialData(tableName);
+		statusWriter.write(buildItems());
+		final List<ObjectRef> resultItems = getItemsFromDb(tableName);
+		checkResults(resultItems);
+	}
 
 	/**
 	 * Set the customFieldTypesWriter
@@ -281,6 +297,13 @@ public class EnumsWritersTest extends AbstractSqlWriterTest {
 		this.severitiesWriter = severitiesWriter;
 	}
 
+
+	/**
+	 * @param statusWriter the statusWriter to set
+	 */
+	public void setStatusWriter(final ItemWriter<ObjectRef> statusWriter) {
+		this.statusWriter = statusWriter;
+	}
 
 	/**
 	 * Build the items to write.

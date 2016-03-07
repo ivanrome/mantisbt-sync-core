@@ -122,6 +122,17 @@ public class EnumsReadersConfiguration {
 				clientStub, userName, password);
 	}
 
+	@Bean
+	@StepScope
+	public AxisAuthItemsArrayReader<ObjectRef> statusReader(final PortalAuthManager authManager,
+			final Stub clientStub,
+			@Value("#{jobParameters['mantis.username']}") final String userName,
+			@Value("#{jobParameters['mantis.password']}") final String password) {
+
+		return getEnumReader("mc_enum_status", authManager,
+				clientStub, userName, password);
+	}
+
 	private AxisAuthItemsArrayReader<ObjectRef> getEnumReader(final String operation,
 			final PortalAuthManager authManager, final Stub clientStub,
 			final String userName, final String password) {

@@ -30,7 +30,7 @@ public class JobEnumsConfiguration {
 	@Bean
 	public Job syncEnumsJob(final JobBuilderFactory jobs, final Step customFieldTypesStep, final Step etasStep,
 			final Step prioritiesStep, final Step projectionsStep, final Step projectStatusStep, final Step projectViewStatesStep,
-			final Step reproducibilitiesStep, final Step resolutionsStep, final Step severitiesStep ) {
+			final Step reproducibilitiesStep, final Step resolutionsStep, final Step severitiesStep, final Step statusStep) {
 
 		return jobs.get("syncEnumsJob")
 				.incrementer(new RunIdIncrementer())
@@ -43,6 +43,7 @@ public class JobEnumsConfiguration {
 				.next(reproducibilitiesStep)
 				.next(resolutionsStep)
 				.next(severitiesStep)
+				.next(statusStep)
 				.end()
 				.build();
 	}
@@ -117,6 +118,14 @@ public class JobEnumsConfiguration {
 			final ItemWriter<ObjectRef> severitiesWriter) {
 
 		return getEnumStep("severitiesStep", stepBuilderFactory, severitiesReader, severitiesWriter);
+	}
+
+	@Bean
+	public Step statusStep(final StepBuilderFactory stepBuilderFactory,
+			final ItemReader<ObjectRef> statusReader,
+			final ItemWriter<ObjectRef> statusWriter) {
+
+		return getEnumStep("statusStep", stepBuilderFactory, statusReader, statusWriter);
 	}
 
 	private Step getEnumStep(final String stepName,	final StepBuilderFactory stepBuilderFactory,

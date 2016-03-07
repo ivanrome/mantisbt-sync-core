@@ -74,6 +74,9 @@ public class EnumsReadersTest {
 	@Autowired
 	private AxisAuthItemsArrayReader<ObjectRef> severitiesReader;
 
+	@Autowired
+	private AxisAuthItemsArrayReader<ObjectRef> statusReader;
+
 	@Mock
 	private MantisConnectBindingStub clientStub;
 
@@ -340,6 +343,33 @@ public class EnumsReadersTest {
 	}
 
 	/**
+	 * Test for the reader of the table mantis_enum_status.
+	 *
+	 * @throws Exception
+	 * 			Technical exception
+	 */
+	@Test
+	public void testStatusReader() throws Exception {
+		final ObjectRef[] expected = generateItems("mc_enum_status");
+
+		Mockito.when(clientStub.mc_enum_status("toto", "passwd"))
+		.thenReturn(expected);
+
+		statusReader.setClientStub(clientStub);
+
+		for (int i = 0; i <= expected.length; i++) {
+			final ObjectRef item = statusReader.read();
+			if (i < expected.length) {
+				assertNotNull(item);
+				assertEquals(expected[i].getId(), item.getId());
+				assertEquals(expected[i].getName(), item.getName());
+			} else {
+				assertNull(item);
+			}
+		}
+	}
+
+	/**
 	 * @param customFieldTypesReader the customFieldTypesReader to set
 	 */
 	public void setCustomFieldTypesReader(
@@ -404,6 +434,13 @@ public class EnumsReadersTest {
 	 */
 	public void setSeveritiesReader(final AxisAuthItemsArrayReader<ObjectRef> severitiesReader) {
 		this.severitiesReader = severitiesReader;
+	}
+
+	/**
+	 * @param statusReader the statusReader to set
+	 */
+	public void setStatusReader(final AxisAuthItemsArrayReader<ObjectRef> statusReader) {
+		this.statusReader = statusReader;
 	}
 
 	/**
