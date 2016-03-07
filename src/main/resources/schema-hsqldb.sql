@@ -1,10 +1,10 @@
--- Création de la table DUAL pour HSQLDB
+-- Add DUAL table for HSQLDB
 CREATE TABLE dual (
 dummy varchar(1) );
 
 INSERT INTO dual (dummy) VALUES ('X');
 
--- Création des tables contenant les énumérations
+-- Tables for MantisBT enumerations
 
 CREATE TABLE mantis_enum_custom_field_types  (
     id int NOT NULL PRIMARY KEY,
@@ -51,7 +51,7 @@ CREATE TABLE mantis_enum_severities  (
     name varchar(32) NOT NULL
 );
 
--- Création des tables contenant les données liées à un projet
+-- Tables for data related to projects
 
 CREATE TABLE mantis_project_table  (
     id int NOT NULL PRIMARY KEY,
@@ -63,8 +63,8 @@ CREATE TABLE mantis_project_hierarchy_table  (
     child_id int NOT NULL,
     
     PRIMARY KEY(parent_id, child_id),
-    FOREIGN KEY (parent_id) REFERENCES mantis_project_table(id),
-    FOREIGN KEY (child_id) REFERENCES mantis_project_table(id)
+    CONSTRAINT FK_PRH_PRJ_1 FOREIGN KEY (parent_id) REFERENCES mantis_project_table(id),
+    CONSTRAINT FK_PRH_PRJ_2 FOREIGN KEY (child_id) REFERENCES mantis_project_table(id)
 );
 
 CREATE TABLE mantis_category_table  (
@@ -72,7 +72,7 @@ CREATE TABLE mantis_category_table  (
     project_id int NOT NULL,
     name varchar(128) NOT NULL,
     
-    FOREIGN KEY (project_id) REFERENCES mantis_project_table(id)
+    CONSTRAINT FK_CAT_PRJ FOREIGN KEY (project_id) REFERENCES mantis_project_table(id)
 );
 
 CREATE TABLE mantis_custom_field_table  (
@@ -83,7 +83,7 @@ CREATE TABLE mantis_custom_field_table  (
     default_value varchar(255),
     valid_regexp varchar(255),
     
-    FOREIGN KEY (type_id) REFERENCES mantis_enum_custom_field_types(id)
+    CONSTRAINT FK_CUF_CFT FOREIGN KEY (type_id) REFERENCES mantis_enum_custom_field_types(id)
 );
 
 CREATE TABLE mantis_custom_field_project_table  (
@@ -91,13 +91,13 @@ CREATE TABLE mantis_custom_field_project_table  (
     project_id int NOT NULL,
     
     PRIMARY KEY(project_id, field_id),
-    FOREIGN KEY (field_id) REFERENCES mantis_custom_field_table(id),
-    FOREIGN KEY (project_id) REFERENCES mantis_project_table(id)
+    CONSTRAINT FK_CFP_CUF FOREIGN KEY (field_id) REFERENCES mantis_custom_field_table(id),
+    CONSTRAINT FK_CFP_PRJ FOREIGN KEY (project_id) REFERENCES mantis_project_table(id)
 );
 
 CREATE TABLE mantis_user_table  (
     id int NOT NULL PRIMARY KEY,
-    name varchar(32) NOT NULL
+    name varchar(64) NOT NULL
 );
 
 CREATE TABLE mantis_project_user_list_table  (
@@ -105,8 +105,8 @@ CREATE TABLE mantis_project_user_list_table  (
     user_id int NOT NULL,
     
     PRIMARY KEY(project_id, user_id),
-    FOREIGN KEY (user_id) REFERENCES mantis_user_table(id),
-    FOREIGN KEY (project_id) REFERENCES mantis_project_table(id)
+    CONSTRAINT FK_PUL_USR FOREIGN KEY (user_id) REFERENCES mantis_user_table(id),
+    CONSTRAINT FK_PUL_PRJ FOREIGN KEY (project_id) REFERENCES mantis_project_table(id)
 );
 
 CREATE TABLE mantis_project_version_table (
@@ -117,10 +117,10 @@ CREATE TABLE mantis_project_version_table (
 	released boolean,
 	obsolete boolean,
 
-    FOREIGN KEY (project_id) REFERENCES mantis_project_table(id)
+    CONSTRAINT FK_PJV_PRJ FOREIGN KEY (project_id) REFERENCES mantis_project_table(id)
 );
 
--- Création des tables contenant les données liées à une mantis
+-- Tables for the data related to issues
 
 CREATE TABLE mantis_bug_table (
 	id int NOT NULL PRIMARY KEY,
@@ -143,13 +143,13 @@ CREATE TABLE mantis_bug_table (
 	date_submitted datetime,
 	last_updated datetime,
 	
-	FOREIGN KEY (project_id) REFERENCES mantis_project_table(id),
-	FOREIGN KEY (reporter_id) REFERENCES mantis_user_table(id),
-	FOREIGN KEY (handler_id) REFERENCES mantis_user_table(id),
-	FOREIGN KEY (priority_id) REFERENCES mantis_enum_priorities(id),
-	FOREIGN KEY (severity_id) REFERENCES mantis_enum_severities(id),
-	FOREIGN KEY (status_id) REFERENCES mantis_enum_project_status(id),
-	FOREIGN KEY (resolution_id) REFERENCES mantis_enum_resolutions(id)
+	CONSTRAINT FK_BUG_PRJ FOREIGN KEY (project_id) REFERENCES mantis_project_table(id),
+	CONSTRAINT FK_BUG_REP FOREIGN KEY (reporter_id) REFERENCES mantis_user_table(id),
+	CONSTRAINT FK_BUG_HDR FOREIGN KEY (handler_id) REFERENCES mantis_user_table(id),
+	CONSTRAINT FK_BUG_PRI FOREIGN KEY (priority_id) REFERENCES mantis_enum_priorities(id),
+	CONSTRAINT FK_BUG_SEV FOREIGN KEY (severity_id) REFERENCES mantis_enum_severities(id),
+	CONSTRAINT FK_BUG_STA FOREIGN KEY (status_id) REFERENCES mantis_enum_project_status(id),
+	CONSTRAINT FK_BUG_RES FOREIGN KEY (resolution_id) REFERENCES mantis_enum_resolutions(id)
 );
 
 CREATE TABLE mantis_bugnote_table (
@@ -160,8 +160,8 @@ CREATE TABLE mantis_bugnote_table (
 	date_submitted datetime,
 	last_modified datetime,
 	
-	FOREIGN KEY (bug_id) REFERENCES mantis_bug_table(id),
-	FOREIGN KEY (reporter_id) REFERENCES mantis_user_table(id)
+	CONSTRAINT FK_BGN_BUG FOREIGN KEY (bug_id) REFERENCES mantis_bug_table(id),
+	CONSTRAINT FK_BGN_REP FOREIGN KEY (reporter_id) REFERENCES mantis_user_table(id)
 );
 
 CREATE TABLE mantis_custom_field_string_table (
@@ -170,8 +170,8 @@ CREATE TABLE mantis_custom_field_string_table (
 	field_value varchar(255),
 	
 	PRIMARY KEY(field_id, bug_id),
-	FOREIGN KEY (field_id) REFERENCES mantis_custom_field_table(id),
-	FOREIGN KEY (bug_id) REFERENCES mantis_bug_table(id)
+	CONSTRAINT FK_CFS_CUF FOREIGN KEY (field_id) REFERENCES mantis_custom_field_table(id),
+	CONSTRAINT FK_CFS_BUG FOREIGN KEY (bug_id) REFERENCES mantis_bug_table(id)
 );
 
 CREATE TABLE mantis_bug_history_table (
@@ -184,8 +184,8 @@ CREATE TABLE mantis_bug_history_table (
 	history_type int,
 	date_modified datetime NOT NULL,
 	
-	FOREIGN KEY (user_id) REFERENCES mantis_user_table(id),
-	FOREIGN KEY (bug_id) REFERENCES mantis_bug_table(id)
+	CONSTRAINT FK_BGH_USR FOREIGN KEY (user_id) REFERENCES mantis_user_table(id),
+	CONSTRAINT FK_BGH_BUG FOREIGN KEY (bug_id) REFERENCES mantis_bug_table(id)
 );
 
 -- Indexes
