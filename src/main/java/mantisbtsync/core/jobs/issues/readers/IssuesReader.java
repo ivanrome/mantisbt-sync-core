@@ -267,7 +267,7 @@ public class IssuesReader implements ItemReader<BugBean> {
 				if (noteData.getReporter() != null) {
 					noteBean.setReporterId(noteData.getReporter().getId());
 				}
-				noteBean.setText(noteData.getText());
+				noteBean.setTextNote(noteData.getText());
 				if (noteData.getDate_submitted() != null) {
 					noteBean.setDateSubmitted(getSqlDate(noteData.getDate_submitted()));
 				}

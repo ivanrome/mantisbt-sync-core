@@ -18,7 +18,7 @@ public class BugNoteBean {
 
 	private BigInteger reporterId;
 
-	private String text;
+	private String textNote;
 
 	private Timestamp dateSubmitted;
 
@@ -75,15 +75,15 @@ public class BugNoteBean {
 	/**
 	 * @return the text
 	 */
-	public String getText() {
-		return text;
+	public String getTextNote() {
+		return textNote;
 	}
 
 	/**
 	 * @param text the text to set
 	 */
-	public void setText(final String text) {
-		this.text = text;
+	public void setTextNote(final String text) {
+		this.textNote = text;
 	}
 
 	/**

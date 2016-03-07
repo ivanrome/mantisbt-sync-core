@@ -71,7 +71,7 @@ public class BugNotesWriterTest extends AbstractSqlWriterTest {
 		note.setId(BigInteger.ONE);
 		note.setBugId(BigInteger.ONE);
 		note.setReporterId(BigInteger.ONE);
-		note.setText("note_1");
+		note.setTextNote("note_1");
 		note.setDateSubmitted(date);
 		note.setLastModified(date);
 
