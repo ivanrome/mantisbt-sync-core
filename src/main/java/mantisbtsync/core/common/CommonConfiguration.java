@@ -7,7 +7,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import javax.sql.DataSource;
+import javax.xml.bind.JAXBException;
 
+import mantisbtsync.core.common.auth.PortalAuthBuilder;
 import mantisbtsync.core.common.auth.PortalAuthManager;
 
 import org.apache.axis.AxisFault;
@@ -36,8 +38,8 @@ public class CommonConfiguration {
 	}
 
 	@Bean
-	public PortalAuthManager authManager() {
-		return new PortalAuthManager();
+	public PortalAuthManager authManager(@Value("${mantis.auth.filepath:}") final String filepath) throws JAXBException {
+		return PortalAuthBuilder.buildAuthManager(filepath);
 	}
 
 	@Bean
