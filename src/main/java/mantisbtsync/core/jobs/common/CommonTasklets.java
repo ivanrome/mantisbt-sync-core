@@ -21,37 +21,28 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package mantisbtsync.core;
+package mantisbtsync.core.jobs.common;
 
-import mantisbtsync.core.common.CommonConfiguration;
+import mantisbtsync.core.common.auth.PortalAuthManager;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.context.annotation.ComponentScan;
+import org.springframework.batch.core.configuration.annotation.StepScope;
+import org.springframework.batch.core.step.tasklet.MethodInvokingTaskletAdapter;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
 
 /**
- * Entry point for the application.
- *
  * @author jdevarulrajah
  *
  */
 @Configuration
-@EnableAutoConfiguration
-@Import(CommonConfiguration.class)
-@ComponentScan({"mantisbtsync.core.jobs.enums", "mantisbtsync.core.jobs.projects",
-	"mantisbtsync.core.jobs.issues", "mantisbtsync.core.jobs.common"})
-public class Application {
+public class CommonTasklets {
 
-	/**
-	 * Entry point method.
-	 *
-	 * @param args
-	 * 			Command line arguments
-	 */
-	public static void main(final String[] args) {
-		SpringApplication.run(Application.class, args);
+	@Bean
+	@StepScope
+	public MethodInvokingTaskletAdapter authTasklet(final PortalAuthManager authManager) {
+		final MethodInvokingTaskletAdapter authTasklet = new MethodInvokingTaskletAdapter();
+		authTasklet.setTargetObject(authManager);
+		authTasklet.setTargetMethod("authentificate");
+		return authTasklet;
 	}
-
 }
