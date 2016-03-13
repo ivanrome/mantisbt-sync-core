@@ -31,14 +31,10 @@ import javax.xml.bind.JAXBException;
 
 import mantisbtsync.core.common.auth.PortalAuthBuilder;
 import mantisbtsync.core.common.auth.PortalAuthManager;
-import mantisbtsync.core.common.listener.CloseAuthManagerListener;
 
 import org.apache.axis.AxisFault;
 import org.apache.axis.client.Stub;
 import org.apache.axis.configuration.BasicClientConfig;
-import org.springframework.batch.core.Step;
-import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
-import org.springframework.batch.core.step.tasklet.MethodInvokingTaskletAdapter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -77,20 +73,5 @@ public class CommonConfiguration {
 		loc.setMantisConnectPortEndpointAddress(endpoint);
 		final MantisConnectBindingStub stub = new MantisConnectBindingStub(new URL("http://www.mantisbt.org/bugs/api/soap/mantisconnect.php"), loc);
 		return stub;
-	}
-
-	@Bean
-	public CloseAuthManagerListener closeAuthManagerListener(final PortalAuthManager authManager) {
-		final CloseAuthManagerListener listener = new CloseAuthManagerListener();
-		listener.setMgr(authManager);
-		return listener;
-	}
-
-	@Bean
-	public Step authStep(final StepBuilderFactory stepBuilderFactory,
-			final MethodInvokingTaskletAdapter authTasklet) {
-
-		return stepBuilderFactory.get("authStep").allowStartIfComplete(true)
-				.tasklet(authTasklet).build();
 	}
 }

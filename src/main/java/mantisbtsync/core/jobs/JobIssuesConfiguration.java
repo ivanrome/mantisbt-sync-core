@@ -23,6 +23,7 @@
  */
 package mantisbtsync.core.jobs;
 
+import mantisbtsync.core.common.auth.PortalAuthManager;
 import mantisbtsync.core.common.listener.CloseAuthManagerListener;
 import mantisbtsync.core.jobs.issues.beans.BugBean;
 import mantisbtsync.core.jobs.issues.readers.IssuesReader;
@@ -34,6 +35,7 @@ import org.springframework.batch.core.StepExecutionListener;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
+import org.springframework.batch.core.step.tasklet.MethodInvokingTaskletAdapter;
 import org.springframework.batch.item.support.CompositeItemWriter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -52,17 +54,32 @@ import org.springframework.context.annotation.Configuration;
 public class JobIssuesConfiguration {
 
 	@Bean
-	public Job syncEnumsJob(final JobBuilderFactory jobs, final Step issuesLastSuccessExtractorStep,
-			final Step issuesSyncStep, final Step authStep, final CloseAuthManagerListener closeAuthManagerListener) {
+	public Job syncIssuesJob(final JobBuilderFactory jobs, final Step issuesLastSuccessExtractorStep,
+			final Step issuesSyncStep, final Step authIssuesStep, final CloseAuthManagerListener closeIssuesListener) {
 
 		return jobs.get("syncIssuesJob")
 				.incrementer(new RunIdIncrementer())
-				.listener(closeAuthManagerListener)
-				.flow(authStep)
+				.listener(closeIssuesListener)
+				.flow(authIssuesStep)
 				.next(issuesLastSuccessExtractorStep)
 				.next(issuesSyncStep)
 				.end()
 				.build();
+	}
+
+	@Bean
+	public CloseAuthManagerListener closeIssuesListener(final PortalAuthManager authManager) {
+		final CloseAuthManagerListener listener = new CloseAuthManagerListener();
+		listener.setMgr(authManager);
+		return listener;
+	}
+
+	@Bean
+	public Step authIssuesStep(final StepBuilderFactory stepBuilderFactory,
+			final MethodInvokingTaskletAdapter authTasklet) {
+
+		return stepBuilderFactory.get("authIssuesStep").allowStartIfComplete(true)
+				.tasklet(authTasklet).build();
 	}
 
 	@Bean

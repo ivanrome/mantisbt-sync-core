@@ -23,6 +23,7 @@
  */
 package mantisbtsync.core.jobs;
 
+import mantisbtsync.core.common.auth.PortalAuthManager;
 import mantisbtsync.core.common.listener.CloseAuthManagerListener;
 
 import org.springframework.batch.core.Job;
@@ -30,6 +31,7 @@ import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
+import org.springframework.batch.core.step.tasklet.MethodInvokingTaskletAdapter;
 import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.context.annotation.Bean;
@@ -53,12 +55,12 @@ public class JobEnumsConfiguration {
 	public Job syncEnumsJob(final JobBuilderFactory jobs, final Step customFieldTypesStep, final Step etasStep,
 			final Step prioritiesStep, final Step projectionsStep, final Step projectStatusStep, final Step projectViewStatesStep,
 			final Step reproducibilitiesStep, final Step resolutionsStep, final Step severitiesStep, final Step statusStep,
-			final Step authStep, final CloseAuthManagerListener closeAuthManagerListener) {
+			final Step authEnumsStep, final CloseAuthManagerListener closeEnumsListener) {
 
 		return jobs.get("syncEnumsJob")
 				.incrementer(new RunIdIncrementer())
-				.listener(closeAuthManagerListener)
-				.flow(authStep)
+				.listener(closeEnumsListener)
+				.flow(authEnumsStep)
 				.next(customFieldTypesStep)
 				.next(etasStep)
 				.next(prioritiesStep)
@@ -71,6 +73,21 @@ public class JobEnumsConfiguration {
 				.next(statusStep)
 				.end()
 				.build();
+	}
+
+	@Bean
+	public CloseAuthManagerListener closeEnumsListener(final PortalAuthManager authManager) {
+		final CloseAuthManagerListener listener = new CloseAuthManagerListener();
+		listener.setMgr(authManager);
+		return listener;
+	}
+
+	@Bean
+	public Step authEnumsStep(final StepBuilderFactory stepBuilderFactory,
+			final MethodInvokingTaskletAdapter authTasklet) {
+
+		return stepBuilderFactory.get("authEnumsStep").allowStartIfComplete(true)
+				.tasklet(authTasklet).build();
 	}
 
 	@Bean

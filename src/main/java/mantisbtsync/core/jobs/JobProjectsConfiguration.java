@@ -23,6 +23,7 @@
  */
 package mantisbtsync.core.jobs;
 
+import mantisbtsync.core.common.auth.PortalAuthManager;
 import mantisbtsync.core.common.listener.CloseAuthManagerListener;
 import mantisbtsync.core.jobs.projects.beans.ProjectCategoryBean;
 import mantisbtsync.core.jobs.projects.beans.ProjectCustomFieldBean;
@@ -42,6 +43,7 @@ import org.springframework.batch.core.job.builder.FlowBuilder;
 import org.springframework.batch.core.job.flow.Flow;
 import org.springframework.batch.core.job.flow.JobExecutionDecider;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
+import org.springframework.batch.core.step.tasklet.MethodInvokingTaskletAdapter;
 import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.context.annotation.Bean;
@@ -69,7 +71,7 @@ public class JobProjectsConfiguration {
 	@Bean
 	public Job syncProjectsJob(final JobBuilderFactory jobs, final Step mantisProjectsListStep,
 			final Flow projectInitFlow, final JobExecutionDecider jobProjectInitFlowDecider,
-			final Step authStep, final CloseAuthManagerListener closeAuthManagerListener) {
+			final Step authProjectsStep, final CloseAuthManagerListener closeProjectsListener) {
 
 		final FlowBuilder<Flow> loopBuilder = new FlowBuilder<Flow>("projectInitLoop");
 		final Flow loop = loopBuilder.start(projectInitFlow)
@@ -81,8 +83,8 @@ public class JobProjectsConfiguration {
 
 		return jobs.get("syncProjectsJob")
 				.incrementer(new RunIdIncrementer())
-				.listener(closeAuthManagerListener)
-				.flow(authStep)
+				.listener(closeProjectsListener)
+				.flow(authProjectsStep)
 				.next(mantisProjectsListStep)
 				.next(loop)
 				.end()
@@ -112,6 +114,21 @@ public class JobProjectsConfiguration {
 	// end::flow[]
 
 	// tag::step[]
+
+	@Bean
+	public CloseAuthManagerListener closeProjectsListener(final PortalAuthManager authManager) {
+		final CloseAuthManagerListener listener = new CloseAuthManagerListener();
+		listener.setMgr(authManager);
+		return listener;
+	}
+
+	@Bean
+	public Step authProjectsStep(final StepBuilderFactory stepBuilderFactory,
+			final MethodInvokingTaskletAdapter authTasklet) {
+
+		return stepBuilderFactory.get("authProjectsStep").allowStartIfComplete(true)
+				.tasklet(authTasklet).build();
+	}
 
 	@Bean
 	public Step mantisProjectsListStep(final StepBuilderFactory stepBuilderFactory,
