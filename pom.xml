@@ -7,6 +7,13 @@
 	<name>mantisbt-sync-core</name>
 	<description>Batch to synchronize a local database from a remote instance of Mantis Bug Tracker with Soap calls</description>
 	<url>https://github.com/jrrdev/mantisbt-sync-core</url>
+	<licenses>
+		<license>
+			<name>The MIT License (MIT)</name>
+			<url>https://opensource.org/licenses/MIT</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
 
 	<scm>
 		<connection>scm:git:https://github.com/jrrdev/mantisbt-sync-core.git</connection>
