@@ -2,7 +2,7 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>mantisbt-sync</groupId>
-	<artifactId>core</artifactId>
+	<artifactId>mantisbt-sync-core</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>mantisbt-sync-core</name>
 	<description>Batch to synchronize a local database from a remote instance of Mantis Bug Tracker with Soap calls</description>
