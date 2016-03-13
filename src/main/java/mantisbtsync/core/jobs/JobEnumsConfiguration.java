@@ -23,6 +23,8 @@
  */
 package mantisbtsync.core.jobs;
 
+import mantisbtsync.core.common.listener.CloseAuthManagerListener;
+
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
@@ -50,11 +52,14 @@ public class JobEnumsConfiguration {
 	@Bean
 	public Job syncEnumsJob(final JobBuilderFactory jobs, final Step customFieldTypesStep, final Step etasStep,
 			final Step prioritiesStep, final Step projectionsStep, final Step projectStatusStep, final Step projectViewStatesStep,
-			final Step reproducibilitiesStep, final Step resolutionsStep, final Step severitiesStep, final Step statusStep) {
+			final Step reproducibilitiesStep, final Step resolutionsStep, final Step severitiesStep, final Step statusStep,
+			final Step authStep, final CloseAuthManagerListener closeAuthManagerListener) {
 
 		return jobs.get("syncEnumsJob")
 				.incrementer(new RunIdIncrementer())
-				.flow(customFieldTypesStep)
+				.listener(closeAuthManagerListener)
+				.flow(authStep)
+				.next(customFieldTypesStep)
 				.next(etasStep)
 				.next(prioritiesStep)
 				.next(projectionsStep)

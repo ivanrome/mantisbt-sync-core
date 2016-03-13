@@ -23,6 +23,7 @@
  */
 package mantisbtsync.core.jobs;
 
+import mantisbtsync.core.common.listener.CloseAuthManagerListener;
 import mantisbtsync.core.jobs.projects.beans.ProjectCategoryBean;
 import mantisbtsync.core.jobs.projects.beans.ProjectCustomFieldBean;
 import mantisbtsync.core.jobs.projects.decider.ProjectFlowDecider;
@@ -67,7 +68,8 @@ public class JobProjectsConfiguration {
 
 	@Bean
 	public Job syncProjectsJob(final JobBuilderFactory jobs, final Step mantisProjectsListStep,
-			final Flow projectInitFlow, final JobExecutionDecider jobProjectInitFlowDecider) {
+			final Flow projectInitFlow, final JobExecutionDecider jobProjectInitFlowDecider,
+			final Step authStep, final CloseAuthManagerListener closeAuthManagerListener) {
 
 		final FlowBuilder<Flow> loopBuilder = new FlowBuilder<Flow>("projectInitLoop");
 		final Flow loop = loopBuilder.start(projectInitFlow)
@@ -79,7 +81,9 @@ public class JobProjectsConfiguration {
 
 		return jobs.get("syncProjectsJob")
 				.incrementer(new RunIdIncrementer())
-				.flow(mantisProjectsListStep)
+				.listener(closeAuthManagerListener)
+				.flow(authStep)
+				.next(mantisProjectsListStep)
 				.next(loop)
 				.end()
 				.build();

@@ -23,6 +23,7 @@
  */
 package mantisbtsync.core.jobs;
 
+import mantisbtsync.core.common.listener.CloseAuthManagerListener;
 import mantisbtsync.core.jobs.issues.beans.BugBean;
 import mantisbtsync.core.jobs.issues.readers.IssuesReader;
 import mantisbtsync.core.jobs.issues.tasklets.IssuesLastRunExtractorTasklet;
@@ -52,11 +53,13 @@ public class JobIssuesConfiguration {
 
 	@Bean
 	public Job syncEnumsJob(final JobBuilderFactory jobs, final Step issuesLastSuccessExtractorStep,
-			final Step issuesSyncStep) {
+			final Step issuesSyncStep, final Step authStep, final CloseAuthManagerListener closeAuthManagerListener) {
 
 		return jobs.get("syncIssuesJob")
 				.incrementer(new RunIdIncrementer())
-				.flow(issuesLastSuccessExtractorStep)
+				.listener(closeAuthManagerListener)
+				.flow(authStep)
+				.next(issuesLastSuccessExtractorStep)
 				.next(issuesSyncStep)
 				.end()
 				.build();

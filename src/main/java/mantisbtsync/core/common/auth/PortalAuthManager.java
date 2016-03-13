@@ -35,6 +35,7 @@ import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.client.LaxRedirectStrategy;
+import org.springframework.batch.core.ExitStatus;
 
 /**
  * Manage a connection through http to get an authenfication cookie.
@@ -90,7 +91,7 @@ public class PortalAuthManager {
 	 * @throws IOException
 	 * @throws ClientProtocolException
 	 */
-	public void authentificate() throws ClientProtocolException, IOException {
+	public ExitStatus authentificate() throws ClientProtocolException, IOException {
 		authCookie = null;
 
 		if (firstRequest != null) {
@@ -113,6 +114,8 @@ public class PortalAuthManager {
 
 			authCookie = strBuff.toString();
 		}
+
+		return ExitStatus.COMPLETED;
 	}
 
 	/**
