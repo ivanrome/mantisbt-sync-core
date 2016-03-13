@@ -51,6 +51,7 @@ public class BugsWriterTest extends AbstractSqlWriterTest {
 
 	@Test
 	public void test() throws Exception {
+
 		final Operation op = insertInto("mantis_project_table")
 				.columns("id", "name")
 				.values(1, "project_1")

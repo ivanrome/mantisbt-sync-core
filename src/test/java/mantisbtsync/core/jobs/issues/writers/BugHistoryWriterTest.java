@@ -39,7 +39,6 @@ import mantisbtsync.core.junit.AbstractSqlWriterTest;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.ninja_squad.dbsetup.Operations;
 import com.ninja_squad.dbsetup.operation.Operation;
 
 /**
@@ -53,8 +52,6 @@ public class BugHistoryWriterTest extends AbstractSqlWriterTest {
 
 	@Test
 	public void test() throws Exception {
-
-		lauchOperation(Operations.deleteAllFrom("mantis_bug_history_table"));
 
 		final Operation op = sequenceOf(
 				insertInto("mantis_project_table")

@@ -23,8 +23,10 @@
  */
 package mantisbtsync.core.junit;
 
+import static com.ninja_squad.dbsetup.Operations.deleteAllFrom;
 import mantisbtsync.core.Application;
 
+import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.springframework.batch.test.StepScopeTestExecutionListener;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,5 +79,32 @@ public abstract class AbstractSqlWriterTest {
 
 	public final void setJdbcTemplate(final JdbcTemplate jdbcTemplate) {
 		this.jdbcTemplate = jdbcTemplate;
+	}
+
+	@Before
+	public void preparaDatabase() {
+		lauchOperation(deleteAllFrom(
+				"mantis_bug_history_table",
+				"mantis_custom_field_string_table",
+				"mantis_bugnote_table",
+				"mantis_bug_table",
+				"mantis_custom_field_project_table",
+				"mantis_custom_field_table",
+				"mantis_category_table",
+				"mantis_project_user_list_table",
+				"mantis_user_table",
+				"mantis_project_version_table",
+				"mantis_project_hierarchy_table",
+				"mantis_project_table",
+				"mantis_enum_custom_field_types",
+				"mantis_enum_etas",
+				"mantis_enum_priorities",
+				"mantis_enum_projections",
+				"mantis_enum_project_status",
+				"mantis_enum_project_view_states",
+				"mantis_enum_reproducibilities",
+				"mantis_enum_resolutions",
+				"mantis_enum_severities",
+				"mantis_enum_status"));
 	}
 }

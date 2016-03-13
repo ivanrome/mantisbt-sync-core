@@ -50,6 +50,7 @@ public class BugCustomFieldsWriterTest extends AbstractSqlWriterTest {
 
 	@Test
 	public void test() throws Exception {
+
 		final Operation op = sequenceOf(
 				insertInto("mantis_project_table")
 				.columns("id", "name")

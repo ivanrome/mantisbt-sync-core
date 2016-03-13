@@ -23,7 +23,6 @@
  */
 package mantisbtsync.core.jobs.projects;
 
-import static com.ninja_squad.dbsetup.Operations.deleteAllFrom;
 import static com.ninja_squad.dbsetup.Operations.insertInto;
 import static com.ninja_squad.dbsetup.Operations.sequenceOf;
 import static org.junit.Assert.assertEquals;
@@ -74,16 +73,6 @@ public class ProjectsUserWriterTest extends AbstractSqlWriterTest {
 
 	@Test
 	public void test() throws Exception {
-
-		lauchOperation(deleteAllFrom("mantis_project_user_list_table",
-				"mantis_user_table",
-				"mantis_custom_field_project_table",
-				"mantis_custom_field_table",
-				"mantis_enum_custom_field_types",
-				"mantis_project_hierarchy_table",
-				"mantis_category_table",
-				"mantis_project_version_table",
-				"mantis_project_table"));
 
 		final Operation op = sequenceOf(
 				insertInto("mantis_project_table")
