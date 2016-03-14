@@ -23,6 +23,7 @@
  */
 package mantisbtsync.core.common;
 
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -58,8 +59,14 @@ public class CommonConfiguration {
 	}
 
 	@Bean
-	public PortalAuthManager authManager(@Value("${mantis.auth.filepath:}") final String filepath) throws JAXBException {
-		return PortalAuthBuilder.buildAuthManager(filepath);
+	public PortalAuthBuilder authBuilder() {
+		return new PortalAuthBuilder();
+	}
+
+	@Bean
+	public PortalAuthManager authManager(@Value("${mantis.auth.filepath:}") final String filepath,
+			final PortalAuthBuilder authBuilder) throws JAXBException, IOException {
+		return authBuilder.buildAuthManager(filepath);
 	}
 
 	@Bean

@@ -24,6 +24,7 @@
 package mantisbtsync.core.common.auth;
 
 import java.io.File;
+import java.io.IOException;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -37,23 +38,29 @@ import mantisbtsync.core.common.auth.request.AbstractAuthHttpRequest;
 import mantisbtsync.core.common.auth.request.AuthHttpGet;
 import mantisbtsync.core.common.auth.request.AuthHttpPost;
 
+import org.springframework.context.ResourceLoaderAware;
+import org.springframework.core.io.ResourceLoader;
+
 /**
  * @author jdevarulrajah
  *
  */
-public class PortalAuthBuilder {
+public class PortalAuthBuilder implements ResourceLoaderAware {
+
+	private ResourceLoader resourceLoader;
 
 	/**
 	 * Private constructor.
 	 */
-	private PortalAuthBuilder() {
+	public PortalAuthBuilder() {
 	}
 
-	public static PortalAuthManager buildAuthManager(final String filepath) throws JAXBException {
+	public PortalAuthManager buildAuthManager(final String filepath) throws JAXBException, IOException {
 		final PortalAuthManager mgr = new PortalAuthManager();
 
 		if (filepath != null && !filepath.isEmpty()) {
-			final File file = new File(filepath);
+
+			final File file = resourceLoader.getResource(filepath).getFile();
 
 			if (file.exists() && file.isFile() && file.canRead()) {
 				final JAXBContext jaxbContext = JAXBContext.newInstance(AuthSequenceBean.class);
@@ -69,7 +76,7 @@ public class PortalAuthBuilder {
 		return mgr;
 	}
 
-	private static AbstractAuthHttpRequest buildRequest(final HttpRequestBean reqBean) {
+	private AbstractAuthHttpRequest buildRequest(final HttpRequestBean reqBean) {
 		AbstractAuthHttpRequest req = null;
 
 		if (reqBean != null) {
@@ -92,5 +99,10 @@ public class PortalAuthBuilder {
 		}
 
 		return req;
+	}
+
+	@Override
+	public void setResourceLoader(final ResourceLoader pResourceLoader) {
+		resourceLoader = pResourceLoader;
 	}
 }
