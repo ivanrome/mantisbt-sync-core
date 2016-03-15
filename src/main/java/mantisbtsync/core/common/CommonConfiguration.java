@@ -34,8 +34,10 @@ import mantisbtsync.core.common.auth.PortalAuthBuilder;
 import mantisbtsync.core.common.auth.PortalAuthManager;
 
 import org.apache.axis.AxisFault;
+import org.apache.axis.MessageContext;
 import org.apache.axis.client.Stub;
 import org.apache.axis.configuration.BasicClientConfig;
+import org.apache.axis.transport.http.HTTPConstants;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -78,7 +80,10 @@ public class CommonConfiguration {
 
 		final MantisConnectLocator loc = new MantisConnectLocator(new BasicClientConfig());
 		loc.setMantisConnectPortEndpointAddress(endpoint);
-		final MantisConnectBindingStub stub = new MantisConnectBindingStub(new URL("http://www.mantisbt.org/bugs/api/soap/mantisconnect.php"), loc);
+		final MantisConnectBindingStub stub = new MantisConnectBindingStub(new URL(endpoint), loc);
+		stub._setProperty(MessageContext.HTTP_TRANSPORT_VERSION, HTTPConstants.HEADER_PROTOCOL_V11);
+		stub.setMaintainSession(true);
+
 		return stub;
 	}
 }
