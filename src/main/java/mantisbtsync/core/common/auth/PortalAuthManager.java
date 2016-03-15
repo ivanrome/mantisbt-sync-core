@@ -30,6 +30,7 @@ import mantisbtsync.core.common.auth.request.AbstractAuthHttpRequest;
 
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.CookieStore;
+import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.cookie.Cookie;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -66,18 +67,10 @@ public class PortalAuthManager {
 	private String authCookie = null;
 
 	/**
-	 * @param firstRequest the firstRequest to set
+	 * Last response received in the sequence. It isn't close until close()
+	 * is called to keep the connection open.
 	 */
-	public void setFirstRequest(final AbstractAuthHttpRequest firstRequest) {
-		this.firstRequest = firstRequest;
-	}
-
-	/**
-	 * @return the authCookie
-	 */
-	public String getAuthCookie() {
-		return authCookie;
-	}
+	private final CloseableHttpResponse lastResponse = null;
 
 	/**
 	 * Default constructor.
@@ -125,8 +118,61 @@ public class PortalAuthManager {
 	 */
 	public void close() throws IOException {
 		authCookie = null;
+		if (lastResponse != null) {
+			lastResponse.close();
+		}
+
 		if (client != null) {
 			client.close();
 		}
+	}
+
+	/**
+	 * @return the client
+	 */
+	public CloseableHttpClient getClient() {
+		return client;
+	}
+
+	/**
+	 * @param client the client to set
+	 */
+	public void setClient(final CloseableHttpClient client) {
+		this.client = client;
+	}
+
+	/**
+	 * @return the firstRequest
+	 */
+	public AbstractAuthHttpRequest getFirstRequest() {
+		return firstRequest;
+	}
+
+	/**
+	 * @param firstRequest the firstRequest to set
+	 */
+	public void setFirstRequest(final AbstractAuthHttpRequest firstRequest) {
+		this.firstRequest = firstRequest;
+	}
+
+	/**
+	 * @return the authCookie
+	 */
+	public String getAuthCookie() {
+		return authCookie;
+	}
+
+	/**
+	 * @param authCookie the authCookie to set
+	 */
+	public void setAuthCookie(final String authCookie) {
+		this.authCookie = authCookie;
+	}
+
+	/**
+	 * @return the cookieStore
+	 */
+	public CookieStore getCookieStore() {
+		return cookieStore;
 	}
 }

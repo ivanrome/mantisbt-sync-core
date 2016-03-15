@@ -25,8 +25,6 @@ package mantisbtsync.core.junit;
 
 import javax.sql.DataSource;
 
-import mantisbtsync.core.common.auth.PortalAuthManager;
-
 import org.apache.axis.AxisFault;
 import org.apache.axis.client.Stub;
 import org.springframework.context.annotation.Bean;
@@ -49,11 +47,6 @@ public class JunitTestConfiguration {
 	@Bean
 	public Destination dbSetupDest(final DataSource dataSource) {
 		return new DataSourceDestination(dataSource);
-	}
-
-	@Bean
-	public PortalAuthManager authManager() {
-		return new PortalAuthManager();
 	}
 
 	@Bean

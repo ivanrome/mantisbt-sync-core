@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<authsequence>
+	<firstRequest>
+		<uri>http://en.wikipedia.org/wiki/Main_Page</uri>
+		<get />
+		<nextRequest>
+			<uri><![CDATA[http://en.wikipedia.org/w/index.php?search=mantis+bug+tracker&title=Special%3ASearch&fulltext=Search]]></uri>
+			<get />
+		</nextRequest>
+	</firstRequest>
+</authsequence>

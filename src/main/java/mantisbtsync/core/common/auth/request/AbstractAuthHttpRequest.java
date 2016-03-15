@@ -83,7 +83,7 @@ public abstract class AbstractAuthHttpRequest {
 	 * @throws ClientProtocolException
 	 * 			in case of an http protocol error
 	 */
-	public final void executeSequence(final CloseableHttpClient client) throws IOException, ClientProtocolException {
+	public final CloseableHttpResponse executeSequence(final CloseableHttpClient client) throws IOException, ClientProtocolException {
 		// TODO : throw exception if initialization is incorrect
 		init();
 		CloseableHttpResponse response = null;
@@ -101,14 +101,19 @@ public abstract class AbstractAuthHttpRequest {
 
 		} finally {
 			// Close the resource before executing the next request
-			if (response != null) {
+			if (response != null && nextRequest != null) {
 				response.close();
 			}
 		}
 
+		CloseableHttpResponse lastResponse;
 		if (nextRequest != null) {
-			nextRequest.executeSequence(client);
+			lastResponse = nextRequest.executeSequence(client);
+		} else {
+			lastResponse = response;
 		}
+
+		return lastResponse;
 	}
 
 	/**
