@@ -24,6 +24,7 @@
 package mantisbtsync.core.jobs.projects.tasklets;
 
 import java.math.BigInteger;
+import java.rmi.RemoteException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -38,7 +39,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.util.Assert;
 
 import biz.futureware.mantis.rpc.soap.client.MantisConnectBindingStub;
-import biz.futureware.mantis.rpc.soap.client.ProjectData;
 
 /**
  * Tasklet to read the projects list.
@@ -53,10 +53,9 @@ public class ProjectsListTasklet implements Tasklet {
 	 */
 	public static final String MERGE_PROJECT_TABLE =
 			"MERGE INTO mantis_project_table dest\n"
-					+ " USING (SELECT ? as id, ? as name FROM dual) src\n"
+					+ " USING (SELECT ? as id FROM dual) src\n"
 					+ " ON (dest.id = src.id)\n"
-					+ " WHEN NOT MATCHED THEN INSERT (id, name) VALUES (src.id, src.name)\n"
-					+ " WHEN MATCHED THEN UPDATE SET dest.name = src.name";
+					+ " WHEN NOT MATCHED THEN INSERT (id) VALUES (src.id)";
 
 	/**
 	 * SQL request to merge data into the table mantis_project_hierarchy_table.
@@ -191,19 +190,16 @@ public class ProjectsListTasklet implements Tasklet {
 
 		Assert.notNull(clientStub);
 
-		// Si on a renseignÃ© un authManager, on cherche Ã  rÃ©cupÃ©rer le cookie
+		// Si on a renseigné un authManager, on cherche à récupérer le cookie
 		if (authManager != null && authManager.getAuthCookie() != null) {
 			clientStub._setProperty(HTTPConstants.HEADER_COOKIE,
 					authManager.getAuthCookie());
 		}
 
-		final ProjectData[] projects = clientStub.mc_projects_get_user_accessible(userName, password);
 		final Set<BigInteger> projectsId = new HashSet<BigInteger>();
-		final int n = projects.length;
-
-		for (int i = 0; i < n; i++) {
-			recursiveFilter(projects[i], projectsId);
-		}
+		projectsId.add(projectId);
+		insertIntoDb(projectId, null);
+		searchAndInsertSubProject(projectId, projectsId);
 
 		chunkContext.getStepContext().getStepExecution().getExecutionContext()
 		.put("mantis.loop.projects_to_process", projectsId);
@@ -211,36 +207,24 @@ public class ProjectsListTasklet implements Tasklet {
 		return RepeatStatus.FINISHED;
 	}
 
-	private void recursiveFilter(final ProjectData project, final Set<BigInteger> projectsId) {
-		if (projectId == null || projectId.equals(project.getId())) {
-			insertIntoDb(project, projectsId, null);
-		} else {
-			final ProjectData[] childs = project.getSubprojects();
-			if (childs != null) {
-				final int n = childs.length;
-				for (int i = 0; i < n; i++) {
-					recursiveFilter(childs[i], projectsId);
-				}
-			}
+	private void searchAndInsertSubProject(final BigInteger projectId,
+			final Set<BigInteger> projectsId) throws RemoteException {
+
+		final String[] idStrList = clientStub.mc_project_get_all_subprojects(userName, password, projectId);
+		for (final String idStr : idStrList) {
+			final BigInteger subProjectId = BigInteger.valueOf(Long.parseLong(idStr));
+			projectsId.add(subProjectId);
+
+			insertIntoDb(subProjectId, projectId);
+			searchAndInsertSubProject(subProjectId, projectsId);
 		}
 	}
 
-	private void insertIntoDb(final ProjectData project, final Set<BigInteger> projectsId,
-			final BigInteger parentProject) {
+	private void insertIntoDb(final BigInteger projectId, final BigInteger parentProjectId) {
 
-		jdbcTemplate.update(MERGE_PROJECT_TABLE, project.getId(), project.getName());
-		if (parentProject != null) {
-			jdbcTemplate.update(MERGE_PROJECT__HIERARCHY_TABLE, parentProject, project.getId());
-		}
-
-		projectsId.add(project.getId());
-
-		final ProjectData[] childs = project.getSubprojects();
-		if (childs != null) {
-			final int n = childs.length;
-			for (int i = 0; i < n; i++) {
-				insertIntoDb(childs[i], projectsId, project.getId());
-			}
+		jdbcTemplate.update(MERGE_PROJECT_TABLE, projectId);
+		if (parentProjectId != null) {
+			jdbcTemplate.update(MERGE_PROJECT__HIERARCHY_TABLE, parentProjectId, projectId);
 		}
 	}
 
