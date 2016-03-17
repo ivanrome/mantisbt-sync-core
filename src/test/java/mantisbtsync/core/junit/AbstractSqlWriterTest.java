@@ -56,10 +56,10 @@ import com.ninja_squad.dbsetup.operation.Operation;
 public abstract class AbstractSqlWriterTest {
 
 	@Autowired
-	Destination dbSetupDest;
+	private Destination dbSetupDest;
 
 	@Autowired
-	JdbcTemplate jdbcTemplate;
+	private JdbcTemplate jdbcTemplate;
 
 	protected final void lauchOperation(final Operation op) {
 		new DbSetup(dbSetupDest, op).launch();

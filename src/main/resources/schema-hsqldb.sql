@@ -60,7 +60,7 @@ CREATE TABLE mantis_enum_status  (
 
 CREATE TABLE mantis_project_table  (
     id int NOT NULL PRIMARY KEY,
-    name varchar(128) NOT NULL
+    name varchar(128)
 );
 
 CREATE TABLE mantis_project_hierarchy_table  (
@@ -83,7 +83,7 @@ CREATE TABLE mantis_category_table  (
 CREATE TABLE mantis_custom_field_table  (
     id int NOT NULL PRIMARY KEY,
     name varchar(64) NOT NULL,
-    type_id int NOT NULL,
+    type_id int,
     possible_values text,
     default_value varchar(255),
     valid_regexp varchar(255),

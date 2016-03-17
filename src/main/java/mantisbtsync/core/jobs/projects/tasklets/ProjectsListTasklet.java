@@ -51,7 +51,7 @@ public class ProjectsListTasklet implements Tasklet {
 	/**
 	 * SQL request to merge data into the table mantis_project_table.
 	 */
-	private static final String MERGE_PROJECT_TABLE =
+	public static final String MERGE_PROJECT_TABLE =
 			"MERGE INTO mantis_project_table dest\n"
 					+ " USING (SELECT ? as id, ? as name FROM dual) src\n"
 					+ " ON (dest.id = src.id)\n"

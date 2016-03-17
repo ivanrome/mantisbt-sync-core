@@ -27,6 +27,7 @@ import mantisbtsync.core.common.CommonConfiguration;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -38,10 +39,12 @@ import org.springframework.context.annotation.Import;
  *
  */
 @Configuration
+@EnableCaching
 @EnableAutoConfiguration
 @Import(CommonConfiguration.class)
 @ComponentScan({"mantisbtsync.core.jobs.enums", "mantisbtsync.core.jobs.projects",
-	"mantisbtsync.core.jobs.issues", "mantisbtsync.core.jobs.common"})
+	"mantisbtsync.core.jobs.issues", "mantisbtsync.core.jobs.common",
+"mantisbtsync.core.services"})
 public class Application {
 
 	/**
