@@ -26,6 +26,7 @@ package mantisbtsync.core.jobs;
 import mantisbtsync.core.common.auth.PortalAuthManager;
 import mantisbtsync.core.common.listener.CloseAuthManagerListener;
 import mantisbtsync.core.jobs.issues.beans.BugBean;
+import mantisbtsync.core.jobs.issues.processors.IssuesProcessor;
 import mantisbtsync.core.jobs.issues.readers.IssuesReader;
 import mantisbtsync.core.jobs.issues.tasklets.IssuesLastRunExtractorTasklet;
 
@@ -39,6 +40,8 @@ import org.springframework.batch.core.step.tasklet.MethodInvokingTaskletAdapter;
 import org.springframework.batch.item.support.CompositeItemWriter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import biz.futureware.mantis.rpc.soap.client.IssueData;
 
 /**
  * Configuration for the job of Mantis issues syncing.
@@ -96,11 +99,13 @@ public class JobIssuesConfiguration {
 	@Bean
 	public Step issuesSyncStep(final StepBuilderFactory stepBuilderFactory,
 			final IssuesReader issuesReader,
+			final IssuesProcessor issuesProcessor,
 			final CompositeItemWriter<BugBean> compositeIssuesWriter) {
 
 		return stepBuilderFactory.get("issuesSyncStep")
-				.<BugBean, BugBean> chunk(20)
+				.<IssueData, BugBean> chunk(20)
 				.reader(issuesReader)
+				.processor(issuesProcessor)
 				.writer(compositeIssuesWriter)
 				.build();
 	}
