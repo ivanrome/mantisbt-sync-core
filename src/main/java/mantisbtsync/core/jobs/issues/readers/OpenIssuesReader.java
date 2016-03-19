@@ -27,33 +27,19 @@ import java.math.BigInteger;
 import java.util.Calendar;
 import java.util.Date;
 
-import mantisbtsync.core.common.auth.PortalAuthManager;
-
 import org.apache.axis.transport.http.HTTPConstants;
-import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.NonTransientResourceException;
 import org.springframework.batch.item.ParseException;
 import org.springframework.batch.item.UnexpectedInputException;
 import org.springframework.util.Assert;
 
 import biz.futureware.mantis.rpc.soap.client.IssueData;
-import biz.futureware.mantis.rpc.soap.client.MantisConnectBindingStub;
 
 /**
  * @author jdevarulrajah
  *
  */
-public class OpenIssuesReader implements ItemReader<IssueData> {
-
-	/**
-	 * Auth manager.
-	 */
-	private PortalAuthManager authManager;
-
-	/**
-	 * Client stub generate by Apache Axis.
-	 */
-	private MantisConnectBindingStub clientStub;
+public class OpenIssuesReader extends AbstractIssuesReader {
 
 	private int currentPage = 0;
 
@@ -69,37 +55,25 @@ public class OpenIssuesReader implements ItemReader<IssueData> {
 
 	private static final BigInteger PAGE_SIZE = BigInteger.valueOf(20);
 
-	/**
-	 * Mantis username.
-	 */
-	private String userName;
-
-	/**
-	 * Pantis password.
-	 */
-	private String password;
-
 	private Calendar lastJobRun = null;
-
-	private BigInteger projectId;
 
 	@Override
 	public IssueData read() throws Exception, UnexpectedInputException,
 	ParseException, NonTransientResourceException {
 
-		Assert.notNull(clientStub);
+		Assert.notNull(getClientStub());
 
 		// If auth manager is set, try to get the cookie
-		if (authManager != null && authManager.getAuthCookie() != null) {
-			clientStub._setProperty(HTTPConstants.HEADER_COOKIE,
-					authManager.getAuthCookie());
+		if (getAuthManager() != null && getAuthManager().getAuthCookie() != null) {
+			getClientStub()._setProperty(HTTPConstants.HEADER_COOKIE,
+					getAuthManager().getAuthCookie());
 		}
 
 		if (i < 0 || i >= (items.length - 1)) {
 			currentPage++;
 			i = -1;
-			items = clientStub.mc_project_get_issues(userName, password, projectId,
-					BigInteger.valueOf(currentPage), PAGE_SIZE);
+			items = getClientStub().mc_project_get_issues(getUserName(), getPassword(),
+					getProjectId(), BigInteger.valueOf(currentPage), PAGE_SIZE);
 		}
 
 		i++;
@@ -122,62 +96,6 @@ public class OpenIssuesReader implements ItemReader<IssueData> {
 	}
 
 	/**
-	 * @return the authManager
-	 */
-	public PortalAuthManager getAuthManager() {
-		return authManager;
-	}
-
-	/**
-	 * @param authManager the authManager to set
-	 */
-	public void setAuthManager(final PortalAuthManager authManager) {
-		this.authManager = authManager;
-	}
-
-	/**
-	 * @return the clientStub
-	 */
-	public MantisConnectBindingStub getClientStub() {
-		return clientStub;
-	}
-
-	/**
-	 * @param clientStub the clientStub to set
-	 */
-	public void setClientStub(final MantisConnectBindingStub clientStub) {
-		this.clientStub = clientStub;
-	}
-
-	/**
-	 * @return the userName
-	 */
-	public String getUserName() {
-		return userName;
-	}
-
-	/**
-	 * @param userName the userName to set
-	 */
-	public void setUserName(final String userName) {
-		this.userName = userName;
-	}
-
-	/**
-	 * @return the password
-	 */
-	public String getPassword() {
-		return password;
-	}
-
-	/**
-	 * @param password the password to set
-	 */
-	public void setPassword(final String password) {
-		this.password = password;
-	}
-
-	/**
 	 * @return the lastJobRun
 	 */
 	public Calendar getLastJobRun() {
@@ -194,19 +112,5 @@ public class OpenIssuesReader implements ItemReader<IssueData> {
 		} else {
 			lastJobRun = null;
 		}
-	}
-
-	/**
-	 * @return the projectId
-	 */
-	public BigInteger getProjectId() {
-		return projectId;
-	}
-
-	/**
-	 * @param projectId the projectId to set
-	 */
-	public void setProjectId(final BigInteger projectId) {
-		this.projectId = projectId;
 	}
 }

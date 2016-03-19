@@ -24,6 +24,8 @@
 package mantisbtsync.core.services;
 
 import java.math.BigInteger;
+import java.util.Calendar;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
@@ -62,6 +64,10 @@ public class JdbcIssuesService implements IssuesDao {
 			+ " (project_id, field_id) values (?, ?)";
 
 	private static final String SQL_GET_BIGGEST_ID = "SELECT NVL(MAX(bug.id), 0) FROM mantis_bug_table bug";
+
+	private static final String SQL_GET_NOT_CLOSED_ISSUES_ID = "SELECT bug.id FROM mantis_bug_table bug\n"
+			+ " WHERE bug.status_id <> 90\n"
+			+ " AND bug.last_sync <= ?";
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
@@ -226,6 +232,16 @@ public class JdbcIssuesService implements IssuesDao {
 	@Override
 	public BigInteger getIssuesBiggestId() {
 		return jdbcTemplate.queryForObject(SQL_GET_BIGGEST_ID, BigInteger.class);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * @see mantisbtsync.core.services.IssuesDao#getNotClosedIssuesId(java.sql.Date)
+	 */
+	@Override
+	public List<BigInteger> getNotClosedIssuesId(final Calendar jobStartTime) {
+		final java.sql.Timestamp time = new java.sql.Timestamp(jobStartTime.getTimeInMillis());
+		return jdbcTemplate.queryForList(SQL_GET_NOT_CLOSED_ISSUES_ID, BigInteger.class, time);
 	}
 
 	private boolean existsById(final String table, final BigInteger id) {

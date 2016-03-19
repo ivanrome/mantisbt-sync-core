@@ -160,6 +160,7 @@ CREATE TABLE mantis_bug_table (
 	category varchar(128),
 	date_submitted datetime,
 	last_updated datetime,
+	last_sync datetime NOT NULL,
 	
 	CONSTRAINT FK_BUG_PRJ FOREIGN KEY (project_id) REFERENCES mantis_project_table(id),
 	CONSTRAINT FK_BUG_REP FOREIGN KEY (reporter_id) REFERENCES mantis_user_table(id),

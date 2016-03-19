@@ -24,6 +24,8 @@
 package mantisbtsync.core.jobs.issues.readers;
 
 import java.math.BigInteger;
+import java.util.Calendar;
+import java.util.List;
 
 import org.apache.axis.transport.http.HTTPConstants;
 import org.springframework.batch.item.NonTransientResourceException;
@@ -37,11 +39,13 @@ import biz.futureware.mantis.rpc.soap.client.IssueData;
  * @author jdevarulrajah
  *
  */
-public class NewIssuesReader extends AbstractIssuesReader {
+public class OtherIssuesReader extends AbstractIssuesReader {
 
-	private long remoteBiggestId = -1;
+	private List<BigInteger> issues = null;
 
-	private long currentId = -1;
+	private int index = 0;
+
+	private Calendar jobStartTime = null;
 
 	@Override
 	public IssueData read() throws Exception, UnexpectedInputException,
@@ -55,32 +59,33 @@ public class NewIssuesReader extends AbstractIssuesReader {
 					getAuthManager().getAuthCookie());
 		}
 
-		if (remoteBiggestId == -1) {
-			remoteBiggestId = getClientStub().mc_issue_get_biggest_id(getUserName(),
-					getPassword(), getProjectId()).longValue();
-		}
-
-		if (currentId == -1) {
-			currentId = getDao().getIssuesBiggestId().longValue() + 1;
+		if (issues == null) {
+			issues = getDao().getNotClosedIssuesId(jobStartTime);
+			index = 0;
 		}
 
 		IssueData item = null;
-		boolean itemFound = false;
-		long itemFoundId = -1;
-
-		while (!itemFound && currentId <= remoteBiggestId) {
-			itemFound = getClientStub().mc_issue_exists(getUserName(), getPassword(), BigInteger.valueOf(currentId));
-			if (itemFound) {
-				itemFoundId = currentId;
-			}
-
-			currentId++;
-		}
-
-		if (itemFound) {
-			item = getClientStub().mc_issue_get(getUserName(), getPassword(), BigInteger.valueOf(itemFoundId));
+		if (issues != null  && index < issues.size()) {
+			final BigInteger issueId = issues.get(index);
+			item = getClientStub().mc_issue_get(getUserName(), getPassword(), issueId);
+			index++;
 		}
 
 		return item;
+
+	}
+
+	/**
+	 * @return the jobStartTime
+	 */
+	public Calendar getJobStartTime() {
+		return jobStartTime;
+	}
+
+	/**
+	 * @param jobStartTime the jobStartTime to set
+	 */
+	public void setJobStartTime(final Calendar jobStartTime) {
+		this.jobStartTime = jobStartTime;
 	}
 }

@@ -24,6 +24,8 @@
 package mantisbtsync.core.services;
 
 import java.math.BigInteger;
+import java.util.Calendar;
+import java.util.List;
 
 import biz.futureware.mantis.rpc.soap.client.AccountData;
 import biz.futureware.mantis.rpc.soap.client.ObjectRef;
@@ -49,4 +51,6 @@ public interface IssuesDao {
 	public void insertCustomFieldIfNotExists(final ObjectRef item, final BigInteger parentProjectId);
 
 	public BigInteger getIssuesBiggestId();
+
+	public List<BigInteger> getNotClosedIssuesId(Calendar jobStartTime);
 }

@@ -30,6 +30,7 @@ import mantisbtsync.core.jobs.issues.deciders.SkipNewIssuesStepDecider;
 import mantisbtsync.core.jobs.issues.processors.IssuesProcessor;
 import mantisbtsync.core.jobs.issues.readers.NewIssuesReader;
 import mantisbtsync.core.jobs.issues.readers.OpenIssuesReader;
+import mantisbtsync.core.jobs.issues.readers.OtherIssuesReader;
 import mantisbtsync.core.jobs.issues.tasklets.IssuesLastRunExtractorTasklet;
 
 import org.springframework.batch.core.Job;
@@ -63,18 +64,19 @@ public class JobIssuesConfiguration {
 	@Bean
 	public Job syncIssuesJob(final JobBuilderFactory jobs, final Step issuesLastSuccessExtractorStep,
 			final Step newIssuesSyncStep, final SkipNewIssuesStepDecider skipNewIssuesStepDecider,
-			final Step openIssuesSyncStep, final Step authIssuesStep,
+			final Step openIssuesSyncStep, final Step otherIssuesSyncStep, final Step authIssuesStep,
 			final CloseAuthManagerListener closeIssuesListener) {
 
 		final Flow issuesMainFlow = new FlowBuilder<Flow>("issuesMainFlow")
-				.start(issuesLastSuccessExtractorStep)
-				.next(openIssuesSyncStep)
+				.start(openIssuesSyncStep)
+				.next(otherIssuesSyncStep)
 				.build();
 
 		return jobs.get("syncIssuesJob")
 				.incrementer(new RunIdIncrementer())
 				.listener(closeIssuesListener)
 				.flow(authIssuesStep)
+				.next(issuesLastSuccessExtractorStep)
 				.next(skipNewIssuesStepDecider)
 				.on(SkipNewIssuesStepDecider.NO_SKIP_STEP)
 				.to(newIssuesSyncStep)
@@ -135,6 +137,20 @@ public class JobIssuesConfiguration {
 		return stepBuilderFactory.get("openIssuesSyncStep")
 				.<IssueData, BugBean> chunk(20)
 				.reader(openIssuesReader)
+				.processor(issuesProcessor)
+				.writer(compositeIssuesWriter)
+				.build();
+	}
+
+	@Bean
+	public Step otherIssuesSyncStep(final StepBuilderFactory stepBuilderFactory,
+			final OtherIssuesReader otherIssuesReader,
+			final IssuesProcessor issuesProcessor,
+			final CompositeItemWriter<BugBean> compositeIssuesWriter) {
+
+		return stepBuilderFactory.get("otherIssuesSyncStep")
+				.<IssueData, BugBean> chunk(20)
+				.reader(otherIssuesReader)
 				.processor(issuesProcessor)
 				.writer(compositeIssuesWriter)
 				.build();

@@ -23,6 +23,7 @@
  */
 package mantisbtsync.core.jobs.issues.tasklets;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -89,6 +90,9 @@ public class IssuesLastRunExtractorTasklet implements Tasklet {
 			stepContext.getStepExecution().getExecutionContext()
 			.put("mantis.update.last_job_run", lastJobRun);
 		}
+
+		stepContext.getStepExecution().getExecutionContext()
+		.put("mantis.update.current_job_run", Calendar.getInstance());
 
 		return RepeatStatus.FINISHED;
 	}

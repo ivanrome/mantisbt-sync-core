@@ -85,24 +85,25 @@ public class IssuesWritersConfiguration {
 				+ " 		:platform as platform, :version as version,\n"
 				+ " 		:fixedInVersion as fixed_in_version, :targetVersion as target_version,\n"
 				+ " 		:summary as summary, :category as category, :dateSubmitted as date_submitted,\n"
-				+ " 		:lastUpdated as last_updated FROM dual) src\n"
+				+ " 		:lastUpdated as last_updated, sysdate() as last_sync FROM dual) src\n"
 				+ " ON (dest.id = src.id)\n"
 				+ " WHEN NOT MATCHED THEN INSERT (id, project_id, reporter_id, handler_id, priority_id, \n"
 				+ " 		severity_id, status_id, resolution_id, description, steps_to_reproduce, \n"
 				+ " 		additional_information, platform, version, fixed_in_version, target_version, \n"
-				+ " 		summary, category, date_submitted, last_updated) \n"
+				+ " 		summary, category, date_submitted, last_updated, last_sync) \n"
 				+ " 		      VALUES (src.id, src.project_id, src.reporter_id, src.handler_id, src.priority_id,\n"
 				+ " 				src.severity_id, src.status_id, src.resolution_id, src.description, \n"
 				+ " 				src.steps_to_reproduce, src.additional_information, src.platform, src.version,\n"
 				+ " 				src.fixed_in_version, src.target_version, src.summary, src.category, \n"
-				+ " 				src.date_submitted, src.last_updated)\n"
+				+ " 				src.date_submitted, src.last_updated, src.last_sync)\n"
 				+ " WHEN MATCHED THEN UPDATE SET dest.project_id = src.project_id, dest.reporter_id = src.reporter_id, \n"
 				+ " 	dest.handler_id = src.handler_id, dest.priority_id = src.priority_id, dest.severity_id = src.severity_id,\n"
 				+ " 	dest.status_id = src.status_id, dest.resolution_id = src.resolution_id, dest.description = src.description,\n"
 				+ " 	dest.steps_to_reproduce = src.steps_to_reproduce, dest.additional_information = src.additional_information,\n"
 				+ " 	dest.platform = src.platform, dest.version = src.version, dest.fixed_in_version = src.fixed_in_version,\n"
 				+ " 	dest.target_version = src.target_version, dest.summary = src.summary, dest.category = src.category,\n"
-				+ " 	dest.date_submitted = src.date_submitted, dest.last_updated = src.last_updated");
+				+ " 	dest.date_submitted = src.date_submitted, dest.last_updated = src.last_updated,\n"
+				+ "		dest.last_sync = src.last_sync");
 		writer.setDataSource(dataSource);
 		writer.setAssertUpdates(false);
 		return writer;

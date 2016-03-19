@@ -37,6 +37,7 @@ import mantisbtsync.core.junit.AbstractSqlWriterTest;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.ninja_squad.dbsetup.generator.ValueGenerators;
 import com.ninja_squad.dbsetup.operation.Operation;
 
 /**
@@ -58,8 +59,8 @@ public class BugCustomFieldsWriterTest extends AbstractSqlWriterTest {
 				.build(),
 
 				insertInto("mantis_bug_table")
-				.columns("id", "project_id", "summary")
-				.values(1, 1, "summary_1")
+				.columns("id", "project_id", "summary", "last_sync")
+				.values(1, 1, "summary_1", ValueGenerators.dateSequence().nextValue())
 				.build(),
 
 				insertInto("mantis_enum_custom_field_types")

@@ -50,7 +50,7 @@ public class IssuesTaskletsConfiguration {
 	@StepScope
 	public ExecutionContextPromotionListener mantisLastRunExtractorPromotionListener() {
 		final ExecutionContextPromotionListener listener = new ExecutionContextPromotionListener();
-		listener.setKeys(new String[] {"mantis.update.last_job_run"});
+		listener.setKeys(new String[] {"mantis.update.last_job_run", "mantis.update.current_job_run"});
 		return listener;
 	}
 

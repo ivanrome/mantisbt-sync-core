@@ -24,11 +24,13 @@
 package mantisbtsync.core.jobs.issues;
 
 import java.math.BigInteger;
+import java.util.Calendar;
 import java.util.Date;
 
 import mantisbtsync.core.common.auth.PortalAuthManager;
 import mantisbtsync.core.jobs.issues.readers.NewIssuesReader;
 import mantisbtsync.core.jobs.issues.readers.OpenIssuesReader;
+import mantisbtsync.core.jobs.issues.readers.OtherIssuesReader;
 
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.beans.factory.annotation.Value;
@@ -75,6 +77,26 @@ public class IssuesReadersConfiguration {
 		final NewIssuesReader reader = new NewIssuesReader();
 		reader.setAuthManager(authManager);
 		reader.setClientStub(clientStub);
+		reader.setPassword(password);
+		reader.setProjectId(projectId);
+		reader.setUserName(userName);
+
+		return reader;
+	}
+
+	@Bean
+	@StepScope
+	public OtherIssuesReader otherIssuesReader(final PortalAuthManager authManager,
+			final MantisConnectBindingStub clientStub,
+			@Value("#{jobParameters['mantis.username']}") final String userName,
+			@Value("#{jobParameters['mantis.password']}") final String password,
+			@Value("#{jobParameters['mantis.project_id']}") final BigInteger projectId,
+			@Value("#{jobExecutionContext['mantis.update.current_job_run']}") final Calendar jobRunTime) {
+
+		final OtherIssuesReader reader = new OtherIssuesReader();
+		reader.setAuthManager(authManager);
+		reader.setClientStub(clientStub);
+		reader.setJobStartTime(jobRunTime);
 		reader.setPassword(password);
 		reader.setProjectId(projectId);
 		reader.setUserName(userName);
