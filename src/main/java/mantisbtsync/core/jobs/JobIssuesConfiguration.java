@@ -27,7 +27,7 @@ import mantisbtsync.core.common.auth.PortalAuthManager;
 import mantisbtsync.core.common.listener.CloseAuthManagerListener;
 import mantisbtsync.core.jobs.issues.beans.BugBean;
 import mantisbtsync.core.jobs.issues.processors.IssuesProcessor;
-import mantisbtsync.core.jobs.issues.readers.IssuesReader;
+import mantisbtsync.core.jobs.issues.readers.OpenIssuesReader;
 import mantisbtsync.core.jobs.issues.tasklets.IssuesLastRunExtractorTasklet;
 
 import org.springframework.batch.core.Job;
@@ -58,14 +58,14 @@ public class JobIssuesConfiguration {
 
 	@Bean
 	public Job syncIssuesJob(final JobBuilderFactory jobs, final Step issuesLastSuccessExtractorStep,
-			final Step issuesSyncStep, final Step authIssuesStep, final CloseAuthManagerListener closeIssuesListener) {
+			final Step openIssuesSyncStep, final Step authIssuesStep, final CloseAuthManagerListener closeIssuesListener) {
 
 		return jobs.get("syncIssuesJob")
 				.incrementer(new RunIdIncrementer())
 				.listener(closeIssuesListener)
 				.flow(authIssuesStep)
 				.next(issuesLastSuccessExtractorStep)
-				.next(issuesSyncStep)
+				.next(openIssuesSyncStep)
 				.end()
 				.build();
 	}
@@ -97,14 +97,14 @@ public class JobIssuesConfiguration {
 	}
 
 	@Bean
-	public Step issuesSyncStep(final StepBuilderFactory stepBuilderFactory,
-			final IssuesReader issuesReader,
+	public Step openIssuesSyncStep(final StepBuilderFactory stepBuilderFactory,
+			final OpenIssuesReader openIssuesReader,
 			final IssuesProcessor issuesProcessor,
 			final CompositeItemWriter<BugBean> compositeIssuesWriter) {
 
 		return stepBuilderFactory.get("issuesSyncStep")
 				.<IssueData, BugBean> chunk(20)
-				.reader(issuesReader)
+				.reader(openIssuesReader)
 				.processor(issuesProcessor)
 				.writer(compositeIssuesWriter)
 				.build();

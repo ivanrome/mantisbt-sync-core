@@ -43,7 +43,7 @@ import biz.futureware.mantis.rpc.soap.client.MantisConnectBindingStub;
  * @author jdevarulrajah
  *
  */
-public class IssuesReader implements ItemReader<IssueData> {
+public class OpenIssuesReader implements ItemReader<IssueData> {
 
 	/**
 	 * Auth manager.
