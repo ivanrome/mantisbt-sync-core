@@ -21,32 +21,41 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package mantisbtsync.core.services;
+package mantisbtsync.core.jobs.issues.deciders;
 
-import java.math.BigInteger;
-
-import biz.futureware.mantis.rpc.soap.client.AccountData;
-import biz.futureware.mantis.rpc.soap.client.ObjectRef;
+import org.springframework.batch.core.JobExecution;
+import org.springframework.batch.core.StepExecution;
+import org.springframework.batch.core.job.flow.FlowExecutionStatus;
+import org.springframework.batch.core.job.flow.JobExecutionDecider;
 
 /**
- * @author thor
+ * @author jdevarulrajah
  *
  */
-public interface IssuesDao {
+public class SkipNewIssuesStepDecider implements JobExecutionDecider {
 
-	public boolean insertProjectIfNotExists(final ObjectRef item);
+	public static final String NO_SKIP_STEP = "NO_SKIP_STEP";
 
-	public void insertUserIfNotExists(final AccountData item, final BigInteger parentProjectId);
+	public static final String SKIP_STEP = "SKIP_STEP";
 
-	public boolean insertPriorityIfNotExists(final ObjectRef item);
+	private boolean skipStep = true;
 
-	public boolean insertSeverityIfNotExists(final ObjectRef item);
+	/**
+	 * {@inheritDoc}
+	 * @see org.springframework.batch.core.job.flow.JobExecutionDecider#decide(org.springframework.batch.core.JobExecution, org.springframework.batch.core.StepExecution)
+	 */
+	@Override
+	public FlowExecutionStatus decide(final JobExecution jobExecution,
+			final StepExecution stepExecution) {
 
-	public boolean insertStatusIfNotExists(final ObjectRef item);
+		final String param = jobExecution.getJobParameters().getString("job.completeSync");
+		skipStep = !Boolean.parseBoolean(param);
 
-	public boolean insertResolutionIfNotExists(final ObjectRef item);
+		if (skipStep) {
+			return new FlowExecutionStatus(SKIP_STEP);
+		} else {
+			return new FlowExecutionStatus(NO_SKIP_STEP);
+		}
+	}
 
-	public void insertCustomFieldIfNotExists(final ObjectRef item, final BigInteger parentProjectId);
-
-	public BigInteger getIssuesBiggestId();
 }

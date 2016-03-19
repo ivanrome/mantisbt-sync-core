@@ -61,6 +61,7 @@ public class IssuesLastRunExtractorTasklet implements Tasklet {
 		final JobParameters jobParams = stepContext.getStepExecution().getJobParameters();
 		final Map<String, JobParameter> currParams = new HashMap<String, JobParameter>(jobParams.getParameters());
 		currParams.remove("run.id");
+		currParams.remove("job.completeSync");
 
 		Date lastJobRun = null;
 
@@ -72,6 +73,7 @@ public class IssuesLastRunExtractorTasklet implements Tasklet {
 				final JobParameters oldJobParams = jobExecution.getJobParameters();
 				final Map<String, JobParameter> oldParams = new HashMap<String, JobParameter>(oldJobParams.getParameters());
 				oldParams.remove("run.id");
+				oldParams.remove("job.completeSync");
 
 				if (ExitStatus.COMPLETED.equals(jobExecution.getExitStatus())
 						&& oldParams.equals(currParams)) {

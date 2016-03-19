@@ -27,6 +27,7 @@ import java.math.BigInteger;
 import java.util.Date;
 
 import mantisbtsync.core.common.auth.PortalAuthManager;
+import mantisbtsync.core.jobs.issues.readers.NewIssuesReader;
 import mantisbtsync.core.jobs.issues.readers.OpenIssuesReader;
 
 import org.springframework.batch.core.configuration.annotation.StepScope;
@@ -56,6 +57,24 @@ public class IssuesReadersConfiguration {
 		reader.setAuthManager(authManager);
 		reader.setClientStub(clientStub);
 		reader.setLastJobRun(lastJobRun);
+		reader.setPassword(password);
+		reader.setProjectId(projectId);
+		reader.setUserName(userName);
+
+		return reader;
+	}
+
+	@Bean
+	@StepScope
+	public NewIssuesReader newIssuesReader(final PortalAuthManager authManager,
+			final MantisConnectBindingStub clientStub,
+			@Value("#{jobParameters['mantis.username']}") final String userName,
+			@Value("#{jobParameters['mantis.password']}") final String password,
+			@Value("#{jobParameters['mantis.project_id']}") final BigInteger projectId) {
+
+		final NewIssuesReader reader = new NewIssuesReader();
+		reader.setAuthManager(authManager);
+		reader.setClientStub(clientStub);
 		reader.setPassword(password);
 		reader.setProjectId(projectId);
 		reader.setUserName(userName);
