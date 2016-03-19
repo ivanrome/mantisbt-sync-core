@@ -102,7 +102,7 @@ CREATE TABLE mantis_custom_field_project_table  (
 
 CREATE TABLE mantis_user_table  (
     id int NOT NULL PRIMARY KEY,
-    name varchar(64) NOT NULL
+    name varchar(64)
 );
 
 CREATE TABLE mantis_project_user_list_table  (
