@@ -11,6 +11,19 @@ CREATE TABLE mantis_enum_custom_field_types  (
     name varchar(32) NOT NULL
 );
 
+INSERT INTO mantis_enum_custom_field_types (id, name) values (0, 'String');
+INSERT INTO mantis_enum_custom_field_types (id, name) values (1, 'Numeric');
+INSERT INTO mantis_enum_custom_field_types (id, name) values (2, 'Float');
+INSERT INTO mantis_enum_custom_field_types (id, name) values (3, 'Enumeration');
+INSERT INTO mantis_enum_custom_field_types (id, name) values (4, 'E-mail');
+INSERT INTO mantis_enum_custom_field_types (id, name) values (5, 'Checkbox');
+INSERT INTO mantis_enum_custom_field_types (id, name) values (6, 'List');
+INSERT INTO mantis_enum_custom_field_types (id, name) values (7, 'Multiselection list');
+INSERT INTO mantis_enum_custom_field_types (id, name) values (8, 'Date');
+INSERT INTO mantis_enum_custom_field_types (id, name) values (9, 'Radio');
+INSERT INTO mantis_enum_custom_field_types (id, name) values (10, 'Textarea');
+
+
 CREATE TABLE mantis_enum_etas  (
     id int NOT NULL PRIMARY KEY,
     name varchar(32) NOT NULL
