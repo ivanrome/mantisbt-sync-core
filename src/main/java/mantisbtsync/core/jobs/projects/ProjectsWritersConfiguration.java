@@ -60,10 +60,10 @@ public class ProjectsWritersConfiguration {
 
 		final JdbcBatchItemWriter<ProjectCategoryBean> writer = new JdbcBatchItemWriter<ProjectCategoryBean>();
 		writer.setItemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<ProjectCategoryBean>());
-		writer.setSql("MERGE INTO mantis_category_table dest\n"
-				+ " USING (SELECT :name as name, :projectId as project_id FROM dual) src\n"
-				+ " ON (dest.name = src.name AND dest.project_id = src.project_id)\n"
-				+ " WHEN NOT MATCHED THEN INSERT (name, project_id) VALUES (src.name, src.project_id)");
+		writer.setSql("INSERT INTO mantis_category_table (name, project_id)\n"
+				+ " SELECT :name, :projectId FROM dual\n"
+				+ " WHERE NOT EXISTS (SELECT 1 FROM mantis_category_table dest\n"
+				+ "			WHERE dest.name = :name AND dest.project_id = :projectId)");
 		writer.setDataSource(dataSource);
 		writer.setAssertUpdates(false);
 		return writer;
@@ -75,28 +75,19 @@ public class ProjectsWritersConfiguration {
 
 		final JdbcBatchItemWriter<ProjectCustomFieldBean> writer1 = new JdbcBatchItemWriter<ProjectCustomFieldBean>();
 		writer1.setItemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<ProjectCustomFieldBean>());
-		writer1.setSql("MERGE INTO mantis_custom_field_table dest\n"
-				+ " USING (SELECT :id as id, :name as name, :typeId as type_id,"
-				+ "	:possibleValues as possible_values, :defaultValue as default_value,"
-				+ "	:validRegexp as valid_regexp\n"
-				+ "	FROM dual) src\n"
-				+ " ON (dest.id = src.id)\n"
-				+ " WHEN NOT MATCHED THEN\n"
-				+ " INSERT (id, name, type_id, possible_values, default_value, valid_regexp)\n"
-				+ " VALUES (src.id, src.name, src.type_id, src.possible_values, src.default_value, src.valid_regexp)\n"
-				+ " WHEN MATCHED THEN UPDATE SET dest.name = src.name, dest.type_id = src.type_id,\n"
-				+ "		dest.possible_values = src.possible_values, dest.default_value = src.default_value,\n"
-				+ "		dest.valid_regexp = src.valid_regexp");
+		writer1.setSql("INSERT INTO mantis_custom_field_table\n"
+				+ " (id, name, type_id, possible_values, default_value, valid_regexp)\n"
+				+ " VALUES (:id, :name, :typeId, :possibleValues, :defaultValue, :validRegexp)\n"
+				+ " ON DUPLICATE KEY UPDATE name = :name, type_id = :typeId, possible_values = :possibleValues,\n"
+				+ " default_value = :defaultValue, valid_regexp = :validRegexp");
 		writer1.setDataSource(dataSource);
 		writer1.afterPropertiesSet();
 
 		final JdbcBatchItemWriter<ProjectCustomFieldBean> writer2 = new JdbcBatchItemWriter<ProjectCustomFieldBean>();
 		writer2.setItemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<ProjectCustomFieldBean>());
-		writer2.setSql("MERGE INTO mantis_custom_field_project_table dest\n"
-				+ " USING (SELECT :id as field_id, :projectId as project_id FROM dual) src\n"
-				+ " ON (dest.field_id = src.field_id AND dest.project_id = src.project_id)\n"
-				+ " WHEN NOT MATCHED THEN\n"
-				+ " INSERT (field_id, project_id) VALUES (src.field_id, src.project_id)");
+		writer2.setSql("INSERT INTO mantis_custom_field_project_table (field_id, project_id)\n"
+				+ " VALUES (:id, :projectId)\n"
+				+ " ON DUPLICATE KEY UPDATE project_id = project_id");
 		writer2.setDataSource(dataSource);
 		writer2.setAssertUpdates(false);
 		writer2.afterPropertiesSet();
@@ -118,21 +109,17 @@ public class ProjectsWritersConfiguration {
 
 		final JdbcBatchItemWriter<AccountData> writer1 = new JdbcBatchItemWriter<AccountData>();
 		writer1.setItemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<AccountData>());
-		writer1.setSql("MERGE INTO mantis_user_table dest\n"
-				+ " USING (SELECT :id as id, :name as name FROM dual) src\n"
-				+ " ON (dest.id = src.id)\n"
-				+ " WHEN NOT MATCHED THEN INSERT (id, name) VALUES (src.id, src.name)\n"
-				+ " WHEN MATCHED THEN UPDATE SET dest.name = src.name");
+		writer1.setSql("INSERT INTO mantis_user_table (id, name)\n"
+				+ " VALUES (:id, :name)\n"
+				+ " ON DUPLICATE KEY UPDATE name = :name");
 		writer1.setDataSource(dataSource);
 		writer1.afterPropertiesSet();
 
 		final JdbcBatchItemWriter<AccountData> writer2 = new JdbcBatchItemWriter<AccountData>();
 		writer2.setItemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<AccountData>());
-		writer2.setSql("MERGE INTO mantis_project_user_list_table dest\n"
-				+ " USING (SELECT :id as user_id, " + projectId + " as project_id FROM dual) src\n"
-				+ " ON (dest.user_id = src.user_id AND dest.project_id = src.project_id)\n"
-				+ " WHEN NOT MATCHED THEN\n"
-				+ " INSERT (user_id, project_id) VALUES (src.user_id, src.project_id)");
+		writer2.setSql("INSERT INTO mantis_project_user_list_table (user_id, project_id)\n"
+				+ " VALUES (:id, " + projectId + ")\n"
+				+ " ON DUPLICATE KEY UPDATE project_id = project_id");
 		writer2.setDataSource(dataSource);
 		writer2.setAssertUpdates(false);
 		writer2.afterPropertiesSet();
@@ -152,16 +139,11 @@ public class ProjectsWritersConfiguration {
 
 		final JdbcBatchItemWriter<ProjectVersionData> writer = new JdbcBatchItemWriter<ProjectVersionData>();
 		writer.setItemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<ProjectVersionData>());
-		writer.setSql("MERGE INTO mantis_project_version_table dest\n"
-				+ " USING (SELECT :id as id, :name as version, :project_id as project_id,\n"
-				+ " 			:description as description, :released as released, :obsolete as obsolete\n"
-				+ " 	   FROM dual) src\n"
-				+ " ON (dest.id = src.id)\n"
-				+ " WHEN NOT MATCHED THEN\n"
-				+ " INSERT (id, version, project_id, description, released, obsolete)\n"
-				+ " VALUES (src.id, src.version, src.project_id, src.description, src.released, src.obsolete)\n"
-				+ " WHEN MATCHED THEN UPDATE SET dest.version = src.version, dest.project_id = src.project_id,\n"
-				+ "		dest.description = src.description, dest.released = src.released, dest.obsolete = src.obsolete");
+		writer.setSql("INSERT INTO mantis_project_version_table\n"
+				+ " (id, version, project_id, description, released, obsolete)"
+				+ " VALUES (:id, :name, :project_id, :description, :released, :obsolete)\n"
+				+ " ON DUPLICATE KEY UPDATE version = :name, project_id = :project_id,\n"
+				+ "	description = :description, released = :released, obsolete = :obsolete");
 		writer.setDataSource(dataSource);
 		return writer;
 	}

@@ -113,13 +113,10 @@ public class EnumsWritersConfiguration {
 
 	private String getMergeStatement(final String tableName) {
 		final StringBuilder strBuilder = new StringBuilder();
-		strBuilder.append("MERGE INTO ");
+		strBuilder.append("INSERT INTO ");
 		strBuilder.append(tableName);
-		strBuilder.append(" dest\n");
-		strBuilder.append(" USING (SELECT :id as id, :name as name FROM dual) src\n");
-		strBuilder.append(" ON (dest.id = src.id)\n");
-		strBuilder.append(" WHEN MATCHED THEN UPDATE SET dest.name = src.name\n");
-		strBuilder.append(" WHEN NOT MATCHED THEN INSERT (id, name) VALUES (src.id, src.name)\n");
+		strBuilder.append(" (id, name) values (:id, :name)\n");
+		strBuilder.append(" ON DUPLICATE KEY UPDATE name = :name");
 
 		return strBuilder.toString();
 	}

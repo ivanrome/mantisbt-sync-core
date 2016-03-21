@@ -86,7 +86,7 @@ CREATE TABLE mantis_project_hierarchy_table  (
 );
 
 CREATE TABLE mantis_category_table  (
-    id int IDENTITY NOT NULL PRIMARY KEY,
+    id int AUTO_INCREMENT NOT NULL PRIMARY KEY,
     project_id int NOT NULL,
     name varchar(128) NOT NULL,
     
@@ -194,7 +194,7 @@ CREATE TABLE mantis_custom_field_string_table (
 );
 
 CREATE TABLE mantis_bug_history_table (
-	id int IDENTITY NOT NULL PRIMARY KEY,
+	id int AUTO_INCREMENT NOT NULL PRIMARY KEY,
 	bug_id int NOT NULL,
 	user_id int NOT NULL,
 	field_name varchar(64),

@@ -42,15 +42,14 @@ public class BugHistoryWriter implements ItemWriter<BugBean> {
 
 	private final JdbcBatchItemWriter<BugHistoryBean> writer;
 
-	private static final String SQL_QUERY = "MERGE INTO mantis_bug_history_table dest\n"
-			+ " USING (SELECT :bugId as bug_id, :userId as user_id, :fieldName as field_name,\n"
-			+ " 		:oldValue as old_value, :newValue as new_value, :historyType as history_type,\n"
-			+ " 		:dateModified as date_modified FROM dual) src\n"
-			+ " ON (dest.bug_id = src.bug_id AND dest.user_id = src.user_id AND dest.history_type = src.history_type\n"
-			+ "   AND dest.field_name = src.field_name AND dest.old_value = src.old_value AND dest.new_value = src.new_value\n"
-			+ "   AND cast(dest.date_modified as datetime) = cast(src.date_modified as datetime))\n"
-			+ " WHEN NOT MATCHED THEN INSERT (bug_id, user_id, field_name, old_value, new_value, history_type, date_modified)\n"
-			+ " 	VALUES (src.bug_id, src.user_id, src.field_name, src.old_value, src.new_value, src.history_type, src.date_modified)";
+	private static final String SQL_QUERY = "INSERT INTO mantis_bug_history_table\n"
+			+ " (bug_id, user_id, field_name, old_value, new_value, history_type, date_modified)\n"
+			+ " SELECT :bugId, :userId, :fieldName, :oldValue, :newValue, :historyType,\n"
+			+ "	:dateModified FROM dual\n"
+			+ " WHERE NOT EXISTS (SELECT 1 FROM mantis_bug_history_table\n"
+			+ " 		WHERE bug_id = :bugId AND user_id = :userId AND field_name = :fieldName\n"
+			+ "			AND old_value = :oldValue AND new_value = :newValue\n"
+			+ "			AND history_type = :historyType AND date_modified = :dateModified)";
 
 	public BugHistoryWriter() {
 		writer = new JdbcBatchItemWriter<BugHistoryBean>();

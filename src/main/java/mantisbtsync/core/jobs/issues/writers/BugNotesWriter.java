@@ -42,13 +42,10 @@ public class BugNotesWriter implements ItemWriter<BugBean> {
 
 	private final JdbcBatchItemWriter<BugNoteBean> writer;
 
-	private static final String SQL_QUERY = "MERGE INTO mantis_bugnote_table dest\n"
-			+ " USING (SELECT :id as id, :bugId as bug_id, :reporterId as reporter_id,\n"
-			+ " 	:textNote as text_note, :dateSubmitted as date_submitted, :lastModified as last_modified FROM dual) src\n"
-			+ " ON (dest.id = src.id)\n"
-			+ " WHEN NOT MATCHED THEN INSERT (id, bug_id, reporter_id, text_note, date_submitted, last_modified)\n"
-			+ " 		      VALUES (src.id, src.bug_id, src.reporter_id, src.text_note, src.date_submitted, src.last_modified)\n"
-			+ " WHEN MATCHED THEN UPDATE SET dest.text_note = src.text_note, dest.last_modified = src.last_modified";
+	private static final String SQL_QUERY = "INSERT INTO mantis_bugnote_table\n"
+			+ " (id, bug_id, reporter_id, text_note, date_submitted, last_modified)\n"
+			+ " VALUES (:id, :bugId, :reporterId, :textNote, :dateSubmitted, :lastModified)\n"
+			+ " ON DUPLICATE KEY UPDATE text_note = :textNote, last_modified = :lastModified";
 
 	public BugNotesWriter() {
 		writer = new JdbcBatchItemWriter<BugNoteBean>();

@@ -46,10 +46,9 @@ public class JdbcIssuesService implements IssuesDao {
 			+ " WHERE id = ? AND name = ?";
 
 	private static final String SQL_MERGE_PROJECT_TABLE =
-			"MERGE INTO mantis_project_table dest\n"
-					+ " USING (SELECT ? as id, ? as name FROM dual) src\n"
-					+ " ON (dest.id = src.id)\n"
-					+ " WHEN NOT MATCHED THEN INSERT (id, name) VALUES (src.id, src.name)";
+			"INSERT INTO mantis_project_table (id, name)\n"
+					+ " VALUES (?, ?)\n"
+					+ " ON DUPLICATE KEY UPDATE name = ?";
 
 	private static final String SQL_CHECK_USER_PROJECT = "SELECT count(1) FROM mantis_project_user_list_table\n"
 			+ " WHERE project_id = ? AND user_id = ?";
@@ -96,7 +95,7 @@ public class JdbcIssuesService implements IssuesDao {
 		final Boolean exists = jdbcTemplate.queryForObject(SQL_CHECK_PROJECT, Boolean.class, item.getId(), item.getName());
 
 		if (!Boolean.TRUE.equals(exists)) {
-			jdbcTemplate.update(SQL_MERGE_PROJECT_TABLE, item.getId(), item.getName());
+			jdbcTemplate.update(SQL_MERGE_PROJECT_TABLE, item.getId(), item.getName(), item.getName());
 		}
 
 		return true;

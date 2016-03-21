@@ -52,19 +52,17 @@ public class ProjectsListTasklet implements Tasklet {
 	 * SQL request to merge data into the table mantis_project_table.
 	 */
 	private static final String MERGE_PROJECT_TABLE =
-			"MERGE INTO mantis_project_table dest\n"
-					+ " USING (SELECT ? as id FROM dual) src\n"
-					+ " ON (dest.id = src.id)\n"
-					+ " WHEN NOT MATCHED THEN INSERT (id) VALUES (src.id)";
+			"INSERT INTO mantis_project_table (id)\n"
+					+ " VALUES (?)\n"
+					+ " ON DUPLICATE KEY UPDATE name = name";
 
 	/**
 	 * SQL request to merge data into the table mantis_project_hierarchy_table.
 	 */
 	private static final String MERGE_PROJECT__HIERARCHY_TABLE =
-			"MERGE INTO mantis_project_hierarchy_table dest\n"
-					+ " USING (SELECT ? as parent_id, ? as child_id FROM dual) src\n"
-					+ " ON (dest.parent_id = src.parent_id AND dest.child_id = src.child_id)\n"
-					+ " WHEN NOT MATCHED THEN INSERT (parent_id, child_id) VALUES (src.parent_id, src.child_id)";
+			"INSERT INTO mantis_project_hierarchy_table (parent_id, child_id)\n"
+					+ " VALUES (?, ?)\n"
+					+ " ON DUPLICATE KEY UPDATE child_id = child_id";
 
 	/**
 	 * Auth manager.
