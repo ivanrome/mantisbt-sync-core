@@ -265,6 +265,8 @@ public class IssuesProcessor implements ItemProcessor<IssueData, BugBean> {
 					cal.setTimeInMillis(histData.getDate().longValue() * 1000L);
 					histBean.setDateModified(getSqlDate(cal));
 				}
+
+				bean.getHistory().add(histBean);
 			}
 		}
 	}
