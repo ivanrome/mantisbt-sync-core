@@ -22,7 +22,7 @@ import com.github.jrrdev.mantisbtsync.core.jobs.issues.processors.IssuesProcesso
 import biz.futureware.mantis.rpc.soap.client.MantisConnectBindingStub;
 
 /**
- * @author jdevarulrajah
+ * @author jrrdev
  *
  */
 @Configuration

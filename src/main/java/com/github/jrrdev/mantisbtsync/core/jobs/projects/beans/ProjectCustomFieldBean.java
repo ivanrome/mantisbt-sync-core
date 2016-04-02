@@ -27,7 +27,7 @@ package com.github.jrrdev.mantisbtsync.core.jobs.projects.beans;
  * Bean to store the data related to a project
  * custom field.
  *
- * @author jdevarulrajah
+ * @author jrrdev
  *
  */
 public final class ProjectCustomFieldBean {

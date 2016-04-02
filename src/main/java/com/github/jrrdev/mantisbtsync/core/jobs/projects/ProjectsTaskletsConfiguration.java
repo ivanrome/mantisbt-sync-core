@@ -43,7 +43,7 @@ import biz.futureware.mantis.rpc.soap.client.MantisConnectBindingStub;
  * Configuration for the taskets used by the job of
  * Mantis projects syncing.
  *
- * @author jdevarulrajah
+ * @author jrrdev
  *
  */
 @Configuration

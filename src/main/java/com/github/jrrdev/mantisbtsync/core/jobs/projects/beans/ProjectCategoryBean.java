@@ -26,7 +26,7 @@ package com.github.jrrdev.mantisbtsync.core.jobs.projects.beans;
 /**
  * Bean for storing data related to a project category.
  *
- * @author jdevarulrajah
+ * @author jrrdev
  *
  */
 public final class ProjectCategoryBean {

@@ -31,7 +31,7 @@ import biz.futureware.mantis.rpc.soap.client.AccountData;
 import biz.futureware.mantis.rpc.soap.client.ObjectRef;
 
 /**
- * @author thor
+ * @author jrrdev
  *
  */
 public interface IssuesDao {

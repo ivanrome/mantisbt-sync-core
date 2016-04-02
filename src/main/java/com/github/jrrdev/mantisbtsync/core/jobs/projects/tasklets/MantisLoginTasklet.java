@@ -39,7 +39,7 @@ import biz.futureware.mantis.rpc.soap.client.UserData;
  * Tasklet calling mc_login to get the user_acces_level
  * (needed to obtain the users list).
  *
- * @author jdevarulrajah
+ * @author jrrdev
  *
  */
 public class MantisLoginTasklet implements Tasklet {

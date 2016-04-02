@@ -36,7 +36,7 @@ import org.apache.http.util.EntityUtils;
 /**
  * Abstract class describing an http request.
  *
- * @author jdevarulrajah
+ * @author jrrdev
  *
  */
 public abstract class AbstractAuthHttpRequest {

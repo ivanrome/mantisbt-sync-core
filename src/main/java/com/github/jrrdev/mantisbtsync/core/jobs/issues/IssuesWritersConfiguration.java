@@ -42,7 +42,7 @@ import com.github.jrrdev.mantisbtsync.core.jobs.issues.writers.BugHistoryWriter;
 import com.github.jrrdev.mantisbtsync.core.jobs.issues.writers.BugNotesWriter;
 
 /**
- * @author jdevarulrajah
+ * @author jrrdev
  *
  */
 @Configuration

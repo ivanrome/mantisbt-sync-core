@@ -32,7 +32,7 @@ import org.springframework.cache.annotation.CacheConfig;
 import com.github.jrrdev.mantisbtsync.core.services.IssuesDao;
 
 /**
- * @author jdevarulrajah
+ * @author jrrdev
  *
  */
 @CacheConfig

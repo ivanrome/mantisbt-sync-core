@@ -28,7 +28,7 @@ import org.springframework.batch.item.ItemProcessor;
 import com.github.jrrdev.mantisbtsync.core.jobs.projects.beans.ProjectCategoryBean;
 
 /**
- * @author jdevarulrajah
+ * @author jrrdev
  *
  */
 public class ProjectCategoryProcessor implements ItemProcessor<String, ProjectCategoryBean> {

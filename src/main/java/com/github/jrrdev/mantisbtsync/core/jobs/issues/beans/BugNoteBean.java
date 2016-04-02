@@ -27,7 +27,7 @@ import java.math.BigInteger;
 import java.sql.Timestamp;
 
 /**
- * @author jdevarulrajah
+ * @author jrrdev
  *
  */
 public class BugNoteBean {

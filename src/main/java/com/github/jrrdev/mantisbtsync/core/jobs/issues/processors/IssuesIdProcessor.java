@@ -34,7 +34,7 @@ import biz.futureware.mantis.rpc.soap.client.IssueData;
 import biz.futureware.mantis.rpc.soap.client.MantisConnectBindingStub;
 
 /**
- * @author jdevarulrajah
+ * @author jrrdev
  *
  */
 public class IssuesIdProcessor implements ItemProcessor<BugIdBean, IssueData> {

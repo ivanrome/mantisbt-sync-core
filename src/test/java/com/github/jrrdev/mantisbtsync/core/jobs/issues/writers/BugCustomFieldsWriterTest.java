@@ -41,7 +41,7 @@ import com.ninja_squad.dbsetup.generator.ValueGenerators;
 import com.ninja_squad.dbsetup.operation.Operation;
 
 /**
- * @author jdevarulrajah
+ * @author jrrdev
  *
  */
 public class BugCustomFieldsWriterTest extends AbstractSqlWriterTest {

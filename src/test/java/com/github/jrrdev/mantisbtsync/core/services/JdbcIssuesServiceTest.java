@@ -47,7 +47,7 @@ import com.github.jrrdev.mantisbtsync.core.services.IssuesDao;
 import com.ninja_squad.dbsetup.operation.Operation;
 
 /**
- * @author jdevarulrajah
+ * @author jrrdev
  *
  */
 public class JdbcIssuesServiceTest extends AbstractSqlWriterTest {

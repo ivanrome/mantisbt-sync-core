@@ -29,7 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author jdevarulrajah
+ * @author jrrdev
  *
  */
 public class BugBean {

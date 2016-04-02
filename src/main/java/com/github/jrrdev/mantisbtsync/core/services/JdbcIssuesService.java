@@ -37,7 +37,7 @@ import biz.futureware.mantis.rpc.soap.client.AccountData;
 import biz.futureware.mantis.rpc.soap.client.ObjectRef;
 
 /**
- * @author jdevarulrajah
+ * @author jrrdev
  *
  */
 @Repository

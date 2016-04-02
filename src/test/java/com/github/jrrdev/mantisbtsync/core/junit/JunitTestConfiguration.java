@@ -38,7 +38,7 @@ import com.ninja_squad.dbsetup.destination.Destination;
 /**
  * Configuration Spring pour les tests JUnit.
  *
- * @author jdevarulrajah
+ * @author jrrdev
  *
  */
 @Configuration

@@ -57,7 +57,7 @@ import biz.futureware.mantis.rpc.soap.client.MantisConnectBindingStub;
 import biz.futureware.mantis.rpc.soap.client.ObjectRef;
 
 /**
- * @author jdevarulrajah
+ * @author jrrdev
  *
  */
 @Transactional

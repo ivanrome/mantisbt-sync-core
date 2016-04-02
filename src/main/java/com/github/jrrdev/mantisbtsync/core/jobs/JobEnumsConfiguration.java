@@ -45,7 +45,7 @@ import biz.futureware.mantis.rpc.soap.client.ObjectRef;
  * 	- mantis.username
  *  - mantis.password
  *
- * @author jdevarulrajah
+ * @author jrrdev
  *
  */
 @Configuration

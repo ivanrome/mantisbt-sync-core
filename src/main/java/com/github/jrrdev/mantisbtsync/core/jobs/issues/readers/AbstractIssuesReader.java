@@ -35,7 +35,7 @@ import biz.futureware.mantis.rpc.soap.client.IssueData;
 import biz.futureware.mantis.rpc.soap.client.MantisConnectBindingStub;
 
 /**
- * @author jdevarulrajah
+ * @author jrrdev
  *
  */
 public abstract class AbstractIssuesReader implements ItemReader<IssueData> {

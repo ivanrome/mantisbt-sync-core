@@ -33,7 +33,7 @@ import com.github.jrrdev.mantisbtsync.core.common.auth.PortalAuthManager;
 /**
  * Job listener executing AuthManager closing at the end of the job.
  *
- * @author jdevarulrajah
+ * @author jrrdev
  *
  */
 public class CloseAuthManagerListener implements JobExecutionListener {

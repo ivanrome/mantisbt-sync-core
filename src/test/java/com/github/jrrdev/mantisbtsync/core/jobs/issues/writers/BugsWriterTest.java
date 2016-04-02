@@ -40,7 +40,7 @@ import com.github.jrrdev.mantisbtsync.core.junit.AbstractSqlWriterTest;
 import com.ninja_squad.dbsetup.operation.Operation;
 
 /**
- * @author jdevarulrajah
+ * @author jrrdev
  *
  */
 public class BugsWriterTest extends AbstractSqlWriterTest {

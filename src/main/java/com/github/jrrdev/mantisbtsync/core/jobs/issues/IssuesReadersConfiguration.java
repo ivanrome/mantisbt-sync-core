@@ -48,7 +48,7 @@ import com.github.jrrdev.mantisbtsync.core.jobs.issues.readers.OtherIssuesReader
 import biz.futureware.mantis.rpc.soap.client.MantisConnectBindingStub;
 
 /**
- * @author jdevarulrajah
+ * @author jrrdev
  *
  */
 @Configuration

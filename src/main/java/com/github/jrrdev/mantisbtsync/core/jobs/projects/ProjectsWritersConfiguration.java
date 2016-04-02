@@ -48,7 +48,7 @@ import biz.futureware.mantis.rpc.soap.client.ProjectVersionData;
  * Configuration for the writers used by the job of
  * Mantis projects syncing.
  *
- * @author jdevarulrajah
+ * @author jrrdev
  *
  */
 @Configuration

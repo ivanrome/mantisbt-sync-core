@@ -49,7 +49,7 @@ import biz.futureware.mantis.rpc.soap.client.MantisConnectLocator;
 /**
  * Common configuration for the app.
  *
- * @author jdevarulrajah
+ * @author jrrdev
  *
  */
 @Configuration

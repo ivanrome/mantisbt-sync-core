@@ -60,7 +60,7 @@ import biz.futureware.mantis.rpc.soap.client.ProjectVersionData;
  *  - mantis.password
  *  - mantis.project_id
  *
- * @author jdevarulrajah
+ * @author jrrdev
  *
  */
 @Configuration

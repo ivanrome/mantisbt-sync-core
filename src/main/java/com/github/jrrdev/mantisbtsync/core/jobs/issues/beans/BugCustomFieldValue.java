@@ -26,7 +26,7 @@ package com.github.jrrdev.mantisbtsync.core.jobs.issues.beans;
 import java.math.BigInteger;
 
 /**
- * @author jdevarulrajah
+ * @author jrrdev
  *
  */
 public class BugCustomFieldValue {

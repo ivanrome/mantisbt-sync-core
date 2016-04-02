@@ -42,7 +42,7 @@ import com.github.jrrdev.mantisbtsync.core.common.auth.request.AuthHttpGet;
 import com.github.jrrdev.mantisbtsync.core.common.auth.request.AuthHttpPost;
 
 /**
- * @author jdevarulrajah
+ * @author jrrdev
  *
  */
 public class PortalAuthBuilder implements ResourceLoaderAware {

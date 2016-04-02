@@ -32,7 +32,7 @@ import org.springframework.context.annotation.Configuration;
 import com.github.jrrdev.mantisbtsync.core.jobs.issues.tasklets.IssuesLastRunExtractorTasklet;
 
 /**
- * @author jdevarulrajah
+ * @author jrrdev
  *
  */
 @Configuration

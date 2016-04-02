@@ -37,7 +37,7 @@ import com.github.jrrdev.mantisbtsync.core.jobs.projects.processors.ProjectCusto
  * Configuration for the processors used by the job of
  * Mantis projects syncing.
  *
- * @author jdevarulrajah
+ * @author jrrdev
  *
  */
 @Configuration

@@ -31,7 +31,7 @@ import org.springframework.context.annotation.Configuration;
 import com.github.jrrdev.mantisbtsync.core.common.auth.PortalAuthManager;
 
 /**
- * @author jdevarulrajah
+ * @author jrrdev
  *
  */
 @Configuration

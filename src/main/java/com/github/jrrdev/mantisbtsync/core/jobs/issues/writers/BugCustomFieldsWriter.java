@@ -35,7 +35,7 @@ import com.github.jrrdev.mantisbtsync.core.jobs.issues.beans.BugBean;
 import com.github.jrrdev.mantisbtsync.core.jobs.issues.beans.BugCustomFieldValue;
 
 /**
- * @author jdevarulrajah
+ * @author jrrdev
  *
  */
 public class BugCustomFieldsWriter implements ItemWriter<BugBean> {

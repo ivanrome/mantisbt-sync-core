@@ -39,7 +39,7 @@ import org.jsoup.select.Elements;
 /**
  * Implementation of a POST request.
  *
- * @author jdevarulrajah
+ * @author jrrdev
  *
  */
 public final class AuthHttpPost extends AbstractAuthHttpRequest {

@@ -56,7 +56,7 @@ import biz.futureware.mantis.rpc.soap.client.IssueData;
  *  - mantis.password
  *  - mantis.project_id
  *
- * @author jdevarulrajah
+ * @author jrrdev
  *
  */
 @Configuration

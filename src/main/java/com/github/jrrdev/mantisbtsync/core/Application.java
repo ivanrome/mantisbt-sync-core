@@ -35,7 +35,7 @@ import com.github.jrrdev.mantisbtsync.core.common.CommonConfiguration;
 /**
  * Entry point for the application.
  *
- * @author jdevarulrajah
+ * @author jrrdev
  *
  */
 @Configuration

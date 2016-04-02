@@ -61,7 +61,7 @@ import biz.futureware.mantis.rpc.soap.client.ObjectRef;
 import biz.futureware.mantis.rpc.soap.client.ProjectVersionData;
 
 /**
- * @author jdevarulrajah
+ * @author jrrdev
  *
  */
 @Transactional

@@ -45,7 +45,7 @@ import com.ninja_squad.dbsetup.operation.Operation;
  * Abstract Junit class to test writing to database.
  * Hold the DBSetup configuration.
  *
- * @author jdevarulrajah
+ * @author jrrdev
  *
  */
 @Transactional

@@ -29,7 +29,7 @@ import org.apache.http.client.methods.HttpGet;
 /**
  * Implementation of a GET request.
  *
- * @author jdevarulrajah
+ * @author jrrdev
  *
  */
 public final class AuthHttpGet extends AbstractAuthHttpRequest {

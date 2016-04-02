@@ -36,7 +36,7 @@ import org.springframework.util.Assert;
 import biz.futureware.mantis.rpc.soap.client.IssueData;
 
 /**
- * @author jdevarulrajah
+ * @author jrrdev
  *
  */
 public class OpenIssuesReader extends AbstractIssuesReader {

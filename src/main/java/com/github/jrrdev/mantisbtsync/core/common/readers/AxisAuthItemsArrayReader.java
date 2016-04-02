@@ -35,7 +35,7 @@ import com.github.jrrdev.mantisbtsync.core.common.auth.PortalAuthManager;
  * is supposed to return a array of items.
  * Can use an authentification cookie if PortalAuthManager is set.
  *
- * @author jdevarulrajah
+ * @author jrrdev
  *
  */
 public class AxisAuthItemsArrayReader<T> extends

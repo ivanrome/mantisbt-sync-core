@@ -37,7 +37,7 @@ import biz.futureware.mantis.rpc.soap.client.ObjectRef;
  * Configuration for the writers used by the job of
  * Mantis enumerations syncing.
  *
- * @author jdevarulrajah
+ * @author jrrdev
  *
  */
 @Configuration

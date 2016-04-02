@@ -30,7 +30,7 @@ import com.github.jrrdev.mantisbtsync.core.jobs.projects.beans.ProjectCustomFiel
 import biz.futureware.mantis.rpc.soap.client.CustomFieldDefinitionData;
 
 /**
- * @author jdevarulrajah
+ * @author jrrdev
  *
  */
 public class ProjectCustomFieldProcessor

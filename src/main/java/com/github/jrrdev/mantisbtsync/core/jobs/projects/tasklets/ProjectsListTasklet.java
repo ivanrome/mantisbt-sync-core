@@ -43,7 +43,7 @@ import biz.futureware.mantis.rpc.soap.client.MantisConnectBindingStub;
 /**
  * Tasklet to read the projects list.
  *
- * @author jdevarulrajah
+ * @author jrrdev
  *
  */
 public class ProjectsListTasklet implements Tasklet {

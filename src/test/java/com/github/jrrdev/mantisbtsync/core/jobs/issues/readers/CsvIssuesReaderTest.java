@@ -51,7 +51,7 @@ import com.github.jrrdev.mantisbtsync.core.jobs.issues.beans.BugIdBean;
 import com.github.jrrdev.mantisbtsync.core.junit.JunitTestConfiguration;
 
 /**
- * @author jdevarulrajah
+ * @author jrrdev
  *
  */
 @Transactional

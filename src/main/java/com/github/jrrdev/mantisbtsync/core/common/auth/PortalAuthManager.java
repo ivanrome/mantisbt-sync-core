@@ -41,7 +41,7 @@ import com.github.jrrdev.mantisbtsync.core.common.auth.request.AbstractAuthHttpR
 /**
  * Manage a connection through http to get an authenfication cookie.
  *
- * @author jdevarulrajah
+ * @author jrrdev
  *
  */
 public class PortalAuthManager {

@@ -35,7 +35,7 @@ import org.springframework.batch.core.job.flow.JobExecutionDecider;
  * Decider to know if we need to loop on the flow or if all projects
  * have been processed.
  *
- * @author jdevarulrajah
+ * @author jrrdev
  *
  */
 public class ProjectFlowDecider implements JobExecutionDecider {

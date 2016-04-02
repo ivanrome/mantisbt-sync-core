@@ -22,7 +22,7 @@ import com.github.jrrdev.mantisbtsync.core.common.auth.PortalAuthManager;
 import com.github.jrrdev.mantisbtsync.core.junit.JunitTestConfiguration;
 
 /**
- * @author jdevarulrajah
+ * @author jrrdev
  *
  */
 @Transactional
