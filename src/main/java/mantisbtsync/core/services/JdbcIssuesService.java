@@ -92,10 +92,12 @@ public class JdbcIssuesService implements IssuesDao {
 	@Override
 	@Cacheable("projects")
 	public boolean insertProjectIfNotExists(final ObjectRef item) {
-		final Boolean exists = jdbcTemplate.queryForObject(SQL_CHECK_PROJECT, Boolean.class, item.getId(), item.getName());
+		if (item != null) {
+			final Boolean exists = jdbcTemplate.queryForObject(SQL_CHECK_PROJECT, Boolean.class, item.getId(), item.getName());
 
-		if (!Boolean.TRUE.equals(exists)) {
-			jdbcTemplate.update(SQL_MERGE_PROJECT_TABLE, item.getId(), item.getName(), item.getName());
+			if (!Boolean.TRUE.equals(exists)) {
+				jdbcTemplate.update(SQL_MERGE_PROJECT_TABLE, item.getId(), item.getName(), item.getName());
+			}
 		}
 
 		return true;
@@ -108,13 +110,15 @@ public class JdbcIssuesService implements IssuesDao {
 	@Override
 	public void insertUserIfNotExists(final AccountData item,
 			final BigInteger parentProjectId) {
-		insertIntoUserIfNotExists(item);
-		insertIntoUserProjectIfNotExists(item, parentProjectId);
+		if (item != null) {
+			insertIntoUserIfNotExists(item);
+			insertIntoUserProjectIfNotExists(item, parentProjectId);
+		}
 	}
 
 	@Cacheable("users")
 	public boolean insertIntoUserIfNotExists(final AccountData item) {
-		if (!existsById("mantis_user_table", item.getId())) {
+		if (item != null && !existsById("mantis_user_table", item.getId())) {
 			jdbcTemplate.update(getInsertQueryIdName("mantis_user_table"), item.getId(), item.getName());
 		}
 
@@ -124,7 +128,7 @@ public class JdbcIssuesService implements IssuesDao {
 	@Cacheable("users_project")
 	public boolean insertIntoUserProjectIfNotExists(final AccountData item, final BigInteger parentProjectId) {
 
-		if (parentProjectId != null) {
+		if (item != null && parentProjectId != null) {
 			final Boolean exist = jdbcTemplate.queryForObject(SQL_CHECK_USER_PROJECT, Boolean.class, parentProjectId, item.getId());
 			if (!Boolean.TRUE.equals(exist)) {
 				jdbcTemplate.update(SQL_INSERT_USER_PROJECT, parentProjectId, item.getId());
@@ -141,7 +145,7 @@ public class JdbcIssuesService implements IssuesDao {
 	@Override
 	@Cacheable("priorities")
 	public boolean insertPriorityIfNotExists(final ObjectRef item) {
-		if (!existsById("mantis_enum_priorities", item.getId())) {
+		if (item != null && !existsById("mantis_enum_priorities", item.getId())) {
 			jdbcTemplate.update(getInsertQueryIdName("mantis_enum_priorities"), item.getId(), item.getName());
 		}
 
@@ -155,7 +159,7 @@ public class JdbcIssuesService implements IssuesDao {
 	@Override
 	@Cacheable("severities")
 	public boolean insertSeverityIfNotExists(final ObjectRef item) {
-		if (!existsById("mantis_enum_severities", item.getId())) {
+		if (item != null && !existsById("mantis_enum_severities", item.getId())) {
 			jdbcTemplate.update(getInsertQueryIdName("mantis_enum_severities"), item.getId(), item.getName());
 		}
 
@@ -169,7 +173,7 @@ public class JdbcIssuesService implements IssuesDao {
 	@Override
 	@Cacheable("status")
 	public boolean insertStatusIfNotExists(final ObjectRef item) {
-		if (!existsById("mantis_enum_status", item.getId())) {
+		if (item != null && !existsById("mantis_enum_status", item.getId())) {
 			jdbcTemplate.update(getInsertQueryIdName("mantis_enum_status"), item.getId(), item.getName());
 		}
 
@@ -183,7 +187,7 @@ public class JdbcIssuesService implements IssuesDao {
 	@Override
 	@Cacheable("resolutions")
 	public boolean insertResolutionIfNotExists(final ObjectRef item) {
-		if (!existsById("mantis_enum_resolutions", item.getId())) {
+		if (item != null && !existsById("mantis_enum_resolutions", item.getId())) {
 			jdbcTemplate.update(getInsertQueryIdName("mantis_enum_resolutions"), item.getId(), item.getName());
 		}
 
@@ -197,13 +201,15 @@ public class JdbcIssuesService implements IssuesDao {
 	@Override
 	public void insertCustomFieldIfNotExists(final ObjectRef item,
 			final BigInteger parentProjectId) {
-		insertIntoCustomFieldIfNotExists(item);
-		insertIntoCustomFieldProjectIfNotExists(item, parentProjectId);
+		if (item != null) {
+			insertIntoCustomFieldIfNotExists(item);
+			insertIntoCustomFieldProjectIfNotExists(item, parentProjectId);
+		}
 	}
 
 	@Cacheable("customFields")
 	public boolean insertIntoCustomFieldIfNotExists(final ObjectRef item) {
-		if (!existsById("mantis_custom_field_table", item.getId())) {
+		if (item != null && !existsById("mantis_custom_field_table", item.getId())) {
 			jdbcTemplate.update(getInsertQueryIdName("mantis_custom_field_table"), item.getId(), item.getName());
 		}
 
@@ -213,7 +219,7 @@ public class JdbcIssuesService implements IssuesDao {
 	@Cacheable("customFields_project")
 	public boolean insertIntoCustomFieldProjectIfNotExists(final ObjectRef item,
 			final BigInteger parentProjectId) {
-		if (parentProjectId != null) {
+		if (item != null && parentProjectId != null) {
 			final Boolean exist = jdbcTemplate.queryForObject(SQL_CHECK_CUSTOM_FIELD_PROJECT,
 					Boolean.class, parentProjectId, item.getId());
 			if (!Boolean.TRUE.equals(exist)) {
