@@ -285,7 +285,7 @@ public class IssuesProcessor implements ItemProcessor<IssueData, BugBean> {
 
 		dao.insertProjectIfNotExists(item.getProject());
 		dao.insertUserIfNotExists(item.getReporter(), projectId);
-		dao.insertUserIfNotExists(item.getReporter(), projectId);
+		dao.insertUserIfNotExists(item.getHandler(), projectId);
 		dao.insertPriorityIfNotExists(item.getPriority());
 		dao.insertSeverityIfNotExists(item.getSeverity());
 		dao.insertStatusIfNotExists(item.getStatus());
