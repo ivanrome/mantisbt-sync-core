@@ -24,18 +24,26 @@
 package mantisbtsync.core.jobs.issues;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import mantisbtsync.core.common.auth.PortalAuthManager;
-import mantisbtsync.core.jobs.issues.readers.ListIssuesReader;
+import mantisbtsync.core.jobs.issues.beans.BugIdBean;
 import mantisbtsync.core.jobs.issues.readers.OpenIssuesReader;
 import mantisbtsync.core.jobs.issues.readers.OtherIssuesReader;
 
 import org.springframework.batch.core.configuration.annotation.StepScope;
+import org.springframework.batch.item.file.FlatFileItemReader;
+import org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper;
+import org.springframework.batch.item.file.mapping.DefaultLineMapper;
+import org.springframework.batch.item.file.transform.DelimitedLineTokenizer;
+import org.springframework.batch.item.support.ListItemReader;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.ResourceLoader;
 
 import biz.futureware.mantis.rpc.soap.client.MantisConnectBindingStub;
 
@@ -88,18 +96,46 @@ public class IssuesReadersConfiguration {
 
 	@Bean
 	@StepScope
-	public ListIssuesReader listIssuesReader(final PortalAuthManager authManager,
+	public ListItemReader<BugIdBean> listIssuesReader(final PortalAuthManager authManager,
 			final MantisConnectBindingStub clientStub,
 			@Value("#{jobParameters['mantis.username']}") final String userName,
 			@Value("#{jobParameters['mantis.password']}") final String password,
 			@Value("#{jobParameters['mantis.issues_id']}") final String issuesIds) {
 
-		final ListIssuesReader reader = new ListIssuesReader();
-		reader.setAuthManager(authManager);
-		reader.setClientStub(clientStub);
-		reader.setIssuesToSync(issuesIds);
-		reader.setPassword(password);
-		reader.setUserName(userName);
+		final List<BugIdBean> itemList = new ArrayList<BugIdBean>();
+		if (issuesIds != null && !issuesIds.isEmpty()) {
+			final String[] strIds = issuesIds.split(";");
+			for (final String strId : strIds) {
+				final long idValue = Long.valueOf(strId);
+				final BugIdBean bean = new BugIdBean();
+				bean.setId(BigInteger.valueOf(idValue));
+				itemList.add(bean);
+			}
+		}
+
+		final ListItemReader<BugIdBean> reader = new ListItemReader<BugIdBean>(itemList);
+		return reader;
+	}
+
+	@Bean
+	@StepScope
+	public FlatFileItemReader<BugIdBean> csvIssuesReader(final ResourceLoader resourceLoader,
+			@Value("#{jobParameters['mantis.filepath']}") final String filePath) {
+
+		final FlatFileItemReader<BugIdBean> reader = new FlatFileItemReader<BugIdBean>();
+		reader.setResource(resourceLoader.getResource(filePath));
+
+		final DefaultLineMapper<BugIdBean> lineMapper = new DefaultLineMapper<BugIdBean>();
+
+		final DelimitedLineTokenizer tokenizer = new DelimitedLineTokenizer();
+		tokenizer.setNames(new String[]{"id"});
+		lineMapper.setLineTokenizer(tokenizer);
+
+		final BeanWrapperFieldSetMapper<BugIdBean> mapper = new BeanWrapperFieldSetMapper<BugIdBean>();
+		mapper.setTargetType(BugIdBean.class);
+		lineMapper.setFieldSetMapper(mapper);
+
+		reader.setLineMapper(lineMapper);
 
 		return reader;
 	}

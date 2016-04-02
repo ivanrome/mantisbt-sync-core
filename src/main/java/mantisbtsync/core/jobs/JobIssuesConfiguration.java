@@ -26,8 +26,8 @@ package mantisbtsync.core.jobs;
 import mantisbtsync.core.common.auth.PortalAuthManager;
 import mantisbtsync.core.common.listener.CloseAuthManagerListener;
 import mantisbtsync.core.jobs.issues.beans.BugBean;
+import mantisbtsync.core.jobs.issues.beans.BugIdBean;
 import mantisbtsync.core.jobs.issues.processors.IssuesProcessor;
-import mantisbtsync.core.jobs.issues.readers.ListIssuesReader;
 import mantisbtsync.core.jobs.issues.readers.OpenIssuesReader;
 import mantisbtsync.core.jobs.issues.readers.OtherIssuesReader;
 import mantisbtsync.core.jobs.issues.tasklets.IssuesLastRunExtractorTasklet;
@@ -39,7 +39,10 @@ import org.springframework.batch.core.configuration.annotation.JobBuilderFactory
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.core.step.tasklet.MethodInvokingTaskletAdapter;
+import org.springframework.batch.item.file.FlatFileItemReader;
+import org.springframework.batch.item.support.CompositeItemProcessor;
 import org.springframework.batch.item.support.CompositeItemWriter;
+import org.springframework.batch.item.support.ListItemReader;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -84,6 +87,20 @@ public class JobIssuesConfiguration {
 				.listener(closeIssuesListener)
 				.flow(authIssuesStep)
 				.next(forceIssuesSyncStep)
+				.end()
+				.build();
+	}
+
+	@Bean
+	public Job fileSyncIssuesJob(final JobBuilderFactory jobs, final Step authIssuesStep,
+			final CloseAuthManagerListener closeIssuesListener,
+			final Step fileIssuesSyncStep) {
+
+		return jobs.get("fileSyncIssuesJob")
+				.incrementer(new RunIdIncrementer())
+				.listener(closeIssuesListener)
+				.flow(authIssuesStep)
+				.next(fileIssuesSyncStep)
 				.end()
 				.build();
 	}
@@ -144,14 +161,28 @@ public class JobIssuesConfiguration {
 
 	@Bean
 	public Step forceIssuesSyncStep(final StepBuilderFactory stepBuilderFactory,
-			final ListIssuesReader listIssuesReader,
-			final IssuesProcessor issuesProcessor,
+			final ListItemReader<BugIdBean> listIssuesReader,
+			final CompositeItemProcessor<BugIdBean, BugBean> compositeIssuesProcessor,
 			final CompositeItemWriter<BugBean> compositeIssuesWriter) {
 
 		return stepBuilderFactory.get("forceIssuesSyncStep")
-				.<IssueData, BugBean> chunk(10)
+				.<BugIdBean, BugBean> chunk(10)
 				.reader(listIssuesReader)
-				.processor(issuesProcessor)
+				.processor(compositeIssuesProcessor)
+				.writer(compositeIssuesWriter)
+				.build();
+	}
+
+	@Bean
+	public Step fileIssuesSyncStep(final StepBuilderFactory stepBuilderFactory,
+			final FlatFileItemReader<BugIdBean> csvIssuesReader,
+			final CompositeItemProcessor<BugIdBean, BugBean> compositeIssuesProcessor,
+			final CompositeItemWriter<BugBean> compositeIssuesWriter) {
+
+		return stepBuilderFactory.get("fileIssuesSyncStep")
+				.<BugIdBean, BugBean> chunk(10)
+				.reader(csvIssuesReader)
+				.processor(compositeIssuesProcessor)
 				.writer(compositeIssuesWriter)
 				.build();
 	}
