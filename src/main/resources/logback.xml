@@ -2,4 +2,6 @@
 <configuration>
 	<include resource="logback-batch-base.xml" />
 	<logger name="org.springframework" level="INFO"/>
+	<logger name="org.apache.http" level="INFO"/>
+	<logger name="org.apache.axis" level="INFO"/>
 </configuration>
