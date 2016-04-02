@@ -50,7 +50,5 @@ public interface IssuesDao {
 
 	public void insertCustomFieldIfNotExists(final ObjectRef item, final BigInteger parentProjectId);
 
-	public BigInteger getIssuesBiggestId();
-
 	public List<BigInteger> getNotClosedIssuesId(Calendar jobStartTime);
 }

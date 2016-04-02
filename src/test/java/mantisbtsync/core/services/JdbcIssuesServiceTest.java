@@ -44,7 +44,6 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import biz.futureware.mantis.rpc.soap.client.AccountData;
 import biz.futureware.mantis.rpc.soap.client.ObjectRef;
 
-import com.ninja_squad.dbsetup.generator.ValueGenerators;
 import com.ninja_squad.dbsetup.operation.Operation;
 
 /**
@@ -347,43 +346,6 @@ public class JdbcIssuesServiceTest extends AbstractSqlWriterTest {
 		assertEquals(item, list.get(0));
 
 		dao.insertCustomFieldIfNotExists(item, BigInteger.ONE);
-	}
-
-	/**
-	 * Test method for {@link mantisbtsync.core.services.JdbcIssuesService#getIssuesBiggestId()}.
-	 */
-	@Test
-	public void testGetIssuesBiggestIdNoIssues() {
-		final BigInteger result = dao.getIssuesBiggestId();
-		assertEquals(BigInteger.ZERO, result);
-	}
-
-	/**
-	 * Test method for {@link mantisbtsync.core.services.JdbcIssuesService#getIssuesBiggestId()}.
-	 */
-	@Test
-	public void testGetIssuesBiggestId() {
-		final Operation op = sequenceOf(
-				insertInto("mantis_project_table")
-				.columns("id", "name")
-				.values(1, "project_1")
-				.build(),
-
-				insertInto("mantis_user_table")
-				.columns("id", "name")
-				.values(1, "old_user_1")
-				.build(),
-
-				insertInto("mantis_bug_table")
-				.columns("id", "project_id", "summary", "last_sync")
-				.values(10, 1, "summary_1", ValueGenerators.dateSequence().nextValue())
-				.build()
-				);
-
-		lauchOperation(op);
-
-		final BigInteger result = dao.getIssuesBiggestId();
-		assertEquals(BigInteger.TEN, result);
 	}
 
 	/**

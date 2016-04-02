@@ -26,10 +26,8 @@ package mantisbtsync.core.jobs;
 import mantisbtsync.core.common.auth.PortalAuthManager;
 import mantisbtsync.core.common.listener.CloseAuthManagerListener;
 import mantisbtsync.core.jobs.issues.beans.BugBean;
-import mantisbtsync.core.jobs.issues.deciders.SkipNewIssuesStepDecider;
 import mantisbtsync.core.jobs.issues.processors.IssuesProcessor;
 import mantisbtsync.core.jobs.issues.readers.ListIssuesReader;
-import mantisbtsync.core.jobs.issues.readers.NewIssuesReader;
 import mantisbtsync.core.jobs.issues.readers.OpenIssuesReader;
 import mantisbtsync.core.jobs.issues.readers.OtherIssuesReader;
 import mantisbtsync.core.jobs.issues.tasklets.IssuesLastRunExtractorTasklet;
@@ -39,8 +37,6 @@ import org.springframework.batch.core.Step;
 import org.springframework.batch.core.StepExecutionListener;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
-import org.springframework.batch.core.job.builder.FlowBuilder;
-import org.springframework.batch.core.job.flow.Flow;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.core.step.tasklet.MethodInvokingTaskletAdapter;
 import org.springframework.batch.item.support.CompositeItemWriter;
@@ -64,27 +60,16 @@ public class JobIssuesConfiguration {
 
 	@Bean
 	public Job syncIssuesJob(final JobBuilderFactory jobs, final Step issuesLastSuccessExtractorStep,
-			final Step newIssuesSyncStep, final SkipNewIssuesStepDecider skipNewIssuesStepDecider,
 			final Step openIssuesSyncStep, final Step otherIssuesSyncStep, final Step authIssuesStep,
 			final CloseAuthManagerListener closeIssuesListener) {
-
-		final Flow issuesMainFlow = new FlowBuilder<Flow>("issuesMainFlow")
-				.start(openIssuesSyncStep)
-				.next(otherIssuesSyncStep)
-				.build();
 
 		return jobs.get("syncIssuesJob")
 				.incrementer(new RunIdIncrementer())
 				.listener(closeIssuesListener)
 				.flow(authIssuesStep)
 				.next(issuesLastSuccessExtractorStep)
-				.next(skipNewIssuesStepDecider)
-				.on(SkipNewIssuesStepDecider.NO_SKIP_STEP)
-				.to(newIssuesSyncStep)
-				.next(issuesMainFlow)
-				.from(skipNewIssuesStepDecider)
-				.on(SkipNewIssuesStepDecider.SKIP_STEP)
-				.to(issuesMainFlow)
+				.next(openIssuesSyncStep)
+				.next(otherIssuesSyncStep)
 				.end()
 				.build();
 	}
@@ -130,20 +115,6 @@ public class JobIssuesConfiguration {
 	}
 
 	@Bean
-	public Step newIssuesSyncStep(final StepBuilderFactory stepBuilderFactory,
-			final NewIssuesReader newIssuesReader,
-			final IssuesProcessor issuesProcessor,
-			final CompositeItemWriter<BugBean> compositeIssuesWriter) {
-
-		return stepBuilderFactory.get("newIssuesSyncStep")
-				.<IssueData, BugBean> chunk(10)
-				.reader(newIssuesReader)
-				.processor(issuesProcessor)
-				.writer(compositeIssuesWriter)
-				.build();
-	}
-
-	@Bean
 	public Step openIssuesSyncStep(final StepBuilderFactory stepBuilderFactory,
 			final OpenIssuesReader openIssuesReader,
 			final IssuesProcessor issuesProcessor,
@@ -184,13 +155,4 @@ public class JobIssuesConfiguration {
 				.writer(compositeIssuesWriter)
 				.build();
 	}
-
-	// tag::decider[]
-
-	@Bean
-	public SkipNewIssuesStepDecider skipNewIssuesStepDecider() {
-		return new SkipNewIssuesStepDecider();
-	}
-
-	// end::decider[]
 }

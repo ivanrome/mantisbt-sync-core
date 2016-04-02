@@ -62,8 +62,6 @@ public class JdbcIssuesService implements IssuesDao {
 	private static final String SQL_INSERT_CUSTOM_FIELD_PROJECT = "INSERT INTO mantis_custom_field_project_table\n"
 			+ " (project_id, field_id) values (?, ?)";
 
-	private static final String SQL_GET_BIGGEST_ID = "SELECT IFNULL(MAX(bug.id), 0) FROM mantis_bug_table bug";
-
 	private static final String SQL_GET_NOT_CLOSED_ISSUES_ID = "SELECT bug.id FROM mantis_bug_table bug\n"
 			+ " WHERE bug.status_id <> 90\n"
 			+ " AND bug.last_sync <= ?";
@@ -228,15 +226,6 @@ public class JdbcIssuesService implements IssuesDao {
 		}
 
 		return true;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * @see mantisbtsync.core.services.IssuesDao#getIssuesBiggestId()
-	 */
-	@Override
-	public BigInteger getIssuesBiggestId() {
-		return jdbcTemplate.queryForObject(SQL_GET_BIGGEST_ID, BigInteger.class);
 	}
 
 	/**
