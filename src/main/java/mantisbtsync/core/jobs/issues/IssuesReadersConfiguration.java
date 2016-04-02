@@ -28,6 +28,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 import mantisbtsync.core.common.auth.PortalAuthManager;
+import mantisbtsync.core.jobs.issues.readers.ListIssuesReader;
 import mantisbtsync.core.jobs.issues.readers.NewIssuesReader;
 import mantisbtsync.core.jobs.issues.readers.OpenIssuesReader;
 import mantisbtsync.core.jobs.issues.readers.OtherIssuesReader;
@@ -99,6 +100,24 @@ public class IssuesReadersConfiguration {
 		reader.setJobStartTime(jobRunTime);
 		reader.setPassword(password);
 		reader.setProjectId(projectId);
+		reader.setUserName(userName);
+
+		return reader;
+	}
+
+	@Bean
+	@StepScope
+	public ListIssuesReader listIssuesReader(final PortalAuthManager authManager,
+			final MantisConnectBindingStub clientStub,
+			@Value("#{jobParameters['mantis.username']}") final String userName,
+			@Value("#{jobParameters['mantis.password']}") final String password,
+			@Value("#{jobParameters['mantis.issues_id']}") final String issuesIds) {
+
+		final ListIssuesReader reader = new ListIssuesReader();
+		reader.setAuthManager(authManager);
+		reader.setClientStub(clientStub);
+		reader.setIssuesToSync(issuesIds);
+		reader.setPassword(password);
 		reader.setUserName(userName);
 
 		return reader;

@@ -28,6 +28,7 @@ import mantisbtsync.core.common.listener.CloseAuthManagerListener;
 import mantisbtsync.core.jobs.issues.beans.BugBean;
 import mantisbtsync.core.jobs.issues.deciders.SkipNewIssuesStepDecider;
 import mantisbtsync.core.jobs.issues.processors.IssuesProcessor;
+import mantisbtsync.core.jobs.issues.readers.ListIssuesReader;
 import mantisbtsync.core.jobs.issues.readers.NewIssuesReader;
 import mantisbtsync.core.jobs.issues.readers.OpenIssuesReader;
 import mantisbtsync.core.jobs.issues.readers.OtherIssuesReader;
@@ -89,6 +90,20 @@ public class JobIssuesConfiguration {
 	}
 
 	@Bean
+	public Job forceSyncIssuesJob(final JobBuilderFactory jobs, final Step authIssuesStep,
+			final CloseAuthManagerListener closeIssuesListener,
+			final Step forceIssuesSyncStep) {
+
+		return jobs.get("forceSyncIssuesJob")
+				.incrementer(new RunIdIncrementer())
+				.listener(closeIssuesListener)
+				.flow(authIssuesStep)
+				.next(forceIssuesSyncStep)
+				.end()
+				.build();
+	}
+
+	@Bean
 	public CloseAuthManagerListener closeIssuesListener(final PortalAuthManager authManager) {
 		final CloseAuthManagerListener listener = new CloseAuthManagerListener();
 		listener.setMgr(authManager);
@@ -121,7 +136,7 @@ public class JobIssuesConfiguration {
 			final CompositeItemWriter<BugBean> compositeIssuesWriter) {
 
 		return stepBuilderFactory.get("newIssuesSyncStep")
-				.<IssueData, BugBean> chunk(100)
+				.<IssueData, BugBean> chunk(10)
 				.reader(newIssuesReader)
 				.processor(issuesProcessor)
 				.writer(compositeIssuesWriter)
@@ -135,7 +150,7 @@ public class JobIssuesConfiguration {
 			final CompositeItemWriter<BugBean> compositeIssuesWriter) {
 
 		return stepBuilderFactory.get("openIssuesSyncStep")
-				.<IssueData, BugBean> chunk(20)
+				.<IssueData, BugBean> chunk(10)
 				.reader(openIssuesReader)
 				.processor(issuesProcessor)
 				.writer(compositeIssuesWriter)
@@ -149,8 +164,22 @@ public class JobIssuesConfiguration {
 			final CompositeItemWriter<BugBean> compositeIssuesWriter) {
 
 		return stepBuilderFactory.get("otherIssuesSyncStep")
-				.<IssueData, BugBean> chunk(20)
+				.<IssueData, BugBean> chunk(10)
 				.reader(otherIssuesReader)
+				.processor(issuesProcessor)
+				.writer(compositeIssuesWriter)
+				.build();
+	}
+
+	@Bean
+	public Step forceIssuesSyncStep(final StepBuilderFactory stepBuilderFactory,
+			final ListIssuesReader listIssuesReader,
+			final IssuesProcessor issuesProcessor,
+			final CompositeItemWriter<BugBean> compositeIssuesWriter) {
+
+		return stepBuilderFactory.get("forceIssuesSyncStep")
+				.<IssueData, BugBean> chunk(10)
+				.reader(listIssuesReader)
 				.processor(issuesProcessor)
 				.writer(compositeIssuesWriter)
 				.build();
