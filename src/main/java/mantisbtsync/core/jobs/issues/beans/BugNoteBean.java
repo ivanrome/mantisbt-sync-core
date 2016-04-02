@@ -133,4 +133,14 @@ public class BugNoteBean {
 	public void setLastModified(final Timestamp lastModified) {
 		this.lastModified = lastModified;
 	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "BugNoteBean [id=" + id + ", bugId=" + bugId + ", reporterId="
+				+ reporterId + ", textNote=" + textNote + ", dateSubmitted="
+				+ dateSubmitted + ", lastModified=" + lastModified + "]";
+	}
 }

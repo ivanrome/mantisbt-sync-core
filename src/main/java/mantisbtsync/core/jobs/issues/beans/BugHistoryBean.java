@@ -149,4 +149,15 @@ public final class BugHistoryBean {
 	public void setDateModified(final Timestamp dateModified) {
 		this.dateModified = dateModified;
 	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "BugHistoryBean [bugId=" + bugId + ", userId=" + userId
+				+ ", fieldName=" + fieldName + ", oldValue=" + oldValue
+				+ ", newValue=" + newValue + ", historyType=" + historyType
+				+ ", dateModified=" + dateModified + "]";
+	}
 }

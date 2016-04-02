@@ -52,4 +52,12 @@ public class BugIdBean {
 	public void setId(final BigInteger id) {
 		this.id = id;
 	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "BugIdBean [id=" + id + "]";
+	}
 }

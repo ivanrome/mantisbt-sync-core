@@ -84,4 +84,13 @@ public class BugCustomFieldValue {
 	public void setFieldValue(final String fieldValue) {
 		this.fieldValue = fieldValue;
 	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "BugCustomFieldValue [fieldId=" + fieldId + ", bugId=" + bugId
+				+ ", fieldValue=" + fieldValue + "]";
+	}
 }

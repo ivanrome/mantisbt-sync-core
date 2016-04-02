@@ -370,4 +370,24 @@ public class BugBean {
 	public List<BugHistoryBean> getHistory() {
 		return history;
 	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "BugBean [id=" + id + ", projectId=" + projectId
+				+ ", reporterId=" + reporterId + ", handlerId=" + handlerId
+				+ ", priorityId=" + priorityId + ", severityId=" + severityId
+				+ ", statusId=" + statusId + ", resolutionId=" + resolutionId
+				+ ", description=" + description + ", stepsToReproduce="
+				+ stepsToReproduce + ", additionalInformation="
+				+ additionalInformation + ", platform=" + platform
+				+ ", version=" + version + ", fixedInVersion=" + fixedInVersion
+				+ ", targetVersion=" + targetVersion + ", summary=" + summary
+				+ ", category=" + category + ", dateSubmitted=" + dateSubmitted
+				+ ", lastUpdated=" + lastUpdated + ", notes=" + notes
+				+ ", customFields=" + customFields + ", history=" + history
+				+ "]";
+	}
 }
