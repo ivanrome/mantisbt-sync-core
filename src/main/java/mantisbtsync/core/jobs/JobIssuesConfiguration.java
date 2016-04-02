@@ -27,6 +27,7 @@ import mantisbtsync.core.common.auth.PortalAuthManager;
 import mantisbtsync.core.common.listener.CloseAuthManagerListener;
 import mantisbtsync.core.jobs.issues.beans.BugBean;
 import mantisbtsync.core.jobs.issues.beans.BugIdBean;
+import mantisbtsync.core.jobs.issues.listener.CacheEvictionListener;
 import mantisbtsync.core.jobs.issues.processors.IssuesProcessor;
 import mantisbtsync.core.jobs.issues.readers.OpenIssuesReader;
 import mantisbtsync.core.jobs.issues.readers.OtherIssuesReader;
@@ -135,13 +136,15 @@ public class JobIssuesConfiguration {
 	public Step openIssuesSyncStep(final StepBuilderFactory stepBuilderFactory,
 			final OpenIssuesReader openIssuesReader,
 			final IssuesProcessor issuesProcessor,
-			final CompositeItemWriter<BugBean> compositeIssuesWriter) {
+			final CompositeItemWriter<BugBean> compositeIssuesWriter,
+			final CacheEvictionListener cacheEvictionListener) {
 
 		return stepBuilderFactory.get("openIssuesSyncStep")
 				.<IssueData, BugBean> chunk(10)
 				.reader(openIssuesReader)
 				.processor(issuesProcessor)
 				.writer(compositeIssuesWriter)
+				.listener(cacheEvictionListener)
 				.build();
 	}
 
@@ -149,13 +152,15 @@ public class JobIssuesConfiguration {
 	public Step otherIssuesSyncStep(final StepBuilderFactory stepBuilderFactory,
 			final OtherIssuesReader otherIssuesReader,
 			final IssuesProcessor issuesProcessor,
-			final CompositeItemWriter<BugBean> compositeIssuesWriter) {
+			final CompositeItemWriter<BugBean> compositeIssuesWriter,
+			final CacheEvictionListener cacheEvictionListener) {
 
 		return stepBuilderFactory.get("otherIssuesSyncStep")
 				.<IssueData, BugBean> chunk(10)
 				.reader(otherIssuesReader)
 				.processor(issuesProcessor)
 				.writer(compositeIssuesWriter)
+				.listener(cacheEvictionListener)
 				.build();
 	}
 
@@ -163,13 +168,15 @@ public class JobIssuesConfiguration {
 	public Step forceIssuesSyncStep(final StepBuilderFactory stepBuilderFactory,
 			final ListItemReader<BugIdBean> listIssuesReader,
 			final CompositeItemProcessor<BugIdBean, BugBean> compositeIssuesProcessor,
-			final CompositeItemWriter<BugBean> compositeIssuesWriter) {
+			final CompositeItemWriter<BugBean> compositeIssuesWriter,
+			final CacheEvictionListener cacheEvictionListener) {
 
 		return stepBuilderFactory.get("forceIssuesSyncStep")
 				.<BugIdBean, BugBean> chunk(10)
 				.reader(listIssuesReader)
 				.processor(compositeIssuesProcessor)
 				.writer(compositeIssuesWriter)
+				.listener(cacheEvictionListener)
 				.build();
 	}
 
@@ -177,13 +184,20 @@ public class JobIssuesConfiguration {
 	public Step fileIssuesSyncStep(final StepBuilderFactory stepBuilderFactory,
 			final FlatFileItemReader<BugIdBean> csvIssuesReader,
 			final CompositeItemProcessor<BugIdBean, BugBean> compositeIssuesProcessor,
-			final CompositeItemWriter<BugBean> compositeIssuesWriter) {
+			final CompositeItemWriter<BugBean> compositeIssuesWriter,
+			final CacheEvictionListener cacheEvictionListener) {
 
 		return stepBuilderFactory.get("fileIssuesSyncStep")
 				.<BugIdBean, BugBean> chunk(10)
 				.reader(csvIssuesReader)
 				.processor(compositeIssuesProcessor)
 				.writer(compositeIssuesWriter)
+				.listener(cacheEvictionListener)
 				.build();
+	}
+
+	@Bean
+	public CacheEvictionListener cacheEvictionListener() {
+		return new CacheEvictionListener();
 	}
 }

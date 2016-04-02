@@ -28,6 +28,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -236,6 +237,17 @@ public class JdbcIssuesService implements IssuesDao {
 	public List<BigInteger> getNotClosedIssuesId(final Calendar jobStartTime) {
 		final java.sql.Timestamp time = new java.sql.Timestamp(jobStartTime.getTimeInMillis());
 		return jdbcTemplate.queryForList(SQL_GET_NOT_CLOSED_ISSUES_ID, BigInteger.class, time);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * @see mantisbtsync.core.services.IssuesDao#evictAllCaches()
+	 */
+	@Override
+	@CacheEvict(value = {"projects", "users", "users_project", "priorities", "severities"
+			, "status", "resolutions", "customFields", "customFields_project"}, allEntries = true)
+	public void evictAllCaches() {
+		// do nothing, everything is in the annotations
 	}
 
 	private boolean existsById(final String table, final BigInteger id) {
