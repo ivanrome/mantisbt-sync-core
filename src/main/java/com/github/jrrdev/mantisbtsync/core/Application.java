@@ -42,9 +42,13 @@ import com.github.jrrdev.mantisbtsync.core.common.CommonConfiguration;
 @EnableCaching
 @EnableAutoConfiguration
 @Import(CommonConfiguration.class)
-@ComponentScan({"com.github.jrrdev.mantisbtsync.core.jobs.enums", "com.github.jrrdev.mantisbtsync.core.jobs.projects",
-	"com.github.jrrdev.mantisbtsync.core.jobs.issues", "com.github.jrrdev.mantisbtsync.core.jobs.common",
-"com.github.jrrdev.mantisbtsync.core.services"})
+@ComponentScan({
+	"com.github.jrrdev.mantisbtsync.core.jobs.enums",
+	"com.github.jrrdev.mantisbtsync.core.jobs.projects",
+	"com.github.jrrdev.mantisbtsync.core.jobs.issues",
+	"com.github.jrrdev.mantisbtsync.core.jobs.common",
+	"com.github.jrrdev.mantisbtsync.core.services"
+})
 public class Application {
 
 	/**

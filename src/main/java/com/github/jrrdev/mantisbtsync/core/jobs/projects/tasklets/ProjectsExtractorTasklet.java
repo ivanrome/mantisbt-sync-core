@@ -32,6 +32,13 @@ import org.springframework.batch.core.step.tasklet.Tasklet;
 import org.springframework.batch.repeat.RepeatStatus;
 
 /**
+ * Tasklet that gets the list of projects to sync from the job execution
+ * context (mantis.loop.projects_to_process) and pop the first element and
+ * stores it in the step execution context (mantis.loop.project_id).
+ *
+ * That tasklet is used to sync sub-projects related to the main project
+ * passed as job parameter.
+ *
  * @author jrrdev
  *
  */

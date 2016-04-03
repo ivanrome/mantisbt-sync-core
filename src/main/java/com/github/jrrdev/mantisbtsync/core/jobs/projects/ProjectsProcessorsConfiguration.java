@@ -34,8 +34,7 @@ import com.github.jrrdev.mantisbtsync.core.jobs.projects.processors.ProjectCateg
 import com.github.jrrdev.mantisbtsync.core.jobs.projects.processors.ProjectCustomFieldProcessor;
 
 /**
- * Configuration for the processors used by the job of
- * Mantis projects syncing.
+ * Configuration for the processors used to sync MantisBT projects.
  *
  * @author jrrdev
  *
@@ -43,6 +42,13 @@ import com.github.jrrdev.mantisbtsync.core.jobs.projects.processors.ProjectCusto
 @Configuration
 public class ProjectsProcessorsConfiguration {
 
+	/**
+	 * Processor for the project categories.
+	 *
+	 * @param projectId
+	 * 		Id of the project being synced.
+	 * @return the processor
+	 */
 	@Bean
 	@StepScope
 	public ProjectCategoryProcessor projectCategoriesProcessor(
@@ -56,6 +62,13 @@ public class ProjectsProcessorsConfiguration {
 		return proc;
 	}
 
+	/**
+	 * Processor that builds the custom field bean.
+	 *
+	 * @param projectId
+	 * 		Id of the project being synced.
+	 * @return the processor
+	 */
 	@Bean
 	@StepScope
 	public ProjectCustomFieldProcessor projectCustomFieldProcessor(

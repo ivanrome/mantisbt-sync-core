@@ -40,20 +40,40 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ResourceLoader;
 
+import biz.futureware.mantis.rpc.soap.client.MantisConnectBindingStub;
+
 import com.github.jrrdev.mantisbtsync.core.common.auth.PortalAuthManager;
 import com.github.jrrdev.mantisbtsync.core.jobs.issues.beans.BugIdBean;
 import com.github.jrrdev.mantisbtsync.core.jobs.issues.readers.OpenIssuesReader;
 import com.github.jrrdev.mantisbtsync.core.jobs.issues.readers.OtherIssuesReader;
 
-import biz.futureware.mantis.rpc.soap.client.MantisConnectBindingStub;
-
 /**
+ * Configuration for the readers used to sync issues.
+ *
  * @author jrrdev
  *
  */
 @Configuration
 public class IssuesReadersConfiguration {
 
+	/**
+	 * Reader for all issues that are still open in the given project and that was
+	 * updated since a given datetime passed in the job execution context.
+	 *
+	 * @param authManager
+	 * 			The portal auth manager
+	 * @param clientStub
+	 * 			Axis client stub
+	 * @param userName
+	 * 			MantisBT username. If anonymous access is used, should be an empty string.
+	 * @param password
+	 * 			MantisBT password. If anonymous access is used, should be an empty string.
+	 * @param projectId
+	 * 			The id of the project
+	 * @param lastJobRun
+	 * 			Datetime of the last successful sync.
+	 * @return the reader
+	 */
 	@Bean
 	@StepScope
 	public OpenIssuesReader openIssuesReader(final PortalAuthManager authManager,
@@ -74,6 +94,24 @@ public class IssuesReadersConfiguration {
 		return reader;
 	}
 
+	/**
+	 * Reader for the data related to the issues still marked as opened in the local DB
+	 * and that weren't sync since a given datetime passed in the job execution context.
+	 *
+	 * @param authManager
+	 * 			The portal auth manager
+	 * @param clientStub
+	 * 			Axis client stub
+	 * @param userName
+	 * 			MantisBT username. If anonymous access is used, should be an empty string.
+	 * @param password
+	 * 			MantisBT password. If anonymous access is used, should be an empty string.
+	 * @param projectId
+	 * 			The id of the project
+	 * @param jobRunTime
+	 * 			Job start time
+	 * @return the reader
+	 */
 	@Bean
 	@StepScope
 	public OtherIssuesReader otherIssuesReader(final PortalAuthManager authManager,
@@ -94,6 +132,22 @@ public class IssuesReadersConfiguration {
 		return reader;
 	}
 
+	/**
+	 * Return a reader that gets a list of issues ids from a the job parameter mantis.issues_id.
+	 * The list of issues ids passed in parameter must be separated by a semi-colon.
+	 *
+	 * @param authManager
+	 * 			The portal auth manager
+	 * @param clientStub
+	 * 			Axis client stub
+	 * @param userName
+	 * 			MantisBT username. If anonymous access is used, should be an empty string.
+	 * @param password
+	 * 			MantisBT password. If anonymous access is used, should be an empty string.
+	 * @param issuesIds
+	 * 			Semi-colon separated list of issues ids
+	 * @return the reader
+	 */
 	@Bean
 	@StepScope
 	public ListItemReader<BugIdBean> listIssuesReader(final PortalAuthManager authManager,
@@ -117,6 +171,18 @@ public class IssuesReadersConfiguration {
 		return reader;
 	}
 
+	/**
+	 * Return a reader that gets a list of issues ids from a CSV file.
+	 * The CSV file must not have a header line for columns definition.
+	 * The file is loaded through Spring resource loader so the filepath can contains
+	 * definitions like classpath: and others.
+	 *
+	 * @param resourceLoader
+	 * 			Spring resource loader
+	 * @param filePath
+	 * 			File path of the CSV file
+	 * @return the reader
+	 */
 	@Bean
 	@StepScope
 	public FlatFileItemReader<BugIdBean> csvIssuesReader(final ResourceLoader resourceLoader,

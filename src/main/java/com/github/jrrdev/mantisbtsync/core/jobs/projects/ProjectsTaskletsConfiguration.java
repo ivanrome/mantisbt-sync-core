@@ -32,16 +32,15 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import biz.futureware.mantis.rpc.soap.client.MantisConnectBindingStub;
+
 import com.github.jrrdev.mantisbtsync.core.common.auth.PortalAuthManager;
 import com.github.jrrdev.mantisbtsync.core.jobs.projects.tasklets.MantisLoginTasklet;
 import com.github.jrrdev.mantisbtsync.core.jobs.projects.tasklets.ProjectsExtractorTasklet;
 import com.github.jrrdev.mantisbtsync.core.jobs.projects.tasklets.ProjectsListTasklet;
 
-import biz.futureware.mantis.rpc.soap.client.MantisConnectBindingStub;
-
 /**
- * Configuration for the taskets used by the job of
- * Mantis projects syncing.
+ * Configuration for the taskets  used to sync MantisBT projects.
  *
  * @author jrrdev
  *
@@ -51,6 +50,19 @@ public class ProjectsTaskletsConfiguration {
 
 	// tag::tasklet[]
 
+	/**
+	 * Build the tasklet calling mc_login to get the user_acces_level.
+	 *
+	 * @param authManager
+	 * 			The portal auth manager
+	 * @param clientStub
+	 * 			Axis client stub
+	 * @param userName
+	 * 			MantisBT username. If anonymous access is used, should be an empty string.
+	 * @param password
+	 * 			MantisBT password. If anonymous access is used, should be an empty string.
+	 * @return the tasklet
+	 */
 	@Bean
 	@StepScope
 	public MantisLoginTasklet mantisLoginTasklet(final PortalAuthManager authManager,
@@ -67,6 +79,24 @@ public class ProjectsTaskletsConfiguration {
 		return tasklet;
 	}
 
+	/**
+	 * Build the tasklet which retrieves all subprojects related to the main
+	 * project passed as job parameter.
+	 *
+	 * @param authManager
+	 * 			The portal auth manager
+	 * @param clientStub
+	 * 			Axis client stub
+	 * @param jdbcTemplate
+	 * 			JDBC template
+	 * @param userName
+	 * 			MantisBT username. If anonymous access is used, should be an empty string.
+	 * @param password
+	 * 			MantisBT password. If anonymous access is used, should be an empty string.
+	 * @param projectId
+	 * 			The id of the project
+	 * @return the tasklet
+	 */
 	@Bean
 	@StepScope
 	public ProjectsListTasklet mantisProjectsListTasklet(final PortalAuthManager authManager,
@@ -86,6 +116,12 @@ public class ProjectsTaskletsConfiguration {
 		return tasklet;
 	}
 
+	/**
+	 * Build the tasklet that gets the list of projects to sync from the job execution
+	 * context.
+	 *
+	 * @return the tasklet
+	 */
 	@Bean
 	@StepScope
 	public ProjectsExtractorTasklet mantisProjectExtractorTasklet() {
@@ -97,6 +133,12 @@ public class ProjectsTaskletsConfiguration {
 
 	// tag::listener[]
 
+	/**
+	 * Build the execution promotion listener used to store the access level (mantis.acess_level)
+	 * in the job execution context.
+	 *
+	 * @return the execution promotion listener
+	 */
 	@Bean
 	@StepScope
 	public ExecutionContextPromotionListener mantisLoginPromotionListener() {
@@ -106,6 +148,12 @@ public class ProjectsTaskletsConfiguration {
 		return listener;
 	}
 
+	/**
+	 * Build the execution promotion listener used to store the list of projects to sync
+	 * (mantis.loop.projects_to_process) in the job execution context.
+	 *
+	 * @return the execution promotion listener
+	 */
 	@Bean
 	@StepScope
 	public ExecutionContextPromotionListener mantisProjectsListListener() {
@@ -115,6 +163,12 @@ public class ProjectsTaskletsConfiguration {
 		return listener;
 	}
 
+	/**
+	 * Build the execution promotion listener used to store the current project to sync
+	 * (mantis.loop.project_id) in the job execution context.
+	 *
+	 * @return the execution promotion listener
+	 */
 	@Bean
 	@StepScope
 	public ExecutionContextPromotionListener mantisProjectExtractorListener() {

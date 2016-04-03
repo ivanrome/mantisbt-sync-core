@@ -28,6 +28,9 @@ import org.springframework.batch.item.ItemProcessor;
 import com.github.jrrdev.mantisbtsync.core.jobs.projects.beans.ProjectCategoryBean;
 
 /**
+ * Processor for the project categories that simply fills the project id with the given one.
+ * This processor is used because mc_project_get_categories doesn't return the project id.
+ *
  * @author jrrdev
  *
  */

@@ -31,16 +31,15 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import com.github.jrrdev.mantisbtsync.core.common.auth.PortalAuthManager;
-import com.github.jrrdev.mantisbtsync.core.common.readers.AxisAuthItemsArrayReader;
-
 import biz.futureware.mantis.rpc.soap.client.AccountData;
 import biz.futureware.mantis.rpc.soap.client.CustomFieldDefinitionData;
 import biz.futureware.mantis.rpc.soap.client.ProjectVersionData;
 
+import com.github.jrrdev.mantisbtsync.core.common.auth.PortalAuthManager;
+import com.github.jrrdev.mantisbtsync.core.common.readers.AxisAuthItemsArrayReader;
+
 /**
- * Configuration for the readers used by the job of
- * Mantis projects syncing.
+ * Configuration for the readers used to sync MantisBT projects.
  *
  * @author jrrdev
  *
@@ -48,6 +47,21 @@ import biz.futureware.mantis.rpc.soap.client.ProjectVersionData;
 @Configuration
 public class ProjectsReadersConfiguration {
 
+	/**
+	 * Project categories reader. Use mc_project_get_categories WS operation.
+	 *
+	 * @param authManager
+	 * 			The portal auth manager
+	 * @param clientStub
+	 * 			Axis client stub
+	 * @param userName
+	 * 			MantisBT username. If anonymous access is used, should be an empty string.
+	 * @param password
+	 * 			MantisBT password. If anonymous access is used, should be an empty string.
+	 * @param projectId
+	 * 			The id of the project
+	 * @return the reader
+	 */
 	@Bean
 	@StepScope
 	public AxisAuthItemsArrayReader<String> projectCategoriesReader(final PortalAuthManager authManager,
@@ -65,6 +79,21 @@ public class ProjectsReadersConfiguration {
 		return reader;
 	}
 
+	/**
+	 * Project custom fields reader. Use mc_project_get_custom_fields WS operation.
+	 *
+	 * @param authManager
+	 * 			The portal auth manager
+	 * @param clientStub
+	 * 			Axis client stub
+	 * @param userName
+	 * 			MantisBT username. If anonymous access is used, should be an empty string.
+	 * @param password
+	 * 			MantisBT password. If anonymous access is used, should be an empty string.
+	 * @param projectId
+	 * 			The id of the project
+	 * @return the reader
+	 */
 	@Bean
 	@StepScope
 	public AxisAuthItemsArrayReader<CustomFieldDefinitionData> projectCustomFieldsReader(final PortalAuthManager authManager,
@@ -82,6 +111,23 @@ public class ProjectsReadersConfiguration {
 		return reader;
 	}
 
+	/**
+	 * Project users reader. Use mc_project_get_users WS operation.
+	 *
+	 * @param authManager
+	 * 			The portal auth manager
+	 * @param clientStub
+	 * 			Axis client stub
+	 * @param userName
+	 * 			MantisBT username. If anonymous access is used, should be an empty string.
+	 * @param password
+	 * 			MantisBT password. If anonymous access is used, should be an empty string.
+	 * @param projectId
+	 * 			The id of the project
+	 * @param acessLevel
+	 * 			Access level of the user used for authentication.
+	 * @return the reader
+	 */
 	@Bean
 	@StepScope
 	public AxisAuthItemsArrayReader<AccountData> projectUsersReader(final PortalAuthManager authManager,
@@ -100,6 +146,21 @@ public class ProjectsReadersConfiguration {
 		return reader;
 	}
 
+	/**
+	 * Project versions reader. Use mc_project_get_versions WS operation.
+	 *
+	 * @param authManager
+	 * 			The portal auth manager
+	 * @param clientStub
+	 * 			Axis client stub
+	 * @param userName
+	 * 			MantisBT username. If anonymous access is used, should be an empty string.
+	 * @param password
+	 * 			MantisBT password. If anonymous access is used, should be an empty string.
+	 * @param projectId
+	 * 			The id of the project
+	 * @return the reader
+	 */
 	@Bean
 	@StepScope
 	public AxisAuthItemsArrayReader<ProjectVersionData> projectVersionsReader(final PortalAuthManager authManager,

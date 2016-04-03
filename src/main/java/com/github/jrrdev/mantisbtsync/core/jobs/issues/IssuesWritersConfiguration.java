@@ -48,6 +48,19 @@ import com.github.jrrdev.mantisbtsync.core.jobs.issues.writers.BugNotesWriter;
 @Configuration
 public class IssuesWritersConfiguration {
 
+	/**
+	 * Build the composite item writer that chains all writers related to issues upsert.
+	 *
+	 * @param bugsWriter
+	 * 			Writer for the data related to an issue
+	 * @param bugNotesWriter
+	 * 			Writer for the data related to a note
+	 * @param bugCustomFieldsWriter
+	 * 			Writer for the data related to a custom field value
+	 * @param bugHistoryWriter
+	 * 			Writer for the date related to the history of an issue
+	 * @return the composite writer
+	 */
 	@Bean
 	@StepScope
 	public CompositeItemWriter<BugBean> compositeIssuesWriter(final JdbcBatchItemWriter<BugBean> bugsWriter,
@@ -70,6 +83,14 @@ public class IssuesWritersConfiguration {
 		return compositeWriter;
 	}
 
+	/**
+	 * Build the writer upserting the data related to an issue.
+	 * Perform upsert in the mantis_bug_table table.
+	 *
+	 * @param dataSource
+	 * 			The datasource
+	 * @return the writer upserting the data related to an issue
+	 */
 	@Bean
 	@StepScope
 	public JdbcBatchItemWriter<BugBean> bugsWriter(final DataSource dataSource) {
@@ -97,6 +118,13 @@ public class IssuesWritersConfiguration {
 		return writer;
 	}
 
+	/**
+	 * Build the writer upserting the list of notes related to an issue.
+	 *
+	 * @param dataSource
+	 * 			The datasource
+	 * @return the writer upserting the list of notes related to an issue
+	 */
 	@Bean
 	@StepScope
 	public BugNotesWriter bugNotesWriter(final DataSource dataSource) {
@@ -105,6 +133,13 @@ public class IssuesWritersConfiguration {
 		return writer;
 	}
 
+	/**
+	 * Build the writer upserting the list of custom field values related to an issue.
+	 *
+	 * @param dataSource
+	 * 			The datasource
+	 * @return the writer upserting the list of custom field values related to an issue
+	 */
 	@Bean
 	@StepScope
 	public BugCustomFieldsWriter bugCustomFieldsWriter(final DataSource dataSource) {
@@ -113,6 +148,13 @@ public class IssuesWritersConfiguration {
 		return writer;
 	}
 
+	/**
+	 * Build the writer upserting the list history entries related to an issue.
+	 *
+	 * @param dataSource
+	 * 			The datasource
+	 * @return the writer upserting the list history entries related to an issue
+	 */
 	@Bean
 	@StepScope
 	public BugHistoryWriter bugHistoryWriter(final DataSource dataSource) {

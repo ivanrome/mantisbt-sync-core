@@ -36,12 +36,18 @@ import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.util.Assert;
 
-import com.github.jrrdev.mantisbtsync.core.common.auth.PortalAuthManager;
-
 import biz.futureware.mantis.rpc.soap.client.MantisConnectBindingStub;
 
+import com.github.jrrdev.mantisbtsync.core.common.auth.PortalAuthManager;
+
 /**
- * Tasklet to read the projects list.
+ * Tasklet to that retrieved all subprojects related to the main
+ * project passed as job parameter.
+ * Each subproject is inserted into mantis_project_table with a link to the
+ * main project in mantis_project_hierarchy_table.
+ * In addition, each subproject is added is added to the list of projects to sync
+ * that is stored in the execution context (mantis.loop.projects_to_process).
+ *
  *
  * @author jrrdev
  *

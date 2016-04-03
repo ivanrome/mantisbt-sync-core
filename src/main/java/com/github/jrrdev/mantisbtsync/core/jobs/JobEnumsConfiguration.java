@@ -34,16 +34,13 @@ import org.springframework.batch.item.ItemWriter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import biz.futureware.mantis.rpc.soap.client.ObjectRef;
+
 import com.github.jrrdev.mantisbtsync.core.common.auth.PortalAuthManager;
 import com.github.jrrdev.mantisbtsync.core.common.listener.CloseAuthManagerListener;
 
-import biz.futureware.mantis.rpc.soap.client.ObjectRef;
-
 /**
- * Configuration for the job of Mantis enumerations syncing.
- * Parameters for this job are :
- * 	- mantis.username
- *  - mantis.password
+ * Configuration for the jobs to sync MantisBT enumerations.
  *
  * @author jrrdev
  *
@@ -51,6 +48,42 @@ import biz.futureware.mantis.rpc.soap.client.ObjectRef;
 @Configuration
 public class JobEnumsConfiguration {
 
+	/**
+	 * Build the syncEnumsJob job (sync of MantisBT enumerations).
+	 * Parameters for this job are :
+	 * 	- mantis.username
+	 *  - mantis.password
+	 *
+	 *  Steps are executed in a linear flow.
+	 *
+	 * @param jobs
+	 * 			Job build factory
+	 * @param customFieldTypesStep
+	 * 			Step syncing the custom field types
+	 * @param etasStep
+	 * 			Step syncing the etas
+	 * @param prioritiesStep
+	 * 			Step syncing the priorities
+	 * @param projectionsStep
+	 * 			Step syncing the projections
+	 * @param projectStatusStep
+	 * 			Step syncing the project status
+	 * @param projectViewStatesStep
+	 * 			Step syncing the project view states
+	 * @param reproducibilitiesStep
+	 * 			Step syncing the reproducibilities
+	 * @param resolutionsStep
+	 * 			Step syncing the resolutions
+	 * @param severitiesStep
+	 * 			Step syncing the severities
+	 * @param statusStep
+	 * 			Step syncing the status
+	 * @param authEnumsStep
+	 * 			Step for portal authentification at the begining of the job
+	 * @param closeEnumsListener
+	 * 			Listener for closing the portal authentification connection at the end of the job
+	 * @return the job
+	 */
 	@Bean
 	public Job syncEnumsJob(final JobBuilderFactory jobs, final Step customFieldTypesStep, final Step etasStep,
 			final Step prioritiesStep, final Step projectionsStep, final Step projectStatusStep, final Step projectViewStatesStep,
@@ -75,6 +108,13 @@ public class JobEnumsConfiguration {
 				.build();
 	}
 
+	/**
+	 * Build the listener for closing the portal authentification connection at the end of the job.
+	 *
+	 * @param authManager
+	 * 			The portal auth manager
+	 * @return the listener
+	 */
 	@Bean
 	public CloseAuthManagerListener closeEnumsListener(final PortalAuthManager authManager) {
 		final CloseAuthManagerListener listener = new CloseAuthManagerListener();
@@ -82,6 +122,15 @@ public class JobEnumsConfiguration {
 		return listener;
 	}
 
+	/**
+	 * Build the step for portal authentification at the begining of the job.
+	 *
+	 * @param stepBuilderFactory
+	 * 			The step builder factory
+	 * @param authTasklet
+	 * 			The tasklet performing the authentication
+	 * @return the step
+	 */
 	@Bean
 	public Step authEnumsStep(final StepBuilderFactory stepBuilderFactory,
 			final MethodInvokingTaskletAdapter authTasklet) {
@@ -90,6 +139,17 @@ public class JobEnumsConfiguration {
 				.tasklet(authTasklet).build();
 	}
 
+	/**
+	 * Build the step syncing the custom field types.
+	 *
+	 * @param stepBuilderFactory
+	 * 			The step builder factory
+	 * @param customFieldTypesReader
+	 * 			The reader
+	 * @param customFieldTypesWriter
+	 * 			The writer
+	 * @return the step
+	 */
 	@Bean
 	public Step customFieldTypesStep(final StepBuilderFactory stepBuilderFactory,
 			final ItemReader<ObjectRef> customFieldTypesReader,
@@ -98,6 +158,17 @@ public class JobEnumsConfiguration {
 		return getEnumStep("customFieldTypesStep", stepBuilderFactory, customFieldTypesReader, customFieldTypesWriter);
 	}
 
+	/**
+	 * Build the step syncing the etas.
+	 *
+	 * @param stepBuilderFactory
+	 * 			The step builder factory
+	 * @param etasReader
+	 * 			The reader
+	 * @param etasWriter
+	 * 			The writer
+	 * @return the step
+	 */
 	@Bean
 	public Step etasStep(final StepBuilderFactory stepBuilderFactory,
 			final ItemReader<ObjectRef> etasReader,
@@ -106,6 +177,17 @@ public class JobEnumsConfiguration {
 		return getEnumStep("etasStep", stepBuilderFactory, etasReader, etasWriter);
 	}
 
+	/**
+	 * Build the step syncing the priorities.
+	 *
+	 * @param stepBuilderFactory
+	 * 			The step builder factory
+	 * @param prioritiesReader
+	 * 			The reader
+	 * @param prioritiesWriter
+	 * 			The writer
+	 * @return the step
+	 */
 	@Bean
 	public Step prioritiesStep(final StepBuilderFactory stepBuilderFactory,
 			final ItemReader<ObjectRef> prioritiesReader,
@@ -114,6 +196,17 @@ public class JobEnumsConfiguration {
 		return getEnumStep("prioritiesStep", stepBuilderFactory, prioritiesReader, prioritiesWriter);
 	}
 
+	/**
+	 * Build the step syncing the projections.
+	 *
+	 * @param stepBuilderFactory
+	 * 			The step builder factory
+	 * @param projectionsReader
+	 * 			The reader
+	 * @param projectionsWriter
+	 * 			The writer
+	 * @return the step
+	 */
 	@Bean
 	public Step projectionsStep(final StepBuilderFactory stepBuilderFactory,
 			final ItemReader<ObjectRef> projectionsReader,
@@ -122,6 +215,17 @@ public class JobEnumsConfiguration {
 		return getEnumStep("projectionsStep", stepBuilderFactory, projectionsReader, projectionsWriter);
 	}
 
+	/**
+	 * Build the step syncing the project status.
+	 *
+	 * @param stepBuilderFactory
+	 * 			The step builder factory
+	 * @param projectStatusReader
+	 * 			The reader
+	 * @param projectStatusWriter
+	 * 			The writer
+	 * @return the step
+	 */
 	@Bean
 	public Step projectStatusStep(final StepBuilderFactory stepBuilderFactory,
 			final ItemReader<ObjectRef> projectStatusReader,
@@ -130,6 +234,17 @@ public class JobEnumsConfiguration {
 		return getEnumStep("projectStatusStep", stepBuilderFactory, projectStatusReader, projectStatusWriter);
 	}
 
+	/**
+	 * Build the step syncing the project view states.
+	 *
+	 * @param stepBuilderFactory
+	 * 			The step builder factory
+	 * @param projectViewStatesReader
+	 * 			The reader
+	 * @param projectViewStatesWriter
+	 * 			The writer
+	 * @return the step
+	 */
 	@Bean
 	public Step projectViewStatesStep(final StepBuilderFactory stepBuilderFactory,
 			final ItemReader<ObjectRef> projectViewStatesReader,
@@ -138,6 +253,17 @@ public class JobEnumsConfiguration {
 		return getEnumStep("projectViewStatesStep", stepBuilderFactory, projectViewStatesReader, projectViewStatesWriter);
 	}
 
+	/**
+	 * Build the step syncing the reproducibilities.
+	 *
+	 * @param stepBuilderFactory
+	 * 			The step builder factory
+	 * @param reproducibilitiesReader
+	 * 			The reader
+	 * @param reproducibilitiesWriter
+	 * 			The writer
+	 * @return the step
+	 */
 	@Bean
 	public Step reproducibilitiesStep(final StepBuilderFactory stepBuilderFactory,
 			final ItemReader<ObjectRef> reproducibilitiesReader,
@@ -146,6 +272,17 @@ public class JobEnumsConfiguration {
 		return getEnumStep("reproducibilitiesStep", stepBuilderFactory, reproducibilitiesReader, reproducibilitiesWriter);
 	}
 
+	/**
+	 * Build the step syncing the resolutions.
+	 *
+	 * @param stepBuilderFactory
+	 * 			The step builder factory
+	 * @param resolutionsReader
+	 * 			The reader
+	 * @param resolutionsWriter
+	 * 			The writer
+	 * @return the step
+	 */
 	@Bean
 	public Step resolutionsStep(final StepBuilderFactory stepBuilderFactory,
 			final ItemReader<ObjectRef> resolutionsReader,
@@ -154,6 +291,17 @@ public class JobEnumsConfiguration {
 		return getEnumStep("resolutionsStep", stepBuilderFactory, resolutionsReader, resolutionsWriter);
 	}
 
+	/**
+	 * Build the step syncing the severities.
+	 *
+	 * @param stepBuilderFactory
+	 * 			The step builder factory
+	 * @param severitiesReader
+	 * 			The reader
+	 * @param severitiesWriter
+	 * 			The writer
+	 * @return the step
+	 */
 	@Bean
 	public Step severitiesStep(final StepBuilderFactory stepBuilderFactory,
 			final ItemReader<ObjectRef> severitiesReader,
@@ -162,6 +310,17 @@ public class JobEnumsConfiguration {
 		return getEnumStep("severitiesStep", stepBuilderFactory, severitiesReader, severitiesWriter);
 	}
 
+	/**
+	 * Build the step syncing the issues status.
+	 *
+	 * @param stepBuilderFactory
+	 * 			The step builder factory
+	 * @param statusReader
+	 * 			The reader
+	 * @param statusWriter
+	 * 			The writer
+	 * @return the step
+	 */
 	@Bean
 	public Step statusStep(final StepBuilderFactory stepBuilderFactory,
 			final ItemReader<ObjectRef> statusReader,
@@ -170,6 +329,19 @@ public class JobEnumsConfiguration {
 		return getEnumStep("statusStep", stepBuilderFactory, statusReader, statusWriter);
 	}
 
+	/**
+	 * Build the step with the given name, reader and writer.
+	 *
+	 * @param stepName
+	 * 			The step name
+	 * @param stepBuilderFactory
+	 * 			The step builder factory
+	 * @param reader
+	 * 			The reader
+	 * @param writer
+	 * 			The writer
+	 * @return the step
+	 */
 	private Step getEnumStep(final String stepName,	final StepBuilderFactory stepBuilderFactory,
 			final ItemReader<ObjectRef> reader,	final ItemWriter<ObjectRef> writer) {
 

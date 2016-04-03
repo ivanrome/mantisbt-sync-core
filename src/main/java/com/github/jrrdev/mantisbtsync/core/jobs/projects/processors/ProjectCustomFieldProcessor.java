@@ -25,11 +25,14 @@ package com.github.jrrdev.mantisbtsync.core.jobs.projects.processors;
 
 import org.springframework.batch.item.ItemProcessor;
 
-import com.github.jrrdev.mantisbtsync.core.jobs.projects.beans.ProjectCustomFieldBean;
-
 import biz.futureware.mantis.rpc.soap.client.CustomFieldDefinitionData;
 
+import com.github.jrrdev.mantisbtsync.core.jobs.projects.beans.ProjectCustomFieldBean;
+
 /**
+ * Processor that builds the custom field bean from the raw data retrieved from
+ * the WS call.
+ *
  * @author jrrdev
  *
  */

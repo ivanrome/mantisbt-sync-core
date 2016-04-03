@@ -38,15 +38,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import com.github.jrrdev.mantisbtsync.core.jobs.projects.beans.ProjectCategoryBean;
-import com.github.jrrdev.mantisbtsync.core.jobs.projects.beans.ProjectCustomFieldBean;
-
 import biz.futureware.mantis.rpc.soap.client.AccountData;
 import biz.futureware.mantis.rpc.soap.client.ProjectVersionData;
 
+import com.github.jrrdev.mantisbtsync.core.jobs.projects.beans.ProjectCategoryBean;
+import com.github.jrrdev.mantisbtsync.core.jobs.projects.beans.ProjectCustomFieldBean;
+
 /**
- * Configuration for the writers used by the job of
- * Mantis projects syncing.
+ * Configuration for the writers  used to sync MantisBT projects.
  *
  * @author jrrdev
  *
@@ -54,6 +53,14 @@ import biz.futureware.mantis.rpc.soap.client.ProjectVersionData;
 @Configuration
 public class ProjectsWritersConfiguration {
 
+	/**
+	 * Build the writer upserting the data related to the categories of a project.
+	 * Perform upsert in the mantis_category_table table.
+	 *
+	 * @param dataSource
+	 * 			The datasource
+	 * @return the writer upserting the data related to the categories of a project
+	 */
 	@Bean
 	@StepScope
 	public JdbcBatchItemWriter<ProjectCategoryBean> projectCategoriesWriter(final DataSource dataSource) {
@@ -69,6 +76,14 @@ public class ProjectsWritersConfiguration {
 		return writer;
 	}
 
+	/**
+	 * Build the composite writer upserting the data related to the custom fields of a project.
+	 * Perform upsert in the mantis_custom_field_table and mantis_custom_field_project_table tables.
+	 *
+	 * @param dataSource
+	 * 			The datasource
+	 * @return the writer upserting the data related to the custom fields of a project
+	 */
 	@Bean
 	@StepScope
 	public CompositeItemWriter<ProjectCustomFieldBean> projectCustomFieldsWriter(final DataSource dataSource) {
@@ -102,6 +117,14 @@ public class ProjectsWritersConfiguration {
 		return compositeWriter;
 	}
 
+	/**
+	 * Build the composite writer upserting the data related to the users of a project.
+	 * Perform upsert in the mantis_user_table and mantis_project_user_list_table tables.
+	 *
+	 * @param dataSource
+	 * 			The datasource
+	 * @return the writer upserting the data related to the users of a project
+	 */
 	@Bean
 	@StepScope
 	public CompositeItemWriter<AccountData> projectUsersWriter(final DataSource dataSource,
@@ -133,6 +156,14 @@ public class ProjectsWritersConfiguration {
 		return compositeWriter;
 	}
 
+	/**
+	 * Build the writer upserting the data related to the versions of a project.
+	 * Perform upsert in the mantis_project_version_table table.
+	 *
+	 * @param dataSource
+	 * 			The datasource
+	 * @return the writer upserting the data related to the versions of a project
+	 */
 	@Bean
 	@StepScope
 	public JdbcBatchItemWriter<ProjectVersionData> projectVersionsWriter(final DataSource dataSource) {

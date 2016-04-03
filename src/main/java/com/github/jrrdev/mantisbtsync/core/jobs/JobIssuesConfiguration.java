@@ -37,6 +37,8 @@ import org.springframework.batch.item.support.ListItemReader;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import biz.futureware.mantis.rpc.soap.client.IssueData;
+
 import com.github.jrrdev.mantisbtsync.core.common.auth.PortalAuthManager;
 import com.github.jrrdev.mantisbtsync.core.common.listener.CloseAuthManagerListener;
 import com.github.jrrdev.mantisbtsync.core.jobs.issues.beans.BugBean;
@@ -47,14 +49,12 @@ import com.github.jrrdev.mantisbtsync.core.jobs.issues.readers.OpenIssuesReader;
 import com.github.jrrdev.mantisbtsync.core.jobs.issues.readers.OtherIssuesReader;
 import com.github.jrrdev.mantisbtsync.core.jobs.issues.tasklets.IssuesLastRunExtractorTasklet;
 
-import biz.futureware.mantis.rpc.soap.client.IssueData;
-
 /**
- * Configuration for the job of Mantis issues syncing.
- * Parameters for this job are :
- * 	- mantis.username
- *  - mantis.password
- *  - mantis.project_id
+ * Configuration for the jobs to sync MantisBT enumerations.
+ * Several jobs are available :
+ * - syncIssuesJob
+ * - forceSyncIssuesJob
+ * - fileSyncIssuesJob
  *
  * @author jrrdev
  *
@@ -62,6 +62,35 @@ import biz.futureware.mantis.rpc.soap.client.IssueData;
 @Configuration
 public class JobIssuesConfiguration {
 
+	/**
+	 * Build the syncIssuesJob job. This job will update all modified issues which
+	 * are still marked as open is MantisBT or in the local DB. The update is perform
+	 * in differential mode since last successful execution of this job for the given project.
+	 *
+	 * Note that all issues related to a subproject are updated to.
+	 *
+	 * Parameters for this job are :
+	 * 	- mantis.username
+	 * 		MantisBT username. If anonymous access is used, should be an empty string.
+	 *  - mantis.password
+	 *  	MantisBT password. If anonymous access is used, should be an empty string.
+	 *  - mantis.project_id
+	 *  	The id of the project
+	 *
+	 * @param jobs
+	 * 			Job build factory
+	 * @param issuesLastSuccessExtractorStep
+	 * 			Step extracting the last succeful datetime of this job
+	 * @param openIssuesSyncStep
+	 * 			Step syncing all modified issues which are still open in MantisBT
+	 * @param otherIssuesSyncStep
+	 * 			Step syncing all issues which are still open in the local DB
+	 * @param authIssuesStep
+	 * 			Step for portal authentification at the begining of the job
+	 * @param closeIssuesListener
+	 * 			Listener for closing the portal authentification connection at the end of the job
+	 * @return the job
+	 */
 	@Bean
 	public Job syncIssuesJob(final JobBuilderFactory jobs, final Step issuesLastSuccessExtractorStep,
 			final Step openIssuesSyncStep, final Step otherIssuesSyncStep, final Step authIssuesStep,
@@ -78,6 +107,29 @@ public class JobIssuesConfiguration {
 				.build();
 	}
 
+	/**
+	 * Build the forceSyncIssuesJob job. This job will update all issues for which
+	 * the id is passed as job parameter.
+	 *
+	 *
+	 * Parameters for this job are :
+	 * 	- mantis.username
+	 * 		MantisBT username. If anonymous access is used, should be an empty string.
+	 *  - mantis.password
+	 *  	MantisBT password. If anonymous access is used, should be an empty string.
+	 *  - mantis.issues_id
+	 *  	Semi-colon separated list of issues ids
+	 *
+	 * @param jobs
+	 * 			Job build factory
+	 * @param authIssuesStep
+	 * 			Step for portal authentification at the begining of the job
+	 * @param closeIssuesListener
+	 * 			Listener for closing the portal authentification connection at the end of the job
+	 * @param forceIssuesSyncStep
+	 * 			Step syncing all issues matching the given ids
+	 * @return the job
+	 */
 	@Bean
 	public Job forceSyncIssuesJob(final JobBuilderFactory jobs, final Step authIssuesStep,
 			final CloseAuthManagerListener closeIssuesListener,
@@ -92,6 +144,31 @@ public class JobIssuesConfiguration {
 				.build();
 	}
 
+	/**
+	 * Build the fileSyncIssuesJob job. This job will update all issues matching a list
+	 * of ids contains in a CSV file.
+	 * The CSV file must not have a header line for columns definition.
+	 * The file is loaded through Spring resource loader so the filepath can contains
+	 * definitions like classpath: and others.
+	 *
+	 * Parameters for this job are :
+	 * 	- mantis.username
+	 * 		MantisBT username. If anonymous access is used, should be an empty string.
+	 *  - mantis.password
+	 *  	MantisBT password. If anonymous access is used, should be an empty string.
+	 *  - mantis.filepath
+	 *  	File path of the CSV file
+	 *
+	 * @param jobs
+	 * 			Job build factory
+	 * @param authIssuesStep
+	 * 			Step for portal authentification at the begining of the job
+	 * @param closeIssuesListener
+	 * 			Listener for closing the portal authentification connection at the end of the job
+	 * @param fileIssuesSyncStep
+	 * 			Step syncing all issues matching the given ids
+	 * @return the job
+	 */
 	@Bean
 	public Job fileSyncIssuesJob(final JobBuilderFactory jobs, final Step authIssuesStep,
 			final CloseAuthManagerListener closeIssuesListener,
@@ -106,6 +183,13 @@ public class JobIssuesConfiguration {
 				.build();
 	}
 
+	/**
+	 * Build the listener for closing the portal authentification connection at the end of the job.
+	 *
+	 * @param authManager
+	 * 			The portal auth manager
+	 * @return the listener
+	 */
 	@Bean
 	public CloseAuthManagerListener closeIssuesListener(final PortalAuthManager authManager) {
 		final CloseAuthManagerListener listener = new CloseAuthManagerListener();
@@ -113,6 +197,15 @@ public class JobIssuesConfiguration {
 		return listener;
 	}
 
+	/**
+	 * Build the step for portal authentification at the begining of the job.
+	 *
+	 * @param stepBuilderFactory
+	 * 			The step builder factory
+	 * @param authTasklet
+	 * 			The tasklet performing the authentication
+	 * @return the step
+	 */
 	@Bean
 	public Step authIssuesStep(final StepBuilderFactory stepBuilderFactory,
 			final MethodInvokingTaskletAdapter authTasklet) {
@@ -121,6 +214,18 @@ public class JobIssuesConfiguration {
 				.tasklet(authTasklet).build();
 	}
 
+	/**
+	 * Build the step extracting the last succeful datetime of this job.
+	 *
+	 * @param stepBuilderFactory
+	 * 			The step builder factory
+	 * @param mantisLastRunExtractorTasklet
+	 * 			The tasklet getting the last successful start time of the job
+	 * @param mantisLastRunExtractorPromotionListener
+	 * 			The execution context promotion listener that promotes
+	 * 			mantis.update.last_job_run and mantis.update.current_job_run to the job context.
+	 * @return the step
+	 */
 	@Bean
 	public Step issuesLastSuccessExtractorStep(final StepBuilderFactory stepBuilderFactory,
 			final IssuesLastRunExtractorTasklet mantisLastRunExtractorTasklet,
@@ -132,6 +237,21 @@ public class JobIssuesConfiguration {
 				.build();
 	}
 
+	/**
+	 * The step syncing all modified issues which are still open in MantisBT.
+	 *
+	 * @param stepBuilderFactory
+	 * 			The step builder factory
+	 * @param openIssuesReader
+	 * 			The reader
+	 * @param issuesProcessor
+	 * 			The processor
+	 * @param compositeIssuesWriter
+	 * 			The writer
+	 * @param cacheEvictionListener
+	 * 			Listener for caches eviction if the step fails
+	 * @return
+	 */
 	@Bean
 	public Step openIssuesSyncStep(final StepBuilderFactory stepBuilderFactory,
 			final OpenIssuesReader openIssuesReader,
@@ -148,6 +268,21 @@ public class JobIssuesConfiguration {
 				.build();
 	}
 
+	/**
+	 * Build the step syncing all issues which are still open in the local DB.
+	 *
+	 * @param stepBuilderFactory
+	 * 			The step builder factory
+	 * @param otherIssuesReader
+	 * 			The reader
+	 * @param issuesProcessor
+	 * 			The processor
+	 * @param compositeIssuesWriter
+	 * 			The writer
+	 * @param cacheEvictionListener
+	 * 			Listener for caches eviction if the step fails
+	 * @return
+	 */
 	@Bean
 	public Step otherIssuesSyncStep(final StepBuilderFactory stepBuilderFactory,
 			final OtherIssuesReader otherIssuesReader,
@@ -164,6 +299,21 @@ public class JobIssuesConfiguration {
 				.build();
 	}
 
+	/**
+	 * The step syncing all issues matching the given ids.
+	 *
+	 * @param stepBuilderFactory
+	 * 			The step builder factory
+	 * @param listIssuesReader
+	 * 			The reader
+	 * @param compositeIssuesProcessor
+	 * 			The processor
+	 * @param compositeIssuesWriter
+	 * 			The writer
+	 * @param cacheEvictionListener
+	 * 			Listener for caches eviction if the step fails
+	 * @return
+	 */
 	@Bean
 	public Step forceIssuesSyncStep(final StepBuilderFactory stepBuilderFactory,
 			final ListItemReader<BugIdBean> listIssuesReader,
@@ -180,6 +330,21 @@ public class JobIssuesConfiguration {
 				.build();
 	}
 
+	/**
+	 * The step syncing all issues matching the given ids.
+	 *
+	 * @param stepBuilderFactory
+	 * 			The step builder factory
+	 * @param csvIssuesReader
+	 * 			The reader
+	 * @param compositeIssuesProcessor
+	 * 			The processor
+	 * @param compositeIssuesWriter
+	 * 			The writer
+	 * @param cacheEvictionListener
+	 * 			Listener for caches eviction if the step fails
+	 * @return
+	 */
 	@Bean
 	public Step fileIssuesSyncStep(final StepBuilderFactory stepBuilderFactory,
 			final FlatFileItemReader<BugIdBean> csvIssuesReader,
@@ -196,6 +361,11 @@ public class JobIssuesConfiguration {
 				.build();
 	}
 
+	/**
+	 * Build the listener for caches eviction if the step fails.
+	 *
+	 * @return the listener
+	 */
 	@Bean
 	public CacheEvictionListener cacheEvictionListener() {
 		return new CacheEvictionListener();

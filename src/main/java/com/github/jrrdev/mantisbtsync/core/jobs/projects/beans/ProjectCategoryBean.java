@@ -31,10 +31,19 @@ package com.github.jrrdev.mantisbtsync.core.jobs.projects.beans;
  */
 public final class ProjectCategoryBean {
 
+	/**
+	 * Category name.
+	 */
 	private String name;
 
+	/**
+	 * Category id.
+	 */
 	private Integer id;
 
+	/**
+	 * Project id.
+	 */
 	private Integer projectId;
 
 	/**

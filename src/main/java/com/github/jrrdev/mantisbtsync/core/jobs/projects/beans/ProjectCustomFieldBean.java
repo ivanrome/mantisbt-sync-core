@@ -32,18 +32,39 @@ package com.github.jrrdev.mantisbtsync.core.jobs.projects.beans;
  */
 public final class ProjectCustomFieldBean {
 
+	/**
+	 * Id of the custom field.
+	 */
 	private Integer id;
 
+	/**
+	 * Name of the custom field.
+	 */
 	private String name;
 
+	/**
+	 * Id of the type of custom field.
+	 */
 	private Integer typeId;
 
+	/**
+	 * Possibles values of the field.
+	 */
 	private String possibleValues;
 
+	/**
+	 * Default value of the field.
+	 */
 	private String defaultValue;
 
+	/**
+	 * Regexp used for the custom field validation.
+	 */
 	private String validRegexp;
 
+	/**
+	 * Project if.
+	 */
 	private Integer projectId;
 
 	/**
@@ -148,5 +169,17 @@ public final class ProjectCustomFieldBean {
 	 */
 	public void setProjectId(final Integer projectId) {
 		this.projectId = projectId;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "ProjectCustomFieldBean [id=" + id + ", name=" + name
+				+ ", typeId=" + typeId + ", possibleValues=" + possibleValues
+				+ ", defaultValue=" + defaultValue + ", validRegexp="
+				+ validRegexp + ", projectId=" + projectId + "]";
 	}
 }

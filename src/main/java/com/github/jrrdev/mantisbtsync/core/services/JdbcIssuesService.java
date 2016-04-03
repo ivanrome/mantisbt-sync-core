@@ -37,36 +37,64 @@ import biz.futureware.mantis.rpc.soap.client.AccountData;
 import biz.futureware.mantis.rpc.soap.client.ObjectRef;
 
 /**
+ * Implementation of IssuesDao.
+ * Use caches to avoid large amount of upsert.
+ *
  * @author jrrdev
  *
  */
 @Repository
 public class JdbcIssuesService implements IssuesDao {
 
+	/**
+	 * SQL query used to check if the given project exists in the DB.
+	 * Filtering is performed on id and name.
+	 */
 	private static final String SQL_CHECK_PROJECT = "SELECT count(1) FROM mantis_project_table\n"
 			+ " WHERE id = ? AND name = ?";
 
+	/**
+	 * SQL query for upserting in mantis_project_table.
+	 */
 	private static final String SQL_MERGE_PROJECT_TABLE =
 			"INSERT INTO mantis_project_table (id, name)\n"
 					+ " VALUES (?, ?)\n"
 					+ " ON DUPLICATE KEY UPDATE name = ?";
 
+	/**
+	 * SQL query used to check if the link between an user and a project exists in the DB.
+	 */
 	private static final String SQL_CHECK_USER_PROJECT = "SELECT count(1) FROM mantis_project_user_list_table\n"
 			+ " WHERE project_id = ? AND user_id = ?";
 
+	/**
+	 * SQL query used to insert the link between an user and a project.
+	 */
 	private static final String SQL_INSERT_USER_PROJECT = "INSERT INTO mantis_project_user_list_table\n"
 			+ " (project_id, user_id) values (?, ?)";
 
+	/**
+	 * SQL query used to check if the link between a custom field and a project exists in the DB.
+	 */
 	private static final String SQL_CHECK_CUSTOM_FIELD_PROJECT = "SELECT count(1) FROM mantis_custom_field_project_table\n"
 			+ " WHERE project_id = ? AND field_id = ?";
 
+	/**
+	 * SQL query used to insert the link between a custom field and a project.
+	 */
 	private static final String SQL_INSERT_CUSTOM_FIELD_PROJECT = "INSERT INTO mantis_custom_field_project_table\n"
 			+ " (project_id, field_id) values (?, ?)";
 
+	/**
+	 * SQL query used to get all issues that are still open and not synced since a given datetime.
+	 */
 	private static final String SQL_GET_NOT_CLOSED_ISSUES_ID = "SELECT bug.id FROM mantis_bug_table bug\n"
 			+ " WHERE bug.status_id <> 90\n"
 			+ " AND bug.last_sync <= ?";
 
+	/**
+	 * JDBC template.
+	 */
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 
@@ -115,6 +143,14 @@ public class JdbcIssuesService implements IssuesDao {
 		}
 	}
 
+	/**
+	 * Insert into the mantis_user_table user if the row doesn't exist.
+	 * Marked as public for caching management.
+	 *
+	 * @param item
+	 * 			The user account data
+	 * @return dummy boolean, just for caching management
+	 */
 	@Cacheable("users")
 	public boolean insertIntoUserIfNotExists(final AccountData item) {
 		if (item != null && !existsById("mantis_user_table", item.getId())) {
@@ -124,6 +160,16 @@ public class JdbcIssuesService implements IssuesDao {
 		return true;
 	}
 
+	/**
+	 * Insert into mantis_project_user_list_table if the row doesn't exist.
+	 * Marked as public for caching management.
+	 *
+	 * @param item
+	 * 			The user account data
+	 * @param parentProjectId
+	 * 			The project id
+	 * @return dummy boolean, just for caching management
+	 */
 	@Cacheable("users_project")
 	public boolean insertIntoUserProjectIfNotExists(final AccountData item, final BigInteger parentProjectId) {
 
@@ -206,6 +252,14 @@ public class JdbcIssuesService implements IssuesDao {
 		}
 	}
 
+	/**
+	 * Insert into mantis_custom_field_table if the row doesn't exist.
+	 * Marked as public for caching management.
+	 *
+	 * @param item
+	 * 			The custom field data
+	 * @return dummy boolean, just for caching management
+	 */
 	@Cacheable("customFields")
 	public boolean insertIntoCustomFieldIfNotExists(final ObjectRef item) {
 		if (item != null && !existsById("mantis_custom_field_table", item.getId())) {
@@ -215,6 +269,16 @@ public class JdbcIssuesService implements IssuesDao {
 		return true;
 	}
 
+	/**
+	 * Insert into mantis_custom_field_project_table if the row doesn't exist.
+	 * Marked as public for caching management.
+	 *
+	 * @param item
+	 * 			The custom field data
+	 * @param parentProjectId
+	 * 			The project id
+	 * @return dummy boolean, just for caching management
+	 */
 	@Cacheable("customFields_project")
 	public boolean insertIntoCustomFieldProjectIfNotExists(final ObjectRef item,
 			final BigInteger parentProjectId) {
@@ -257,6 +321,14 @@ public class JdbcIssuesService implements IssuesDao {
 		return Boolean.TRUE.equals(exist);
 	}
 
+	/**
+	 * Build the insert query for a given table which contains
+	 * only id and name columns.
+	 *
+	 * @param table
+	 * 			Table name
+	 * @return the insert query
+	 */
 	private String getInsertQueryIdName(final String table) {
 
 		return "INSERT INTO " + table + " (id, name) values (?, ?)";

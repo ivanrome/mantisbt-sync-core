@@ -35,18 +35,31 @@ import com.github.jrrdev.mantisbtsync.core.jobs.issues.beans.BugBean;
 import com.github.jrrdev.mantisbtsync.core.jobs.issues.beans.BugCustomFieldValue;
 
 /**
+ * Writer used to upsert the custom field values related to
+ * an issue.
+ * Insert entries in mantis_custom_field_string_table table.
+ *
  * @author jrrdev
  *
  */
 public class BugCustomFieldsWriter implements ItemWriter<BugBean> {
 
+	/**
+	 * Sub-writer used to write each item in the list of custom field values.
+	 */
 	private final JdbcBatchItemWriter<BugCustomFieldValue> writer;
 
+	/**
+	 * SQL query used to perform the upsert.
+	 */
 	private static final String SQL_QUERY = "INSERT INTO mantis_custom_field_string_table\n"
 			+ " (field_id, bug_id, field_value)\n"
 			+ " VALUES (:fieldId, :bugId, :fieldValue)\n"
 			+ " ON DUPLICATE KEY UPDATE field_value = :fieldValue";
 
+	/**
+	 * Default constructor.
+	 */
 	public BugCustomFieldsWriter() {
 		writer = new JdbcBatchItemWriter<BugCustomFieldValue>();
 		writer.setItemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<BugCustomFieldValue>());
@@ -54,6 +67,10 @@ public class BugCustomFieldsWriter implements ItemWriter<BugBean> {
 		writer.setAssertUpdates(false);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * @see org.springframework.batch.item.ItemWriter#write(java.util.List)
+	 */
 	@Override
 	public void write(final List<? extends BugBean> items) throws Exception {
 		if (items != null) {
@@ -65,10 +82,19 @@ public class BugCustomFieldsWriter implements ItemWriter<BugBean> {
 		}
 	}
 
+	/**
+	 * Check mandatory properties.
+	 */
 	public void afterPropertiesSet() {
 		writer.afterPropertiesSet();
 	}
 
+	/**
+	 * Set the datasource.
+	 *
+	 * @param dataSource
+	 * 			the datasource to set
+	 */
 	public void setDataSource(final DataSource dataSource) {
 		writer.setDataSource(dataSource);
 	}

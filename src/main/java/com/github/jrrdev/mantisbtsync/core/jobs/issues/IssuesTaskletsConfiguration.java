@@ -32,12 +32,21 @@ import org.springframework.context.annotation.Configuration;
 import com.github.jrrdev.mantisbtsync.core.jobs.issues.tasklets.IssuesLastRunExtractorTasklet;
 
 /**
+ * Configuration for the tasklets used to sync issues.
+ *
  * @author jrrdev
  *
  */
 @Configuration
 public class IssuesTaskletsConfiguration {
 
+	/**
+	 * Tasklet extracting the last sucessful run of the job with the same parameters.
+	 *
+	 * @param jobExplorer
+	 * 			The job explorer
+	 * @return the tasklet
+	 */
 	@Bean
 	@StepScope
 	public IssuesLastRunExtractorTasklet mantisLastRunExtractorTasklet(final JobExplorer jobExplorer) {
@@ -46,6 +55,12 @@ public class IssuesTaskletsConfiguration {
 		return tasklet;
 	}
 
+	/**
+	 * Execution context promotion listener that promotes mantis.update.last_job_run and
+	 * mantis.update.current_job_run to the job context.
+	 *
+	 * @return the execution context promotion listener
+	 */
 	@Bean
 	@StepScope
 	public ExecutionContextPromotionListener mantisLastRunExtractorPromotionListener() {

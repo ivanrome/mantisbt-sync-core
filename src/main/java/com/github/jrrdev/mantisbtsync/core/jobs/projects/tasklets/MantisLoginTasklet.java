@@ -30,10 +30,10 @@ import org.springframework.batch.core.step.tasklet.Tasklet;
 import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.util.Assert;
 
-import com.github.jrrdev.mantisbtsync.core.common.auth.PortalAuthManager;
-
 import biz.futureware.mantis.rpc.soap.client.MantisConnectBindingStub;
 import biz.futureware.mantis.rpc.soap.client.UserData;
+
+import com.github.jrrdev.mantisbtsync.core.common.auth.PortalAuthManager;
 
 /**
  * Tasklet calling mc_login to get the user_acces_level
@@ -130,7 +130,7 @@ public class MantisLoginTasklet implements Tasklet {
 
 		Assert.notNull(clientStub);
 
-		// Si on a renseigné un authManager, on cherche à récupérer le cookie
+		// If auth manager is set, try to get the cookie
 		if (authManager != null && authManager.getAuthCookie() != null) {
 			clientStub._setProperty(HTTPConstants.HEADER_COOKIE,
 					authManager.getAuthCookie());

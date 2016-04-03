@@ -31,26 +31,92 @@ import biz.futureware.mantis.rpc.soap.client.AccountData;
 import biz.futureware.mantis.rpc.soap.client.ObjectRef;
 
 /**
+ * DAO service for issues related operations.
+ * Those operations are mainly insertions of dependencies
+ * for Foreign Keys resolutions. Those operations should be
+ * cached to avoid having a large amount of upsert in the batch.
+ *
  * @author jrrdev
  *
  */
 public interface IssuesDao {
 
+	/**
+	 * Insert a project if it doesn't exist in the DB.
+	 *
+	 * @param item
+	 * 			The project
+	 * @return dummy boolean, just for caching management
+	 */
 	public boolean insertProjectIfNotExists(final ObjectRef item);
 
+	/**
+	 * Insert a user if it doesn't exist in the DB.
+	 *
+	 * @param item
+	 * 			The user
+	 * @param parentProjectId
+	 * 			The project id
+	 */
 	public void insertUserIfNotExists(final AccountData item, final BigInteger parentProjectId);
 
+	/**
+	 * Add a priority in the enumeration if it doesn't exist in the DB.
+	 *
+	 * @param item
+	 * 			the data
+	 * @return dummy boolean, just for caching management
+	 */
 	public boolean insertPriorityIfNotExists(final ObjectRef item);
 
+	/**
+	 * Add a severity in the enumeration if it doesn't exist in the DB.
+	 *
+	 * @param item
+	 * 			the data
+	 * @return dummy boolean, just for caching management
+	 */
 	public boolean insertSeverityIfNotExists(final ObjectRef item);
 
+	/**
+	 * Add a status in the enumeration if it doesn't exist in the DB.
+	 *
+	 * @param item
+	 * 			the data
+	 * @return dummy boolean, just for caching management
+	 */
 	public boolean insertStatusIfNotExists(final ObjectRef item);
 
+	/**
+	 * Add a resolution in the enumeration if it doesn't exist in the DB.
+	 *
+	 * @param item
+	 * 			the data
+	 * @return dummy boolean, just for caching management
+	 */
 	public boolean insertResolutionIfNotExists(final ObjectRef item);
 
+	/**
+	 * Add a custom field to a project if it doesn't exist in the DB.
+	 * @param item
+	 * 			The data of the custom field
+	 * @param parentProjectId
+	 * 			The project id
+	 */
 	public void insertCustomFieldIfNotExists(final ObjectRef item, final BigInteger parentProjectId);
 
+	/**
+	 * Get the issues still open in the DB and that wasn't synced since
+	 * the given time
+	 *
+	 * @param jobStartTime
+	 * 			Time used for filtering
+	 * @return the list of issues ids
+	 */
 	public List<BigInteger> getNotClosedIssuesId(Calendar jobStartTime);
 
+	/**
+	 * Evict all caches.
+	 */
 	public void evictAllCaches();
 }

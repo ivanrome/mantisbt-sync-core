@@ -35,13 +35,23 @@ import com.github.jrrdev.mantisbtsync.core.jobs.issues.beans.BugBean;
 import com.github.jrrdev.mantisbtsync.core.jobs.issues.beans.BugHistoryBean;
 
 /**
+ * Writer used to upsert the history related to
+ * an issue.
+ * Insert entries in mantis_bug_history_table table.
+ *
  * @author jrrdev
  *
  */
 public class BugHistoryWriter implements ItemWriter<BugBean> {
 
+	/**
+	 * Sub-writer used to write each item in the list of history entries.
+	 */
 	private final JdbcBatchItemWriter<BugHistoryBean> writer;
 
+	/**
+	 * SQL query used to perform the upserts.
+	 */
 	private static final String SQL_QUERY = "INSERT INTO mantis_bug_history_table\n"
 			+ " (bug_id, user_id, field_name, old_value, new_value, history_type, date_modified)\n"
 			+ " SELECT :bugId, :userId, :fieldName, :oldValue, :newValue, :historyType,\n"
@@ -51,6 +61,9 @@ public class BugHistoryWriter implements ItemWriter<BugBean> {
 			+ "			AND old_value = :oldValue AND new_value = :newValue\n"
 			+ "			AND history_type = :historyType AND date_modified = :dateModified)";
 
+	/**
+	 * Default constructor.
+	 */
 	public BugHistoryWriter() {
 		writer = new JdbcBatchItemWriter<BugHistoryBean>();
 		writer.setItemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<BugHistoryBean>());
@@ -58,6 +71,10 @@ public class BugHistoryWriter implements ItemWriter<BugBean> {
 		writer.setAssertUpdates(false);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * @see org.springframework.batch.item.ItemWriter#write(java.util.List)
+	 */
 	@Override
 	public void write(final List<? extends BugBean> items) throws Exception {
 		if (items != null) {
@@ -69,10 +86,19 @@ public class BugHistoryWriter implements ItemWriter<BugBean> {
 		}
 	}
 
+	/**
+	 * Check mandatory properties.
+	 */
 	public void afterPropertiesSet() {
 		writer.afterPropertiesSet();
 	}
 
+	/**
+	 * Set the datasource.
+	 *
+	 * @param dataSource
+	 * 			the datasource to set
+	 */
 	public void setDataSource(final DataSource dataSource) {
 		writer.setDataSource(dataSource);
 	}

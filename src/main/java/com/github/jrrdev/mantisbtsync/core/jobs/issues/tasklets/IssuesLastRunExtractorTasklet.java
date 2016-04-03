@@ -44,7 +44,7 @@ import org.springframework.batch.repeat.RepeatStatus;
 import com.github.jrrdev.mantisbtsync.core.jobs.issues.readers.OpenIssuesReader;
 
 /**
- * Tasklet that get the last successful start time of the job with the same
+ * Tasklet getting the last successful start time of the job with the same
  * job parameters.
  * That start time is used by {@link OpenIssuesReader} to perform filtering.
  *
