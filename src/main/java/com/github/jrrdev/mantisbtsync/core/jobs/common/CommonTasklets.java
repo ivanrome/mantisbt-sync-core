@@ -40,11 +40,11 @@ import com.github.jrrdev.mantisbtsync.core.common.auth.PortalAuthManager;
 public class CommonTasklets {
 
 	/**
-	 * Build the tasklet executing the portal authentification.
+	 * Build the tasklet executing the portal authentication.
 	 *
 	 * @param authManager
-	 * 		the portal authentification manager
-	 * @return the tasklet executing the portal authentification
+	 * 		the portal authentication manager
+	 * @return the tasklet executing the portal authentication
 	 */
 	@Bean
 	@StepScope

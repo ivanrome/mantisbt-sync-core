@@ -86,9 +86,9 @@ public class JobIssuesConfiguration {
 	 * @param otherIssuesSyncStep
 	 * 			Step syncing all issues which are still open in the local DB
 	 * @param authIssuesStep
-	 * 			Step for portal authentification at the begining of the job
+	 * 			Step for portal authentication at the begining of the job
 	 * @param closeIssuesListener
-	 * 			Listener for closing the portal authentification connection at the end of the job
+	 * 			Listener for closing the portal authentication connection at the end of the job
 	 * @return the job
 	 */
 	@Bean
@@ -123,9 +123,9 @@ public class JobIssuesConfiguration {
 	 * @param jobs
 	 * 			Job build factory
 	 * @param authIssuesStep
-	 * 			Step for portal authentification at the begining of the job
+	 * 			Step for portal authentication at the begining of the job
 	 * @param closeIssuesListener
-	 * 			Listener for closing the portal authentification connection at the end of the job
+	 * 			Listener for closing the portal authentication connection at the end of the job
 	 * @param forceIssuesSyncStep
 	 * 			Step syncing all issues matching the given ids
 	 * @return the job
@@ -162,9 +162,9 @@ public class JobIssuesConfiguration {
 	 * @param jobs
 	 * 			Job build factory
 	 * @param authIssuesStep
-	 * 			Step for portal authentification at the begining of the job
+	 * 			Step for portal authentication at the begining of the job
 	 * @param closeIssuesListener
-	 * 			Listener for closing the portal authentification connection at the end of the job
+	 * 			Listener for closing the portal authentication connection at the end of the job
 	 * @param fileIssuesSyncStep
 	 * 			Step syncing all issues matching the given ids
 	 * @return the job
@@ -184,7 +184,7 @@ public class JobIssuesConfiguration {
 	}
 
 	/**
-	 * Build the listener for closing the portal authentification connection at the end of the job.
+	 * Build the listener for closing the portal authentication connection at the end of the job.
 	 *
 	 * @param authManager
 	 * 			The portal auth manager
@@ -198,7 +198,7 @@ public class JobIssuesConfiguration {
 	}
 
 	/**
-	 * Build the step for portal authentification at the begining of the job.
+	 * Build the step for portal authentication at the begining of the job.
 	 *
 	 * @param stepBuilderFactory
 	 * 			The step builder factory

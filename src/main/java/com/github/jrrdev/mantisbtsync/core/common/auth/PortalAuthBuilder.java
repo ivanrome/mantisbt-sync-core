@@ -63,13 +63,13 @@ public class PortalAuthBuilder implements ResourceLoaderAware {
 	}
 
 	/**
-	 * Build the portal authentification manager from an XML file
+	 * Build the portal authentication manager from an XML file
 	 * describing the sequence of requests to be sent.
 	 *
 	 * @param filepath
 	 * 		File path of the XML file. The file is loaded through Spring resource loader, so
 	 * 		the file path can contain definition like "classpath:"
-	 * @return the portal authentification manager
+	 * @return the portal authentication manager
 	 * @throws JAXBException
 	 * 		If an error occurs during the XML unmarshalling
 	 * @throws IOException

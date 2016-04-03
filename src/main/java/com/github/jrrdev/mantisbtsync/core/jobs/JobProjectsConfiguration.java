@@ -87,9 +87,9 @@ public class JobProjectsConfiguration {
 	 * 			Decider which decides if the flow must be repeated (if a subproject
 	 * 			is still not synced)
 	 * @param authProjectsStep
-	 * 			Step for portal authentification at the begining of the job
+	 * 			Step for portal authentication at the begining of the job
 	 * @param closeProjectsListener
-	 * 			Listener for closing the portal authentification connection at the end of the job
+	 * 			Listener for closing the portal authentication connection at the end of the job
 	 * @return the job
 	 */
 	@Bean
@@ -157,7 +157,7 @@ public class JobProjectsConfiguration {
 	// tag::step[]
 
 	/**
-	 * Build the listener for closing the portal authentification connection at the end of the job.
+	 * Build the listener for closing the portal authentication connection at the end of the job.
 	 *
 	 * @param authManager
 	 * 			The portal auth manager
@@ -171,7 +171,7 @@ public class JobProjectsConfiguration {
 	}
 
 	/**
-	 * Build the step for portal authentification at the begining of the job.
+	 * Build the step for portal authentication at the begining of the job.
 	 *
 	 * @param stepBuilderFactory
 	 * 			The step builder factory

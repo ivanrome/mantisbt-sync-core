@@ -52,7 +52,9 @@ public class JobEnumsConfiguration {
 	 * Build the syncEnumsJob job (sync of MantisBT enumerations).
 	 * Parameters for this job are :
 	 * 	- mantis.username
+	 * 		MantisBT username. If anonymous access is used, should be an empty string.
 	 *  - mantis.password
+	 *  	MantisBT password. If anonymous access is used, should be an empty string.
 	 *
 	 *  Steps are executed in a linear flow.
 	 *
@@ -79,9 +81,9 @@ public class JobEnumsConfiguration {
 	 * @param statusStep
 	 * 			Step syncing the status
 	 * @param authEnumsStep
-	 * 			Step for portal authentification at the begining of the job
+	 * 			Step for portal authentication at the begining of the job
 	 * @param closeEnumsListener
-	 * 			Listener for closing the portal authentification connection at the end of the job
+	 * 			Listener for closing the portal authentication connection at the end of the job
 	 * @return the job
 	 */
 	@Bean
@@ -109,7 +111,7 @@ public class JobEnumsConfiguration {
 	}
 
 	/**
-	 * Build the listener for closing the portal authentification connection at the end of the job.
+	 * Build the listener for closing the portal authentication connection at the end of the job.
 	 *
 	 * @param authManager
 	 * 			The portal auth manager
@@ -123,7 +125,7 @@ public class JobEnumsConfiguration {
 	}
 
 	/**
-	 * Build the step for portal authentification at the begining of the job.
+	 * Build the step for portal authentication at the begining of the job.
 	 *
 	 * @param stepBuilderFactory
 	 * 			The step builder factory

@@ -32,7 +32,7 @@ import com.github.jrrdev.mantisbtsync.core.common.auth.PortalAuthManager;
 /**
  * Read on item from Apache Axis WebService. The WebService method
  * is supposed to return only one item.
- * Can use an authentification cookie if PortalAuthManager is set.
+ * Can use an authentication cookie if PortalAuthManager is set.
  *
  * @author jrrdev
  *
