@@ -36,17 +36,37 @@ import org.springframework.util.Assert;
 import biz.futureware.mantis.rpc.soap.client.IssueData;
 
 /**
+ * Read the data related to the issues still marked as opened in the local DB
+ * and that weren't sync since a given datetime (that should be the job start time
+ * to not resync issues already synced by a previous step in the job).
+ * These reader is used because mc_project_get_issues doesn't retrieved closed issues.
+ * So it is used to update the issues that was closed since last sync.
+ * Call mc_issue_get WS operation.
+ *
  * @author jrrdev
  *
  */
 public class OtherIssuesReader extends AbstractIssuesReader {
 
+	/**
+	 * List of issues id to sync.
+	 */
 	private List<BigInteger> issues = null;
 
+	/**
+	 * Current index in the list.
+	 */
 	private int index = 0;
 
+	/**
+	 * Job start time.
+	 */
 	private Calendar jobStartTime = null;
 
+	/**
+	 * {@inheritDoc}
+	 * @see org.springframework.batch.item.ItemReader#read()
+	 */
 	@Override
 	public IssueData read() throws Exception, UnexpectedInputException,
 	ParseException, NonTransientResourceException {

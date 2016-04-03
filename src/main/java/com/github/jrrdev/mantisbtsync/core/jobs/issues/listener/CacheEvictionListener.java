@@ -32,12 +32,23 @@ import org.springframework.cache.annotation.CacheConfig;
 import com.github.jrrdev.mantisbtsync.core.services.IssuesDao;
 
 /**
+ * Step listener used to evict all caches related to issue dependencies
+ * inserts into DB.
+ * Those caches are used when writing an issue to not perform insert
+ * if an enum values already exists in the DB.
+ * The listener will evict all cached if the step failed (because it means
+ * that an insert rollback may have been performed and so data in the cache
+ * and in the DB aren't synced).
+ *
  * @author jrrdev
  *
  */
 @CacheConfig
 public class CacheEvictionListener implements StepExecutionListener {
 
+	/**
+	 * The DAO using the caches to evict.
+	 */
 	@Autowired
 	private IssuesDao dao;
 

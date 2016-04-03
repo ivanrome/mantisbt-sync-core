@@ -36,11 +36,18 @@ import org.springframework.util.Assert;
 import biz.futureware.mantis.rpc.soap.client.IssueData;
 
 /**
+ * Read all issues that are still open in the given project and that was
+ * updated since a given datetime (that should be the last succesful sync).
+ * Call mc_project_get_issues WS operation.
+ *
  * @author jrrdev
  *
  */
 public class OpenIssuesReader extends AbstractIssuesReader {
 
+	/**
+	 * Current page in the WS call.
+	 */
 	private int currentPage = 0;
 
 	/**
@@ -53,10 +60,20 @@ public class OpenIssuesReader extends AbstractIssuesReader {
 	 */
 	private IssueData[] items;
 
+	/**
+	 * Page size.
+	 */
 	private static final BigInteger PAGE_SIZE = BigInteger.valueOf(20);
 
+	/**
+	 * Last successful sync.
+	 */
 	private Calendar lastJobRun = null;
 
+	/**
+	 * {@inheritDoc}
+	 * @see org.springframework.batch.item.ItemReader#read()
+	 */
 	@Override
 	public IssueData read() throws Exception, UnexpectedInputException,
 	ParseException, NonTransientResourceException {

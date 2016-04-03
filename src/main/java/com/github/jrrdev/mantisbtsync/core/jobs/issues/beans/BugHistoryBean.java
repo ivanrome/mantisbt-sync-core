@@ -27,23 +27,46 @@ import java.math.BigInteger;
 import java.sql.Timestamp;
 
 /**
+ * Bean wrapping a line in the history of a bean.
+ *
  * @author jrrdev
  *
  */
 public final class BugHistoryBean {
 
+	/**
+	 * Issue id.
+	 */
 	private BigInteger bugId;
 
+	/**
+	 * Id of the user who performed the operation.
+	 */
 	private BigInteger userId;
 
+	/**
+	 * Name of the modified field.
+	 */
 	private String fieldName;
 
+	/**
+	 * Old value of the field.
+	 */
 	private String oldValue;
 
+	/**
+	 * New value of the field.
+	 */
 	private String newValue;
 
+	/**
+	 * History type.
+	 */
 	private BigInteger historyType;
 
+	/**
+	 * Date of the operation.
+	 */
 	private java.sql.Timestamp dateModified;
 
 	/**

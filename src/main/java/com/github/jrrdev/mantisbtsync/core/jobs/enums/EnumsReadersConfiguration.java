@@ -29,14 +29,17 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import biz.futureware.mantis.rpc.soap.client.ObjectRef;
+
 import com.github.jrrdev.mantisbtsync.core.common.auth.PortalAuthManager;
 import com.github.jrrdev.mantisbtsync.core.common.readers.AxisAuthItemsArrayReader;
 
-import biz.futureware.mantis.rpc.soap.client.ObjectRef;
-
 /**
- * Configuration for the readers used by the job of
- * Mantis enumerations syncing.
+ * Configuration for the readers used to sync MantisBT enumerations.
+ * Beware of the fact that access to the webservice operations used for this sync
+ * may be denied by the server depending on user privilege.
+ *
+ * MantisBT enumerations are system values used to defined status, priorities...
  *
  * @author jrrdev
  *
@@ -44,6 +47,20 @@ import biz.futureware.mantis.rpc.soap.client.ObjectRef;
 @Configuration
 public class EnumsReadersConfiguration {
 
+	/**
+	 * Reader for the custom fields types. Use mc_enum_custom_field_types
+	 * ws operation.
+	 *
+	 * @param authManager
+	 * 			The portal auth manager
+	 * @param clientStub
+	 * 			Axis client stub
+	 * @param userName
+	 * 			MantisBT username. If anonymous access is used, should be an empty string.
+	 * @param password
+	 * 			MantisBT password. If anonymous access is used, should be an empty string.
+	 * @return the reader for the custom fields types
+	 */
 	@Bean
 	@StepScope
 	public AxisAuthItemsArrayReader<ObjectRef> customFieldTypesReader(final PortalAuthManager authManager,
@@ -55,6 +72,19 @@ public class EnumsReadersConfiguration {
 				clientStub, userName, password);
 	}
 
+	/**
+	 * Reader for the etas. Use mc_enum_etas ws operation.
+	 *
+	 * @param authManager
+	 * 			The portal auth manager
+	 * @param clientStub
+	 * 			Axis client stub
+	 * @param userName
+	 * 			MantisBT username. If anonymous access is used, should be an empty string.
+	 * @param password
+	 * 			MantisBT password. If anonymous access is used, should be an empty string.
+	 * @return the reader for the etas
+	 */
 	@Bean
 	@StepScope
 	public AxisAuthItemsArrayReader<ObjectRef> etasReader(final PortalAuthManager authManager,
@@ -66,6 +96,19 @@ public class EnumsReadersConfiguration {
 				clientStub, userName, password);
 	}
 
+	/**
+	 * Reader for the priorities. Use mc_enum_priorities ws operation.
+	 *
+	 * @param authManager
+	 * 			The portal auth manager
+	 * @param clientStub
+	 * 			Axis client stub
+	 * @param userName
+	 * 			MantisBT username. If anonymous access is used, should be an empty string.
+	 * @param password
+	 * 			MantisBT password. If anonymous access is used, should be an empty string.
+	 * @return the reader for the priorities
+	 */
 	@Bean
 	@StepScope
 	public AxisAuthItemsArrayReader<ObjectRef> prioritiesReader(final PortalAuthManager authManager,
@@ -77,6 +120,19 @@ public class EnumsReadersConfiguration {
 				clientStub, userName, password);
 	}
 
+	/**
+	 * Reader for the projections. Use mc_enum_projections ws operation.
+	 *
+	 * @param authManager
+	 * 			The portal auth manager
+	 * @param clientStub
+	 * 			Axis client stub
+	 * @param userName
+	 * 			MantisBT username. If anonymous access is used, should be an empty string.
+	 * @param password
+	 * 			MantisBT password. If anonymous access is used, should be an empty string.
+	 * @return the reader for the projections
+	 */
 	@Bean
 	@StepScope
 	public AxisAuthItemsArrayReader<ObjectRef> projectionsReader(final PortalAuthManager authManager,
@@ -88,6 +144,19 @@ public class EnumsReadersConfiguration {
 				clientStub, userName, password);
 	}
 
+	/**
+	 * Reader for the project status. Use mc_enum_project_status ws operation.
+	 *
+	 * @param authManager
+	 * 			The portal auth manager
+	 * @param clientStub
+	 * 			Axis client stub
+	 * @param userName
+	 * 			MantisBT username. If anonymous access is used, should be an empty string.
+	 * @param password
+	 * 			MantisBT password. If anonymous access is used, should be an empty string.
+	 * @return the reader for the project status
+	 */
 	@Bean
 	@StepScope
 	public AxisAuthItemsArrayReader<ObjectRef> projectStatusReader(final PortalAuthManager authManager,
@@ -99,6 +168,19 @@ public class EnumsReadersConfiguration {
 				clientStub, userName, password);
 	}
 
+	/**
+	 * Reader for the project view states. Use mc_enum_project_view_states ws operation.
+	 *
+	 * @param authManager
+	 * 			The portal auth manager
+	 * @param clientStub
+	 * 			Axis client stub
+	 * @param userName
+	 * 			MantisBT username. If anonymous access is used, should be an empty string.
+	 * @param password
+	 * 			MantisBT password. If anonymous access is used, should be an empty string.
+	 * @return the reader for the project view states
+	 */
 	@Bean
 	@StepScope
 	public AxisAuthItemsArrayReader<ObjectRef> projectViewStatesReader(final PortalAuthManager authManager,
@@ -110,6 +192,19 @@ public class EnumsReadersConfiguration {
 				clientStub, userName, password);
 	}
 
+	/**
+	 * Reader for the reprocibilites. Use mc_enum_reproducibilities ws operation.
+	 *
+	 * @param authManager
+	 * 			The portal auth manager
+	 * @param clientStub
+	 * 			Axis client stub
+	 * @param userName
+	 * 			MantisBT username. If anonymous access is used, should be an empty string.
+	 * @param password
+	 * 			MantisBT password. If anonymous access is used, should be an empty string.
+	 * @return the reader for the reprocibilites
+	 */
 	@Bean
 	@StepScope
 	public AxisAuthItemsArrayReader<ObjectRef> reproducibilitiesReader(final PortalAuthManager authManager,
@@ -120,6 +215,19 @@ public class EnumsReadersConfiguration {
 				clientStub, userName, password);
 	}
 
+	/**
+	 * Reader for the resolutions states. Use mc_enum_resolutions ws operation.
+	 *
+	 * @param authManager
+	 * 			The portal auth manager
+	 * @param clientStub
+	 * 			Axis client stub
+	 * @param userName
+	 * 			MantisBT username. If anonymous access is used, should be an empty string.
+	 * @param password
+	 * 			MantisBT password. If anonymous access is used, should be an empty string.
+	 * @return the reader for the resolutions states
+	 */
 	@Bean
 	@StepScope
 	public AxisAuthItemsArrayReader<ObjectRef> resolutionsReader(final PortalAuthManager authManager,
@@ -131,6 +239,19 @@ public class EnumsReadersConfiguration {
 				clientStub, userName, password);
 	}
 
+	/**
+	 * Reader for the severities. Use mc_enum_severities ws operation.
+	 *
+	 * @param authManager
+	 * 			The portal auth manager
+	 * @param clientStub
+	 * 			Axis client stub
+	 * @param userName
+	 * 			MantisBT username. If anonymous access is used, should be an empty string.
+	 * @param password
+	 * 			MantisBT password. If anonymous access is used, should be an empty string.
+	 * @return the reader for the severities
+	 */
 	@Bean
 	@StepScope
 	public AxisAuthItemsArrayReader<ObjectRef> severitiesReader(final PortalAuthManager authManager,
@@ -142,6 +263,19 @@ public class EnumsReadersConfiguration {
 				clientStub, userName, password);
 	}
 
+	/**
+	 * Reader for the issues status. Use mc_enum_status ws operation.
+	 *
+	 * @param authManager
+	 * 			The portal auth manager
+	 * @param clientStub
+	 * 			Axis client stub
+	 * @param userName
+	 * 			MantisBT username. If anonymous access is used, should be an empty string.
+	 * @param password
+	 * 			MantisBT password. If anonymous access is used, should be an empty string.
+	 * @return the reader for the issues status
+	 */
 	@Bean
 	@StepScope
 	public AxisAuthItemsArrayReader<ObjectRef> statusReader(final PortalAuthManager authManager,
@@ -153,6 +287,20 @@ public class EnumsReadersConfiguration {
 				clientStub, userName, password);
 	}
 
+	/**
+	 * Build the reader for the given ws operation.
+	 *
+	 * @param operation
+	 * @param authManager
+	 * 			The portal auth manager
+	 * @param clientStub
+	 * 			Axis client stub
+	 * @param userName
+	 * 			MantisBT username. If anonymous access is used, should be an empty string.
+	 * @param password
+	 * 			MantisBT password. If anonymous access is used, should be an empty string.
+	 * @return the reader
+	 */
 	private AxisAuthItemsArrayReader<ObjectRef> getEnumReader(final String operation,
 			final PortalAuthManager authManager, final Stub clientStub,
 			final String userName, final String password) {

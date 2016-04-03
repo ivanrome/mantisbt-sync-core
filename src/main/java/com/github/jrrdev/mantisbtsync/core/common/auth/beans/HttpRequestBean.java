@@ -28,14 +28,31 @@ import javax.xml.bind.annotation.XmlElements;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
+/**
+ * Bean wrapping the definition of an HTTP request in the XML file.
+ * This bean contains the destination URI, the request type and a
+ * link to the next request.
+ *
+ * @author jrrdev
+ *
+ */
 @XmlRootElement(name = "httpRequest")
 @XmlType(propOrder = { "uri", "requestType", "nextRequest"})
 public class HttpRequestBean {
 
+	/**
+	 * Destination URI of the request.
+	 */
 	private String uri;
 
+	/**
+	 * Bean of the next request in the sequence.
+	 */
 	private HttpRequestBean nextRequest;
 
+	/**
+	 * Request type. Contains values specific to the request type.
+	 */
 	private AbstractHttpRequestTypeBean requestType;
 
 	/**

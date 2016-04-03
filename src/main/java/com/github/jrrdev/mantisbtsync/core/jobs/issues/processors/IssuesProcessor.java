@@ -1,5 +1,25 @@
 /**
+ * The MIT License (MIT)
  *
+ * Copyright (c) 2016 Jérard Devarulrajah
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
  */
 package com.github.jrrdev.mantisbtsync.core.jobs.issues.processors;
 
@@ -11,13 +31,6 @@ import org.springframework.batch.item.ItemProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 
-import com.github.jrrdev.mantisbtsync.core.common.auth.PortalAuthManager;
-import com.github.jrrdev.mantisbtsync.core.jobs.issues.beans.BugBean;
-import com.github.jrrdev.mantisbtsync.core.jobs.issues.beans.BugCustomFieldValue;
-import com.github.jrrdev.mantisbtsync.core.jobs.issues.beans.BugHistoryBean;
-import com.github.jrrdev.mantisbtsync.core.jobs.issues.beans.BugNoteBean;
-import com.github.jrrdev.mantisbtsync.core.services.IssuesDao;
-
 import biz.futureware.mantis.rpc.soap.client.AccountData;
 import biz.futureware.mantis.rpc.soap.client.CustomFieldValueForIssueData;
 import biz.futureware.mantis.rpc.soap.client.HistoryData;
@@ -25,7 +38,20 @@ import biz.futureware.mantis.rpc.soap.client.IssueData;
 import biz.futureware.mantis.rpc.soap.client.IssueNoteData;
 import biz.futureware.mantis.rpc.soap.client.MantisConnectBindingStub;
 
+import com.github.jrrdev.mantisbtsync.core.common.auth.PortalAuthManager;
+import com.github.jrrdev.mantisbtsync.core.jobs.issues.beans.BugBean;
+import com.github.jrrdev.mantisbtsync.core.jobs.issues.beans.BugCustomFieldValue;
+import com.github.jrrdev.mantisbtsync.core.jobs.issues.beans.BugHistoryBean;
+import com.github.jrrdev.mantisbtsync.core.jobs.issues.beans.BugNoteBean;
+import com.github.jrrdev.mantisbtsync.core.services.IssuesDao;
+
 /**
+ * Processor that transform the raw data retrieved from mc_issue_get
+ * to a bean usable for insertion in the DB.
+ * Retrieves also the history of the issue by calling mc_issue_get_history.
+ * At last, prepare the issue insertion by populating the enumerations, project and
+ * users tables if needed for Foreign Keys resolution.
+ *
  * @author jrrdev
  *
  */
@@ -149,6 +175,13 @@ public class IssuesProcessor implements ItemProcessor<IssueData, BugBean> {
 		return bean;
 	}
 
+	/**
+	 * Build the bean from the raw data
+	 *
+	 * @param data
+	 * 		Data retrieved from the WS call
+	 * @return the wrapper bean
+	 */
 	private BugBean getBeanFromDto(final IssueData data) {
 		final BugBean bean = new BugBean();
 		bean.setId(data.getId());
@@ -205,6 +238,15 @@ public class IssuesProcessor implements ItemProcessor<IssueData, BugBean> {
 		return bean;
 	}
 
+	/**
+	 * Fill the notes list in the bean by using the data
+	 * retrieved by the WS call.
+	 *
+	 * @param bean
+	 * 		Bean to populated
+	 * @param data
+	 * 		Raw data from the WS call
+	 */
 	private void fillNotes(final BugBean bean, final IssueData data) {
 		if (data != null && data.getNotes() != null && bean != null) {
 
@@ -229,6 +271,15 @@ public class IssuesProcessor implements ItemProcessor<IssueData, BugBean> {
 		}
 	}
 
+	/**
+	 * Fill the custom fields list in the bean by using the data
+	 * retrieved by the WS call.
+	 *
+	 * @param bean
+	 * 		Bean to populated
+	 * @param data
+	 * 		Raw data from the WS call
+	 */
 	private void fillCustomField(final BugBean bean, final IssueData data) {
 		if (data != null && data.getCustom_fields() != null && bean != null) {
 
@@ -248,6 +299,15 @@ public class IssuesProcessor implements ItemProcessor<IssueData, BugBean> {
 		}
 	}
 
+	/**
+	 * Fill the history list in the bean by using the data
+	 * retrieved by the WS call.
+	 *
+	 * @param bean
+	 * 		Bean to populated
+	 * @param data
+	 * 		Raw data from the WS call
+	 */
 	private void fillHistory(final BugBean bean, final HistoryData[] histories) {
 		if (histories != null && bean != null) {
 
@@ -271,10 +331,25 @@ public class IssuesProcessor implements ItemProcessor<IssueData, BugBean> {
 		}
 	}
 
+	/**
+	 * Convert a calendar to a sql date.
+	 *
+	 * @param cal
+	 * 		The calendar to convert
+	 * @return the corresponding sql date
+	 */
 	private java.sql.Timestamp getSqlDate(final Calendar cal) {
 		return new java.sql.Timestamp(cal.getTimeInMillis());
 	}
 
+	/**
+	 * Insert all the depencies of the issue if they aren't present
+	 * in the DB. This operation is perform because enums and projects syncing
+	 * may not be possible and would result into foreign keys violations.
+	 *
+	 * @param item
+	 * 		Raw data from the WS call
+	 */
 	private void insertIssueDependencies(final IssueData item) {
 		final BigInteger projectId;
 		if (item.getProject() != null) {
@@ -308,6 +383,14 @@ public class IssuesProcessor implements ItemProcessor<IssueData, BugBean> {
 		}
 	}
 
+	/**
+	 * Insert all the depencies of the issue history if they aren't present
+	 * in the DB. This operation is perform because enums and projects syncing
+	 * may not be possible and would result into foreign keys violations.
+	 *
+	 * @param item
+	 * 		Raw data from the WS call
+	 */
 	private void insertHistoryDependencies(final HistoryData[] histories, final BigInteger projectId) {
 		if (histories != null) {
 			for (final HistoryData histData : histories) {

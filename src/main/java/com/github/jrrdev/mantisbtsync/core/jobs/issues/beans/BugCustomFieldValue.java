@@ -26,15 +26,26 @@ package com.github.jrrdev.mantisbtsync.core.jobs.issues.beans;
 import java.math.BigInteger;
 
 /**
+ * Bean wrapping a custom field value.
+ *
  * @author jrrdev
  *
  */
 public class BugCustomFieldValue {
 
+	/**
+	 * Id of the field.
+	 */
 	private BigInteger fieldId;
 
+	/**
+	 * Issue id.
+	 */
 	private BigInteger bugId;
 
+	/**
+	 * Value of the field.
+	 */
 	private String fieldValue;
 
 	/**

@@ -26,11 +26,18 @@ package com.github.jrrdev.mantisbtsync.core.jobs.issues.beans;
 import java.math.BigInteger;
 
 /**
+ * Bean wrapping the id of an issue.
+ * Just a convenient way to store a list of id retrieved
+ * from a file or REST parameters.
+ *
  * @author jrrdev
  *
  */
 public class BugIdBean {
 
+	/**
+	 * Id of the issue.
+	 */
 	private BigInteger id;
 
 	/**

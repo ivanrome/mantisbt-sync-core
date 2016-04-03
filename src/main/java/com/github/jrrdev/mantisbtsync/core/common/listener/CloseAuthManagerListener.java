@@ -38,6 +38,9 @@ import com.github.jrrdev.mantisbtsync.core.common.auth.PortalAuthManager;
  */
 public class CloseAuthManagerListener implements JobExecutionListener {
 
+	/**
+	 * The portal authentification manager.
+	 */
 	private PortalAuthManager mgr;
 
 	/**

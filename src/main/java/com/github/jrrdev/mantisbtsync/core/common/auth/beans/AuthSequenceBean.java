@@ -26,6 +26,13 @@ package com.github.jrrdev.mantisbtsync.core.common.auth.beans;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
+/**
+ * Simple wrapper for the whole sequence of requests.
+ * Just a convenient way to write the XML file.
+ *
+ * @author jrrdev
+ *
+ */
 @XmlRootElement(name = "authsequence")
 public class AuthSequenceBean {
 

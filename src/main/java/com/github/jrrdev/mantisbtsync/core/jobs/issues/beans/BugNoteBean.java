@@ -27,21 +27,41 @@ import java.math.BigInteger;
 import java.sql.Timestamp;
 
 /**
+ * Bean wrapping a note on an issue.
+ *
  * @author jrrdev
  *
  */
 public class BugNoteBean {
 
+	/**
+	 * Id of the note.
+	 */
 	private BigInteger id;
 
+	/**
+	 * Id of the issue.
+	 */
 	private BigInteger bugId;
 
+	/**
+	 * Id of the author.
+	 */
 	private BigInteger reporterId;
 
+	/**
+	 * Text of the note.
+	 */
 	private String textNote;
 
+	/**
+	 * Initial date of the note writing.
+	 */
 	private Timestamp dateSubmitted;
 
+	/**
+	 * Last modification date of the note.
+	 */
 	private Timestamp lastModified;
 
 	/**

@@ -23,7 +23,15 @@
  */
 package com.github.jrrdev.mantisbtsync.core.common.auth.beans;
 
+import com.github.jrrdev.mantisbtsync.core.common.auth.request.AuthHttpGet;
 
+/**
+ * Bean describing a GET request in the XML file.
+ * This bean is used to build an {@link AuthHttpGet} object.
+ *
+ * @author jrrdev
+ *
+ */
 public class HttpGetBean extends AbstractHttpRequestTypeBean {
 
 }

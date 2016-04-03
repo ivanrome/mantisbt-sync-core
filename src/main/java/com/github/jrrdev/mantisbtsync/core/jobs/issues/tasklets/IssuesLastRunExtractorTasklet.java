@@ -41,12 +41,21 @@ import org.springframework.batch.core.scope.context.StepContext;
 import org.springframework.batch.core.step.tasklet.Tasklet;
 import org.springframework.batch.repeat.RepeatStatus;
 
+import com.github.jrrdev.mantisbtsync.core.jobs.issues.readers.OpenIssuesReader;
+
 /**
+ * Tasklet that get the last successful start time of the job with the same
+ * job parameters.
+ * That start time is used by {@link OpenIssuesReader} to perform filtering.
+ *
  * @author jrrdev
  *
  */
 public class IssuesLastRunExtractorTasklet implements Tasklet {
 
+	/**
+	 * Job explorer.
+	 */
 	private JobExplorer jobExplorer;
 
 	/**
@@ -62,7 +71,6 @@ public class IssuesLastRunExtractorTasklet implements Tasklet {
 		final JobParameters jobParams = stepContext.getStepExecution().getJobParameters();
 		final Map<String, JobParameter> currParams = new HashMap<String, JobParameter>(jobParams.getParameters());
 		currParams.remove("run.id");
-		currParams.remove("job.completeSync");
 
 		Date lastJobRun = null;
 
@@ -74,7 +82,6 @@ public class IssuesLastRunExtractorTasklet implements Tasklet {
 				final JobParameters oldJobParams = jobExecution.getJobParameters();
 				final Map<String, JobParameter> oldParams = new HashMap<String, JobParameter>(oldJobParams.getParameters());
 				oldParams.remove("run.id");
-				oldParams.remove("job.completeSync");
 
 				if (ExitStatus.COMPLETED.equals(jobExecution.getExitStatus())
 						&& oldParams.equals(currParams)) {

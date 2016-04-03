@@ -31,12 +31,21 @@ import org.springframework.context.annotation.Configuration;
 import com.github.jrrdev.mantisbtsync.core.common.auth.PortalAuthManager;
 
 /**
+ * Configuration for the tasklets used by all jobs.
+ *
  * @author jrrdev
  *
  */
 @Configuration
 public class CommonTasklets {
 
+	/**
+	 * Build the tasklet executing the portal authentification.
+	 *
+	 * @param authManager
+	 * 		the portal authentification manager
+	 * @return the tasklet executing the portal authentification
+	 */
 	@Bean
 	@StepScope
 	public MethodInvokingTaskletAdapter authTasklet(final PortalAuthManager authManager) {

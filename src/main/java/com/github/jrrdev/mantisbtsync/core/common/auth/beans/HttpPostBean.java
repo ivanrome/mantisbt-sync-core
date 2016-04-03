@@ -28,11 +28,26 @@ import java.util.Map;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
+import com.github.jrrdev.mantisbtsync.core.common.auth.request.AuthHttpPost;
+
+/**
+ * Bean describing a POST request in the XML file.
+ * This bean is used to build an {@link AuthHttpPost} object.
+ *
+ * @author jrrdev
+ *
+ */
 @XmlType(propOrder = { "formAction", "parameters"})
 public class HttpPostBean extends AbstractHttpRequestTypeBean {
 
+	/**
+	 * Name of the html form related to the POST request.
+	 */
 	private String formAction;
 
+	/**
+	 * Map containing the values of the form inputs.
+	 */
 	private Map<String, String> parameters;
 
 	/**

@@ -42,11 +42,18 @@ import com.github.jrrdev.mantisbtsync.core.common.auth.request.AuthHttpGet;
 import com.github.jrrdev.mantisbtsync.core.common.auth.request.AuthHttpPost;
 
 /**
+ * Class used to build an {@link PortalAuthManager} from
+ * the definition of a sequence of requests contains in a
+ * XML file.
+ *
  * @author jrrdev
  *
  */
 public class PortalAuthBuilder implements ResourceLoaderAware {
 
+	/**
+	 * Spring resource loader.
+	 */
 	private ResourceLoader resourceLoader;
 
 	/**
@@ -55,6 +62,20 @@ public class PortalAuthBuilder implements ResourceLoaderAware {
 	public PortalAuthBuilder() {
 	}
 
+	/**
+	 * Build the portal authentification manager from an XML file
+	 * describing the sequence of requests to be sent.
+	 *
+	 * @param filepath
+	 * 		File path of the XML file. The file is loaded through Spring resource loader, so
+	 * 		the file path can contain definition like "classpath:"
+	 * @return the portal authentification manager
+	 * @throws JAXBException
+	 * 		If an error occurs during the XML unmarshalling
+	 * @throws IOException
+	 * 		if the resource cannot be resolved as absolute file path, i.e. if the resource is
+	 * 		not available in a file system
+	 */
 	public PortalAuthManager buildAuthManager(final String filepath) throws JAXBException, IOException {
 		final PortalAuthManager mgr = new PortalAuthManager();
 
@@ -76,6 +97,14 @@ public class PortalAuthBuilder implements ResourceLoaderAware {
 		return mgr;
 	}
 
+	/**
+	 * Build an implementation of the request described by the bean
+	 * and make a recursive call to be build the next request in the sequence.
+	 *
+	 * @param reqBean
+	 * 		Bean containing the description of the request
+	 * @return An implementation of the request
+	 */
 	private AbstractAuthHttpRequest buildRequest(final HttpRequestBean reqBean) {
 		AbstractAuthHttpRequest req = null;
 
@@ -101,6 +130,10 @@ public class PortalAuthBuilder implements ResourceLoaderAware {
 		return req;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * @see org.springframework.context.ResourceLoaderAware#setResourceLoader(org.springframework.core.io.ResourceLoader)
+	 */
 	@Override
 	public void setResourceLoader(final ResourceLoader pResourceLoader) {
 		resourceLoader = pResourceLoader;

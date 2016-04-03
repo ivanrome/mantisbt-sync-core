@@ -29,53 +29,121 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Bean wrapping the data related to a MantisBT issue.
+ *
  * @author jrrdev
  *
  */
 public class BugBean {
 
+	/**
+	 * Issue id.
+	 */
 	private BigInteger id;
 
+	/**
+	 * Id of the project of the issue.
+	 */
 	private BigInteger projectId;
 
+	/**
+	 * Id of the user who submitted the issue.
+	 */
 	private BigInteger reporterId;
 
+	/**
+	 * Id of the user handling the issue.
+	 */
 	private BigInteger handlerId;
 
+	/**
+	 * Id of the priority of the issue.
+	 */
 	private BigInteger priorityId;
 
+	/**
+	 * Id of the severity of the issue.
+	 */
 	private BigInteger severityId;
 
+	/**
+	 * Id of the status of the issue.
+	 */
 	private BigInteger statusId;
 
+	/**
+	 * Id of the resolution of the issue.
+	 */
 	private BigInteger resolutionId;
 
+	/**
+	 * Description of the issue.
+	 */
 	private String description;
 
+	/**
+	 * Steps to reproduce the issue.
+	 */
 	private String stepsToReproduce;
 
+	/**
+	 * Additional informations on the issue.
+	 */
 	private String additionalInformation;
 
+	/**
+	 * Platform.
+	 */
 	private String platform;
 
+	/**
+	 * Version of detection of the issue.
+	 */
 	private String version;
 
+	/**
+	 * Version of fix.
+	 */
 	private String fixedInVersion;
 
+	/**
+	 * Target version of fix.
+	 */
 	private String targetVersion;
 
+	/**
+	 * Summary of the issue.
+	 */
 	private String summary;
 
+	/**
+	 * Categorie of the issue.
+	 */
 	private String category;
 
+	/**
+	 * Submission date of the issue in MantisBT.
+	 */
 	private Timestamp dateSubmitted;
 
+	/**
+	 * Last update date of the issue in MantisBT.
+	 */
 	private Timestamp lastUpdated;
 
+	/**
+	 * List of notes related to the issue.
+	 */
 	private final List<BugNoteBean> notes = new ArrayList<BugNoteBean>();
 
+	/**
+	 * List of the custom fields values.
+	 */
 	private final List<BugCustomFieldValue> customFields = new ArrayList<BugCustomFieldValue>();
 
+	/**
+	 * History of the issue.
+	 */
 	private final List<BugHistoryBean> history = new ArrayList<BugHistoryBean>();
 
 	/**

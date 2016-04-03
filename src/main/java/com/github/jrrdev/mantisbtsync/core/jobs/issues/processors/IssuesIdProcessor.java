@@ -27,13 +27,18 @@ import org.apache.axis.transport.http.HTTPConstants;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.util.Assert;
 
-import com.github.jrrdev.mantisbtsync.core.common.auth.PortalAuthManager;
-import com.github.jrrdev.mantisbtsync.core.jobs.issues.beans.BugIdBean;
-
 import biz.futureware.mantis.rpc.soap.client.IssueData;
 import biz.futureware.mantis.rpc.soap.client.MantisConnectBindingStub;
 
+import com.github.jrrdev.mantisbtsync.core.common.auth.PortalAuthManager;
+import com.github.jrrdev.mantisbtsync.core.jobs.issues.beans.BugIdBean;
+
 /**
+ * Processor used to retrieve the data related to the issue by calling
+ * mc_issue_get ws operation by using the given issue id.
+ * This processor should be chained with {@link IssuesProcessor} because
+ * it doesn't retrieve the issue history and doesn't perform dependencies inserts.
+ *
  * @author jrrdev
  *
  */

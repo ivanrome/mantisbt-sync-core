@@ -28,13 +28,15 @@ import java.math.BigInteger;
 import org.springframework.batch.item.ItemReader;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.github.jrrdev.mantisbtsync.core.common.auth.PortalAuthManager;
-import com.github.jrrdev.mantisbtsync.core.services.IssuesDao;
-
 import biz.futureware.mantis.rpc.soap.client.IssueData;
 import biz.futureware.mantis.rpc.soap.client.MantisConnectBindingStub;
 
+import com.github.jrrdev.mantisbtsync.core.common.auth.PortalAuthManager;
+import com.github.jrrdev.mantisbtsync.core.services.IssuesDao;
+
 /**
+ * Abtract issue reader.
+ *
  * @author jrrdev
  *
  */

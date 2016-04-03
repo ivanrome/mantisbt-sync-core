@@ -23,6 +23,13 @@
  */
 package com.github.jrrdev.mantisbtsync.core.common.auth.beans;
 
+/**
+ * Simple wrapper for the request type. This class is just
+ * a convenient way to write the xml file that will be unmarshalled.
+ *
+ * @author jrrdev
+ *
+ */
 public abstract class AbstractHttpRequestTypeBean {
 
 }
