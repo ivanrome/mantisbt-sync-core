@@ -30,7 +30,7 @@ package com.github.jrrdev.mantisbtsync.core.jobs.projects.beans;
  * @author jrrdev
  *
  */
-public final class ProjectCustomFieldBean {
+public class ProjectCustomFieldBean {
 
 	/**
 	 * Id of the custom field.

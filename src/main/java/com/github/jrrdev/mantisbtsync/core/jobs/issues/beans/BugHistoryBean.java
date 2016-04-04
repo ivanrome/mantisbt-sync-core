@@ -32,7 +32,7 @@ import java.sql.Timestamp;
  * @author jrrdev
  *
  */
-public final class BugHistoryBean {
+public class BugHistoryBean {
 
 	/**
 	 * Issue id.

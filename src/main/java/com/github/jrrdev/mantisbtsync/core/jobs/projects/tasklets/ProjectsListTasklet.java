@@ -103,28 +103,28 @@ public class ProjectsListTasklet implements Tasklet {
 	/**
 	 * @return the authManager
 	 */
-	public final PortalAuthManager getAuthManager() {
+	public PortalAuthManager getAuthManager() {
 		return authManager;
 	}
 
 	/**
 	 * @param authManager the authManager to set
 	 */
-	public final void setAuthManager(final PortalAuthManager authManager) {
+	public void setAuthManager(final PortalAuthManager authManager) {
 		this.authManager = authManager;
 	}
 
 	/**
 	 * @return the clientStub
 	 */
-	public final MantisConnectBindingStub getClientStub() {
+	public MantisConnectBindingStub getClientStub() {
 		return clientStub;
 	}
 
 	/**
 	 * @param clientStub the clientStub to set
 	 */
-	public final void setClientStub(final MantisConnectBindingStub clientStub) {
+	public void setClientStub(final MantisConnectBindingStub clientStub) {
 		this.clientStub = clientStub;
 	}
 

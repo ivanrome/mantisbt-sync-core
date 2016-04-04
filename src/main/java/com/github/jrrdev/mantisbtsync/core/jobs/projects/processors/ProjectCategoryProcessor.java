@@ -44,14 +44,14 @@ public class ProjectCategoryProcessor implements ItemProcessor<String, ProjectCa
 	/**
 	 * @return the projectId
 	 */
-	public final Integer getProjectId() {
+	public Integer getProjectId() {
 		return projectId;
 	}
 
 	/**
 	 * @param projectId the projectId to set
 	 */
-	public final void setProjectId(final Integer projectId) {
+	public void setProjectId(final Integer projectId) {
 		this.projectId = projectId;
 	}
 

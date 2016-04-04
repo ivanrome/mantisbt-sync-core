@@ -29,7 +29,7 @@ package com.github.jrrdev.mantisbtsync.core.jobs.projects.beans;
  * @author jrrdev
  *
  */
-public final class ProjectCategoryBean {
+public class ProjectCategoryBean {
 
 	/**
 	 * Category name.
@@ -55,42 +55,42 @@ public final class ProjectCategoryBean {
 	/**
 	 * @return the name
 	 */
-	public final String getName() {
+	public String getName() {
 		return name;
 	}
 
 	/**
 	 * @param name the name to set
 	 */
-	public final void setName(final String name) {
+	public void setName(final String name) {
 		this.name = name;
 	}
 
 	/**
 	 * @return the id
 	 */
-	public final Integer getId() {
+	public Integer getId() {
 		return id;
 	}
 
 	/**
 	 * @param id the id to set
 	 */
-	public final void setId(final Integer id) {
+	public void setId(final Integer id) {
 		this.id = id;
 	}
 
 	/**
 	 * @return the projectId
 	 */
-	public final Integer getProjectId() {
+	public Integer getProjectId() {
 		return projectId;
 	}
 
 	/**
 	 * @param projectId the projectId to set
 	 */
-	public final void setProjectId(final Integer projectId) {
+	public void setProjectId(final Integer projectId) {
 		this.projectId = projectId;
 	}
 
