@@ -1,9 +1,3 @@
--- Add DUAL table for HSQLDB
-CREATE TABLE dual (
-dummy varchar(1) );
-
-INSERT INTO dual (dummy) VALUES ('X');
-
 -- Tables for MantisBT enumerations
 
 CREATE TABLE mantis_enum_custom_field_types  (
