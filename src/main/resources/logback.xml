@@ -4,4 +4,5 @@
 	<logger name="org.springframework" level="INFO"/>
 	<logger name="org.apache.http" level="INFO"/>
 	<logger name="org.apache.axis" level="INFO"/>
+	<logger name="com.github.jrrdev.mantisbtsync.core.common.auth" level="INFO"/>
 </configuration>

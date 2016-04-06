@@ -30,6 +30,8 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.ResourceLoaderAware;
 import org.springframework.core.io.ResourceLoader;
 
@@ -50,6 +52,8 @@ import com.github.jrrdev.mantisbtsync.core.common.auth.request.AuthHttpPost;
  *
  */
 public class PortalAuthBuilder implements ResourceLoaderAware {
+
+	private static Logger LOGGER = LoggerFactory.getLogger(PortalAuthBuilder.class);
 
 	/**
 	 * Spring resource loader.
@@ -81,6 +85,10 @@ public class PortalAuthBuilder implements ResourceLoaderAware {
 
 		if (filepath != null && !filepath.isEmpty()) {
 
+			if (LOGGER.isInfoEnabled()) {
+				LOGGER.info("Loading portal authentication configuration from file : " + filepath);
+			}
+
 			final File file = resourceLoader.getResource(filepath).getFile();
 
 			if (file.exists() && file.isFile() && file.canRead()) {
@@ -91,7 +99,18 @@ public class PortalAuthBuilder implements ResourceLoaderAware {
 				if (sequence != null) {
 					mgr.setFirstRequest(buildRequest(sequence.getFirstRequest()));
 				}
+
+				if (LOGGER.isInfoEnabled()) {
+					LOGGER.info("Portal authentication configuration loaded");
+				}
+
+			} else {
+				if (LOGGER.isErrorEnabled()) {
+					LOGGER.error("Portal authentication configuration loading failed, file may not exists or can't be read");
+				}
 			}
+		} else if (LOGGER.isInfoEnabled()) {
+			LOGGER.info("No portal authentication configuration file specified");
 		}
 
 		return mgr;
