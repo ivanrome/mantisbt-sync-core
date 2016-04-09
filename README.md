@@ -16,6 +16,7 @@ It also supports authentication through an intranet portal before accessing the 
 6. Apache HTTP Client 4.5.1
 7. JSoup 1.8.3
 8. DbSetup 1.6.0
+9. Flyway 3.2.1
 
 Database :
 
@@ -24,7 +25,7 @@ Database :
 
 ## Getting started
 
-_Installation in production : docker image coming soon..._
+**Installation in production :** see [Docker image](https://github.com/jrrdev/mantisbt-sync-docker)
 
 For development :
 
@@ -38,6 +39,16 @@ If authentication through an intranet portal is needed :
 5. Launch the application
 
 In development, in-memory database (HSQLDB) is used.
+
+### Spring properties
+
+Properties used in this project are :
+
+* spring.datasource.platform
+* spring.datasource.url
+* flyway.locations
+* mantis.endpoint
+* mantis.auth.filepath (optionnal)
 
 ## Jobs
 
@@ -148,14 +159,12 @@ curl -X POST 'http://localhost:8080/batch/operations/jobs/forceSyncIssuesJob' --
 
 ## Roadmap
 
-* Build a docker image for installation in production
-* Use flyway to manage database migration
 * Change portal authentication from HTTP Client to headless Selenium
 * Better logging for easier debug
 
 ## Related projects
 
-* Docker image for MySQL and core batch : _work in progress_
+* [Docker image for MySQL and core batch](https://github.com/jrrdev/mantisbt-sync-docker)
 * Simple cron for periodic sync scheduling : _work in progress_
 * Batch to calculate indicators : _not started_
 * Web UI for batch administration and scheduling : _not started_
