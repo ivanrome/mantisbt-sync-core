@@ -107,6 +107,7 @@ public class PortalAuthBuilder implements ResourceLoaderAware {
 			} else {
 				if (LOGGER.isErrorEnabled()) {
 					LOGGER.error("Portal authentication configuration loading failed, file may not exists or can't be read");
+					throw new IOException("Portal authentication configuration loading failed, file may not exists or can't be read : " + filepath);
 				}
 			}
 		} else if (LOGGER.isInfoEnabled()) {
