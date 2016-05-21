@@ -36,9 +36,7 @@ import com.github.jrrdev.mantisbtsync.core.services.IssuesDao;
  * inserts into DB.
  * Those caches are used when writing an issue to not perform insert
  * if an enum values already exists in the DB.
- * The listener will evict all cached if the step failed (because it means
- * that an insert rollback may have been performed and so data in the cache
- * and in the DB aren't synced).
+ * The listener will evict all cached if at the end of the step.
  *
  * @author jrrdev
  *
@@ -67,9 +65,7 @@ public class CacheEvictionListener implements StepExecutionListener {
 	 */
 	@Override
 	public ExitStatus afterStep(final StepExecution stepExecution) {
-		if(ExitStatus.FAILED.getExitCode().equals(stepExecution.getExitStatus().getExitCode())) {
-			dao.evictAllCaches();
-		}
+		dao.evictAllCaches();
 		return stepExecution.getExitStatus();
 	}
 
