@@ -138,7 +138,7 @@ Job parameters (all mandatory) are :
 To launch the job with curl :
 
 ```Shell
-curl -X POST 'http://localhost:8080/batch/operations/jobs/syncEnumsJob' --data "jobParameters=mantis.username=foo,mantis.password=foopasswd"
+curl --silent -X POST 'http://localhost:8080/batch/operations/jobs/syncEnumsJob' --data "jobParameters=mantis.username=foo,mantis.password=foopasswd"; echo
 ```
 
 Note : Don't worry if the job fails because of access denied by MantisBT server. In fact, this sync isn't mandatory because the issues sync jobs will insert those values if needed
@@ -164,7 +164,7 @@ Job parameters (all mandatory) are :
 To launch the job with curl :
 
 ```Shell
-curl -X POST 'http://localhost:8080/batch/operations/jobs/syncProjectsJob' --data "jobParameters=mantis.username=foo,mantis.password=foopasswd,mantis.project_id=1"
+curl --silent -X POST 'http://localhost:8080/batch/operations/jobs/syncProjectsJob' --data "jobParameters=mantis.username=foo,mantis.password=foopasswd,mantis.project_id=1"; echo
 ```
 
 ### Syncing MantisBT issues
@@ -191,7 +191,7 @@ Note : the file is loaded through Spring resource loader so the file path can co
 To launch the job with curl :
 
 ```Shell
-curl -X POST 'http://localhost:8080/batch/operations/jobs/fileSyncIssuesJob' --data "jobParameters=mantis.username=foo,mantis.password=foopasswd,mantis.filepath=file:/path/to/file/filename.csv"
+curl --silent -X POST 'http://localhost:8080/batch/operations/jobs/fileSyncIssuesJob' --data "jobParameters=mantis.username=foo,mantis.password=foopasswd,mantis.filepath=file:/path/to/file/filename.csv"; echo
 ```
 
 #### Periodic sync
@@ -209,7 +209,7 @@ Job parameters (all mandatory) are :
 To launch the job with curl :
 
 ```Shell
-curl -X POST 'http://localhost:8080/batch/operations/jobs/syncIssuesJob' --data "jobParameters=mantis.username=foo,mantis.password=foopasswd,mantis.project_id=1"
+curl --silent -X POST 'http://localhost:8080/batch/operations/jobs/syncIssuesJob' --data "jobParameters=mantis.username=foo,mantis.password=foopasswd,mantis.project_id=1"; echo
 ```
 
 #### Force sync
@@ -226,7 +226,7 @@ Job parameters (all mandatory) are :
 To launch the job with curl :
 
 ```Shell
-curl -X POST 'http://localhost:8080/batch/operations/jobs/forceSyncIssuesJob' --data "jobParameters=mantis.username=foo,mantis.password=foopasswd,mantis.issues_id=1;2"
+curl --silent -X POST 'http://localhost:8080/batch/operations/jobs/forceSyncIssuesJob' --data "jobParameters=mantis.username=foo,mantis.password=foopasswd,mantis.issues_id=1;2"; echo
 ```
 
 ## Roadmap
