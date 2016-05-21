@@ -50,9 +50,81 @@ Properties used in this project are :
 * mantis.endpoint
 * mantis.auth.filepath (optionnal)
 
-## Jobs
+## REST API
 
-Jobs can be launch through REST calls thank to [Codecentric's spring-boot-starter-batch-web](https://github.com/codecentric/spring-boot-starter-batch-web).
+Jobs launching and monitoring are performed through REST calls thank to [Codecentric's spring-boot-starter-batch-web](https://github.com/codecentric/spring-boot-starter-batch-web).
+
+### Starting jobs
+
+`http://{host}:{port}/batch/operations/jobs/{jobName}` / POST
+
+Optionally you may define job parameters via request param 'jobParameters'. If a JobParametersIncrementer is specified in the job, it is used to increment the parameters.
+On success, it returns the JobExecution's id as a plain string.
+On failure, it returns the message of the Exception as a plain string. There are different failure possibilities :
+
+* HTTP response code 404 (NOT_FOUND): the job cannot be found, not deployed on this server.
+* HTTP response code 409 (CONFLICT): the JobExecution already exists and is either running or not restartable.
+* HTTP response code 422 (UNPROCESSABLE_ENTITY): the job parameters didn't pass the validator.
+* HTTP response code 500 (INTERNAL\_SERVER\_ERROR): any other unexpected failure.
+
+### Retrieving an JobExecution's ExitCode
+
+`http://{host}:{port}/batch/operations/jobs/executions/{executionId}` / GET
+
+On success, it returns the ExitCode of the JobExecution specified by the executionId as a plain string.
+On failure, it returns the message of the Exception as a plain string. There are different failure possibilities:
+
+* HTTP response code 404 (NOT_FOUND): the JobExecution cannot be found.
+* HTTP response code 500 (INTERNAL\_SERVER\_ERROR): any other unexpected failure.
+
+### Retrieving a log file for a specific JobExecution
+
+`http://{host}:{port}/batch/operations/jobs/executions/{executionId}/log` / GET
+
+On success, it returns the log file belonging to the run of the JobExecution specified by the executionId as a plain string.
+On failure, it returns the message of the Exception as a plain string. There are different failure possibilities:
+
+* HTTP response code 404 (NOT_FOUND): the log file cannot be found.
+* HTTP response code 500 (INTERNAL\_SERVER\_ERROR): any other unexpected failure.
+
+### Stopping jobs
+
+`http://{host}:{port}/batch/operations/jobs/executions/{executionId}` / DELETE
+
+On success, it returns true.
+On failure, it returns the message of the Exception as a plain string. There are different failure possibilities:
+
+* HTTP response code 404 (NOT_FOUND): the JobExecution cannot be found.
+* HTTP response code 409 (CONFLICT): the JobExecution is not running.
+* HTTP response code 500 (INTERNAL\_SERVER\_ERROR): any other unexpected failure.
+
+### Retrieving the names of deployed jobs
+
+`http://{host}:{port}/batch/monitoring/jobs` / GET
+
+On success, it returns a JSON array of String containing the names of the deployed jobs.
+
+### Retrieving the ids of JobExecutions running on this server
+
+`http://{host}:{port}/batch/monitoring/jobs/runningexecutions` / GET
+
+On success, it returns a JSON array containing the ids of the JobExecutions running on this server.
+
+### Retrieving the ids of JobExecutions running on this server for a certain job name
+
+`http://{host}:{port}/batch/monitoring/jobs/runningexecutions/{jobName}` / GET
+
+On success, it returns a JSON array containing the ids of the JobExecutions running on this server belonging to the specified job.
+
+### Retrieving the JobExecution
+
+`http://{host}:{port}/batch/monitoring/jobs/executions/{executionId}` / GET
+
+On success, it returns a JSON representation of the JobExecution specified by the id. This representation contains everything you need to know about that job, from job name and BatchStatus to the number of processed items and time used and so on.
+If the JobExecution cannot be found, a HTTP response code 404 is returned.
+
+
+## Jobs
 
 ### Syncing MantisBT enumerations
 
