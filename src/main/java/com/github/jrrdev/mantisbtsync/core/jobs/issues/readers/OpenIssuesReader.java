@@ -105,9 +105,11 @@ public class OpenIssuesReader extends AbstractIssuesReader {
 				return item;
 
 			} else {
+				items = null;
 				return null;
 			}
 		} else {
+			items = null;
 			return null;
 		}
 	}

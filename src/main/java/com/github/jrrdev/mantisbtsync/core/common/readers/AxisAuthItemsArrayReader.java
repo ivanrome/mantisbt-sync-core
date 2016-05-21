@@ -113,6 +113,7 @@ AbstractMethodInvokingDelegator<T[]> implements ItemReader<T> {
 		if (items != null && i < items.length) {
 			return items[i];
 		} else {
+			items = null;
 			return null;
 		}
 	}

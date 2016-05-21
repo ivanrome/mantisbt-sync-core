@@ -89,6 +89,8 @@ public class OtherIssuesReader extends AbstractIssuesReader {
 			final BigInteger issueId = issues.get(index);
 			item = getClientStub().mc_issue_get(getUserName(), getPassword(), issueId);
 			index++;
+		} else {
+			issues = null;
 		}
 
 		return item;
