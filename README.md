@@ -237,7 +237,7 @@ curl -X POST 'http://localhost:8080/batch/operations/jobs/forceSyncIssuesJob' --
 ## Related projects
 
 * [Docker image for MySQL and core batch](https://github.com/jrrdev/mantisbt-sync-docker)
-* Simple cron for periodic sync scheduling : _work in progress_
-* Batch to calculate indicators : _not started_
+* Simple cron for periodic sync scheduling : done ([see here](https://github.com/jrrdev/mantisbt-sync-docker))
+* Batch to calculate indicators : _work in progress_
 * Web UI for batch administration and scheduling : _not started_
 * Sync to JIRA : _not started_
