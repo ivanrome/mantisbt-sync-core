@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>mantisbt-sync</groupId>
 	<artifactId>mantisbt-sync-core</artifactId>
-	<version>1.0.1-SNAPSHOT</version>
+	<version>1.0.2-SNAPSHOT</version>
 	<name>mantisbt-sync-core</name>
 	<description>Batch to synchronize a local database from a remote instance of Mantis Bug Tracker with Soap calls</description>
 	<url>https://github.com/jrrdev/mantisbt-sync-core</url>
