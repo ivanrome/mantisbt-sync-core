@@ -40,6 +40,7 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.batch.core.JobParameter;
 import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.StepExecution;
+import org.springframework.batch.test.JobScopeTestExecutionListener;
 import org.springframework.batch.test.MetaDataInstanceFactory;
 import org.springframework.batch.test.StepScopeTestExecutionListener;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,12 +50,12 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 import org.springframework.transaction.annotation.Transactional;
 
+import biz.futureware.mantis.rpc.soap.client.MantisConnectBindingStub;
+import biz.futureware.mantis.rpc.soap.client.ObjectRef;
+
 import com.github.jrrdev.mantisbtsync.core.Application;
 import com.github.jrrdev.mantisbtsync.core.common.readers.AxisAuthItemsArrayReader;
 import com.github.jrrdev.mantisbtsync.core.junit.JunitTestConfiguration;
-
-import biz.futureware.mantis.rpc.soap.client.MantisConnectBindingStub;
-import biz.futureware.mantis.rpc.soap.client.ObjectRef;
 
 /**
  * @author jrrdev
@@ -64,7 +65,7 @@ import biz.futureware.mantis.rpc.soap.client.ObjectRef;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration({Application.class, JunitTestConfiguration.class})
 @TestExecutionListeners( { DependencyInjectionTestExecutionListener.class,
-	StepScopeTestExecutionListener.class })
+	StepScopeTestExecutionListener.class, JobScopeTestExecutionListener.class })
 public class EnumsReadersTest {
 
 	@Autowired

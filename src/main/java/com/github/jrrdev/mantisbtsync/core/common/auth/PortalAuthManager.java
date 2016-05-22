@@ -26,6 +26,7 @@ package com.github.jrrdev.mantisbtsync.core.common.auth;
 import java.io.IOException;
 import java.util.List;
 
+import org.apache.http.HttpEntity;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -34,6 +35,7 @@ import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.client.LaxRedirectStrategy;
+import org.apache.http.util.EntityUtils;
 import org.springframework.batch.core.ExitStatus;
 
 import com.github.jrrdev.mantisbtsync.core.common.auth.request.AbstractAuthHttpRequest;
@@ -57,11 +59,6 @@ public class PortalAuthManager {
 	private AbstractAuthHttpRequest firstRequest = null;
 
 	/**
-	 * Cookie store.
-	 */
-	private final CookieStore cookieStore = new BasicCookieStore();
-
-	/**
 	 * Authenfication cookie.
 	 */
 	private String authCookie = null;
@@ -70,7 +67,7 @@ public class PortalAuthManager {
 	 * Last response received in the sequence. It isn't close until close()
 	 * is called to keep the connection open.
 	 */
-	private final CloseableHttpResponse lastResponse = null;
+	private CloseableHttpResponse lastResponse = null;
 
 	/**
 	 * Default constructor.
@@ -89,12 +86,12 @@ public class PortalAuthManager {
 
 		if (firstRequest != null) {
 
-			cookieStore.clear();
+			final CookieStore cookieStore = new BasicCookieStore();
 			client = HttpClients.custom().setDefaultCookieStore(cookieStore)
 					.setRedirectStrategy(new LaxRedirectStrategy())
 					.useSystemProperties().build();
 
-			firstRequest.executeSequence(client);
+			lastResponse = firstRequest.executeSequence(client);
 
 			final List<Cookie> cookies = cookieStore.getCookies();
 			final StringBuilder strBuff = new StringBuilder();
@@ -118,12 +115,18 @@ public class PortalAuthManager {
 	 */
 	public void close() throws IOException {
 		authCookie = null;
+
 		if (lastResponse != null) {
+			final HttpEntity entity = lastResponse.getEntity();
+			EntityUtils.consume(entity);
+
 			lastResponse.close();
+			lastResponse = null;
 		}
 
 		if (client != null) {
 			client.close();
+			client = null;
 		}
 	}
 
@@ -167,12 +170,5 @@ public class PortalAuthManager {
 	 */
 	public void setAuthCookie(final String authCookie) {
 		this.authCookie = authCookie;
-	}
-
-	/**
-	 * @return the cookieStore
-	 */
-	public CookieStore getCookieStore() {
-		return cookieStore;
 	}
 }

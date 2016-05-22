@@ -41,6 +41,7 @@ import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.core.JobParameter;
 import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.StepExecution;
+import org.springframework.batch.test.JobScopeTestExecutionListener;
 import org.springframework.batch.test.MetaDataInstanceFactory;
 import org.springframework.batch.test.StepScopeTestExecutionListener;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,15 +51,15 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.github.jrrdev.mantisbtsync.core.Application;
-import com.github.jrrdev.mantisbtsync.core.common.readers.AxisAuthItemsArrayReader;
-import com.github.jrrdev.mantisbtsync.core.junit.JunitTestConfiguration;
-
 import biz.futureware.mantis.rpc.soap.client.AccountData;
 import biz.futureware.mantis.rpc.soap.client.CustomFieldDefinitionData;
 import biz.futureware.mantis.rpc.soap.client.MantisConnectBindingStub;
 import biz.futureware.mantis.rpc.soap.client.ObjectRef;
 import biz.futureware.mantis.rpc.soap.client.ProjectVersionData;
+
+import com.github.jrrdev.mantisbtsync.core.Application;
+import com.github.jrrdev.mantisbtsync.core.common.readers.AxisAuthItemsArrayReader;
+import com.github.jrrdev.mantisbtsync.core.junit.JunitTestConfiguration;
 
 /**
  * @author jrrdev
@@ -68,7 +69,7 @@ import biz.futureware.mantis.rpc.soap.client.ProjectVersionData;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration({Application.class, JunitTestConfiguration.class})
 @TestExecutionListeners( { DependencyInjectionTestExecutionListener.class,
-	StepScopeTestExecutionListener.class})
+	StepScopeTestExecutionListener.class, JobScopeTestExecutionListener.class})
 public class ProjectsReadersTest {
 
 	@Autowired
@@ -86,28 +87,33 @@ public class ProjectsReadersTest {
 	@Mock
 	private MantisConnectBindingStub clientStub;
 
+	private JobExecution jobExecution = null;
+
 
 	@Before
 	public void setUpBefore() {
 		MockitoAnnotations.initMocks(this);
 	}
 
+	public JobExecution getJobExecution() {
+		if (jobExecution == null) {
+			final Map<String, JobParameter> map = new HashMap<String, JobParameter>();
+			map.put("mantis.username", new JobParameter("toto"));
+			map.put("mantis.password", new JobParameter("passwd"));
+
+			final JobParameters jobParams = new JobParameters(map);
+			jobExecution  = MetaDataInstanceFactory.createJobExecution(
+					"testJob", 1L, 1L, jobParams);
+
+			jobExecution.getExecutionContext().put("mantis.acess_level", BigInteger.TEN);
+			jobExecution.getExecutionContext().put("mantis.loop.project_id", BigInteger.ONE);
+		}
+
+		return jobExecution;
+	}
+
 	public StepExecution getStepExecution() {
-
-		final Map<String, JobParameter> map = new HashMap<String, JobParameter>();
-		map.put("mantis.username", new JobParameter("toto"));
-		map.put("mantis.password", new JobParameter("passwd"));
-
-		final JobParameters jobParams = new JobParameters(map);
-
-		final JobExecution exec = MetaDataInstanceFactory.createJobExecution(
-				"testJob", 1L, 1L, jobParams);
-		exec.getExecutionContext().put("mantis.acess_level", BigInteger.TEN);
-		exec.getExecutionContext().put("mantis.loop.project_id", BigInteger.ONE);
-
-		final StepExecution stepExecution = exec.createStepExecution("testStep");
-
-		return stepExecution;
+		return getJobExecution().createStepExecution("testStep");
 	}
 
 	/**

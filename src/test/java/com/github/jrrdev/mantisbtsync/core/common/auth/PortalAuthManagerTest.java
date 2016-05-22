@@ -9,6 +9,7 @@ import static org.junit.Assert.assertNotNull;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.batch.core.ExitStatus;
+import org.springframework.batch.test.JobScopeTestExecutionListener;
 import org.springframework.batch.test.StepScopeTestExecutionListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
@@ -18,7 +19,6 @@ import org.springframework.test.context.support.DependencyInjectionTestExecution
 import org.springframework.transaction.annotation.Transactional;
 
 import com.github.jrrdev.mantisbtsync.core.Application;
-import com.github.jrrdev.mantisbtsync.core.common.auth.PortalAuthManager;
 import com.github.jrrdev.mantisbtsync.core.junit.JunitTestConfiguration;
 
 /**
@@ -29,7 +29,7 @@ import com.github.jrrdev.mantisbtsync.core.junit.JunitTestConfiguration;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration({Application.class, JunitTestConfiguration.class})
 @TestExecutionListeners( { DependencyInjectionTestExecutionListener.class,
-	StepScopeTestExecutionListener.class })
+	StepScopeTestExecutionListener.class, JobScopeTestExecutionListener.class })
 public class PortalAuthManagerTest {
 
 	@Autowired

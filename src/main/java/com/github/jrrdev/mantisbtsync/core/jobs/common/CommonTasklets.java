@@ -23,11 +23,18 @@
  */
 package com.github.jrrdev.mantisbtsync.core.jobs.common;
 
+import java.io.IOException;
+
+import javax.xml.bind.JAXBException;
+
+import org.springframework.batch.core.configuration.annotation.JobScope;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.core.step.tasklet.MethodInvokingTaskletAdapter;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import com.github.jrrdev.mantisbtsync.core.common.auth.PortalAuthBuilder;
 import com.github.jrrdev.mantisbtsync.core.common.auth.PortalAuthManager;
 
 /**
@@ -53,5 +60,18 @@ public class CommonTasklets {
 		authTasklet.setTargetObject(authManager);
 		authTasklet.setTargetMethod("authentificate");
 		return authTasklet;
+	}
+
+	@Bean
+	@JobScope
+	public PortalAuthBuilder authBuilder() {
+		return new PortalAuthBuilder();
+	}
+
+	@Bean
+	@JobScope
+	public PortalAuthManager authManager(@Value("${mantis.auth.filepath:}") final String filepath,
+			final PortalAuthBuilder authBuilder) throws JAXBException, IOException {
+		return authBuilder.buildAuthManager(filepath);
 	}
 }
