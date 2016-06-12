@@ -25,12 +25,8 @@ package com.github.jrrdev.mantisbtsync.core.junit;
 
 import javax.sql.DataSource;
 
-import org.apache.axis.AxisFault;
-import org.apache.axis.client.Stub;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import biz.futureware.mantis.rpc.soap.client.MantisConnectBindingStub;
 
 import com.ninja_squad.dbsetup.destination.DataSourceDestination;
 import com.ninja_squad.dbsetup.destination.Destination;
@@ -48,10 +44,4 @@ public class JunitTestConfiguration {
 	public Destination dbSetupDest(final DataSource dataSource) {
 		return new DataSourceDestination(dataSource);
 	}
-
-	@Bean
-	public Stub clientStub() throws AxisFault {
-		return new MantisConnectBindingStub();
-	}
-
 }

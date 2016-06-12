@@ -24,15 +24,24 @@
 package com.github.jrrdev.mantisbtsync.core.jobs.common;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 import javax.xml.bind.JAXBException;
 
+import org.apache.axis.AxisFault;
+import org.apache.axis.MessageContext;
+import org.apache.axis.configuration.BasicClientConfig;
+import org.apache.axis.transport.http.HTTPConstants;
 import org.springframework.batch.core.configuration.annotation.JobScope;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.core.step.tasklet.MethodInvokingTaskletAdapter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import biz.futureware.mantis.rpc.soap.client.MantisConnectBindingStub;
+import biz.futureware.mantis.rpc.soap.client.MantisConnectLocator;
 
 import com.github.jrrdev.mantisbtsync.core.common.auth.PortalAuthBuilder;
 import com.github.jrrdev.mantisbtsync.core.common.auth.PortalAuthManager;
@@ -73,5 +82,22 @@ public class CommonTasklets {
 	public PortalAuthManager authManager(@Value("${mantis.auth.filepath:}") final String filepath,
 			final PortalAuthBuilder authBuilder) throws JAXBException, IOException {
 		return authBuilder.buildAuthManager(filepath);
+	}
+
+	@Bean
+	@JobScope
+	public MantisConnectBindingStub clientStub(@Value("${mantis.endpoint}") final String endpoint) throws AxisFault, MalformedURLException {
+
+		if (endpoint == null) {
+			throw new MalformedURLException("Mantis endpoint can't be null");
+		}
+
+		final MantisConnectLocator loc = new MantisConnectLocator(new BasicClientConfig());
+		loc.setMantisConnectPortEndpointAddress(endpoint);
+		final MantisConnectBindingStub stub = new MantisConnectBindingStub(new URL(endpoint), loc);
+		stub._setProperty(MessageContext.HTTP_TRANSPORT_VERSION, HTTPConstants.HEADER_PROTOCOL_V11);
+		stub.setMaintainSession(false);
+
+		return stub;
 	}
 }
