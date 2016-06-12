@@ -86,7 +86,8 @@ public class CommonTasklets {
 
 	@Bean
 	@JobScope
-	public MantisConnectBindingStub clientStub(@Value("${mantis.endpoint}") final String endpoint) throws AxisFault, MalformedURLException {
+	public MantisConnectBindingStub clientStub(@Value("${mantis.endpoint}") final String endpoint,
+			final PortalAuthBuilder authBuilder) throws AxisFault, MalformedURLException {
 
 		if (endpoint == null) {
 			throw new MalformedURLException("Mantis endpoint can't be null");
@@ -96,7 +97,7 @@ public class CommonTasklets {
 		loc.setMantisConnectPortEndpointAddress(endpoint);
 		final MantisConnectBindingStub stub = new MantisConnectBindingStub(new URL(endpoint), loc);
 		stub._setProperty(MessageContext.HTTP_TRANSPORT_VERSION, HTTPConstants.HEADER_PROTOCOL_V11);
-		stub.setMaintainSession(false);
+		stub.setMaintainSession(true);
 
 		return stub;
 	}
