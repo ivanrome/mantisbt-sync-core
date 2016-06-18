@@ -23,6 +23,10 @@
  */
 package com.github.jrrdev.mantisbtsync.core.common.readers;
 
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.Queue;
+
 import org.apache.axis.client.Stub;
 import org.apache.axis.transport.http.HTTPConstants;
 import org.springframework.batch.item.ItemReader;
@@ -52,14 +56,14 @@ AbstractMethodInvokingDelegator<T[]> implements ItemReader<T> {
 	private Stub clientStub;
 
 	/**
-	 * Index of the last read item.
-	 */
-	private int i = -1;
-
-	/**
 	 * Results array got from the WS.
 	 */
-	private T[] items;
+	private final Queue<T> items = new LinkedList<T>();
+
+	/**
+	 * Boolean indicating if the WS call have already been made or not.
+	 */
+	private boolean isCallPerformed = false;
 
 
 	/**
@@ -104,17 +108,12 @@ AbstractMethodInvokingDelegator<T[]> implements ItemReader<T> {
 					authManager.getAuthCookie());
 		}
 
-		if (i < 0) {
-			items = invokeDelegateMethod();
-			i = -1;
+		if (!isCallPerformed) {
+			final T[] itemsArray = invokeDelegateMethod();
+			isCallPerformed = true;
+			items.addAll(Arrays.asList(itemsArray));
 		}
 
-		i++;
-		if (items != null && i < items.length) {
-			return items[i];
-		} else {
-			items = null;
-			return null;
-		}
+		return items.poll();
 	}
 }
