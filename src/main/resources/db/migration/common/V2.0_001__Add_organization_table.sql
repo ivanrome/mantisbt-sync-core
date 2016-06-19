@@ -5,6 +5,5 @@ CREATE TABLE organization  (
 );
 
 -- Add a link column
-ALTER TABLE mantis_user_table
-	ADD COLUMN org_id int,
-	ADD FOREIGN KEY FK_USR_ORG(org_id) REFERENCES organization(org_id);
+ALTER TABLE mantis_user_table ADD COLUMN org_id int;
+ALTER TABLE mantis_user_table ADD FOREIGN KEY (org_id) REFERENCES organization(org_id);
