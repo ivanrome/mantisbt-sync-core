@@ -10,7 +10,7 @@ It also supports authentication through an intranet portal before accessing the 
 ## Dependencies
 1. Java 7 or higher
 2. Maven
-3. Spring Boot 1.3.2
+3. Spring Boot 1.3.5
 4. [Codecentric's spring-boot-starter-batch-web 1.3.7](https://github.com/codecentric/spring-boot-starter-batch-web)
 5. mantis-axis-soap-client 1.2.19
 6. Apache HTTP Client 4.5.1
@@ -236,8 +236,9 @@ curl --silent -X POST 'http://localhost:8080/batch/operations/jobs/forceSyncIssu
 
 ## Related projects
 
-* [Docker image for MySQL and core batch](https://github.com/jrrdev/mantisbt-sync-docker)
-* Simple cron for periodic sync scheduling : done ([see here](https://github.com/jrrdev/mantisbt-sync-docker))
-* Batch to calculate indicators : _work in progress_
+* [Docker image for MySQL and core batch](https://github.com/jrrdev/mantisbt-sync-docker) : done
+* [Simple cron for periodic sync scheduling](https://github.com/jrrdev/mantisbt-sync-docker) : done
+* Jobs to calculate issues statistics : _work in progress_
+* [REST API to perform issues monitoring](https://github.com/jrrdev/mantisbt-sync-REST) : _work in progress_
 * Web UI for batch administration and scheduling : _not started_
 * Sync to JIRA : _not started_
