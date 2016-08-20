@@ -116,6 +116,15 @@ public interface IssuesDao {
 	public List<BigInteger> getNotClosedIssuesId(Calendar jobStartTime);
 
 	/**
+	 * Compute the number of issues by project, handler and status.
+	 * The result is stored directly in a table.
+	 *
+	 * @param date
+	 * 			The calculation date
+	 */
+	public void computeHandlersStat(Calendar date);
+
+	/**
 	 * Evict all caches.
 	 */
 	public void evictAllCaches();
