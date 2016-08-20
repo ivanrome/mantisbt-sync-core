@@ -90,7 +90,8 @@ public class JdbcIssuesService implements IssuesDao {
 	 */
 	private static final String SQL_GET_NOT_CLOSED_ISSUES_ID = "SELECT bug.id FROM mantis_bug_table bug\n"
 			+ " WHERE bug.status_id <> 90\n"
-			+ " AND bug.last_sync <= ?";
+			+ " AND bug.last_sync <= ?"
+			+ " AND bug.project_id = ?";
 
 	/**
 	 * JDBC template.
@@ -295,12 +296,12 @@ public class JdbcIssuesService implements IssuesDao {
 
 	/**
 	 * {@inheritDoc}
-	 * @see com.github.jrrdev.mantisbtsync.core.services.IssuesDao#getNotClosedIssuesId(java.sql.Date)
+	 * @see com.github.jrrdev.mantisbtsync.core.services.IssuesDao#getNotClosedIssuesId(java.sql.Date, BigInteger)
 	 */
 	@Override
-	public List<BigInteger> getNotClosedIssuesId(final Calendar jobStartTime) {
+	public List<BigInteger> getNotClosedIssuesId(final Calendar jobStartTime, final BigInteger projectId) {
 		final java.sql.Timestamp time = new java.sql.Timestamp(jobStartTime.getTimeInMillis());
-		return jdbcTemplate.queryForList(SQL_GET_NOT_CLOSED_ISSUES_ID, BigInteger.class, time);
+		return jdbcTemplate.queryForList(SQL_GET_NOT_CLOSED_ISSUES_ID, BigInteger.class, time, projectId);
 	}
 
 	/**

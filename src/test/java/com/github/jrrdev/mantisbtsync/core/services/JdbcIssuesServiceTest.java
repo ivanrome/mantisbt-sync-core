@@ -43,7 +43,6 @@ import biz.futureware.mantis.rpc.soap.client.AccountData;
 import biz.futureware.mantis.rpc.soap.client.ObjectRef;
 
 import com.github.jrrdev.mantisbtsync.core.junit.AbstractSqlWriterTest;
-import com.github.jrrdev.mantisbtsync.core.services.IssuesDao;
 import com.ninja_squad.dbsetup.operation.Operation;
 
 /**
@@ -365,6 +364,7 @@ public class JdbcIssuesServiceTest extends AbstractSqlWriterTest {
 				insertInto("mantis_project_table")
 				.columns("id", "name")
 				.values(1, "project_1")
+				.values(2, "project_2")
 				.build(),
 
 				insertInto("mantis_enum_status")
@@ -378,13 +378,14 @@ public class JdbcIssuesServiceTest extends AbstractSqlWriterTest {
 				.values(1, 1, "sum", before, 1)
 				.values(2, 1, "sum", after, 1)
 				.values(3, 1, "sum", before, 90)
+				.values(4, 2, "sum", before, 1)
 				.build());
 
 		lauchOperation(op);
 
 		cal.add(Calendar.MINUTE, 5);
 
-		final List<BigInteger> list = dao.getNotClosedIssuesId(cal);
+		final List<BigInteger> list = dao.getNotClosedIssuesId(cal, BigInteger.ONE);
 		assertEquals(1, list.size());
 		assertEquals(BigInteger.ONE, list.get(0));
 	}

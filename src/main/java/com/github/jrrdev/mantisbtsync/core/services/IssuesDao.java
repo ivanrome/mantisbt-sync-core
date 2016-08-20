@@ -113,7 +113,7 @@ public interface IssuesDao {
 	 * 			Time used for filtering
 	 * @return the list of issues ids
 	 */
-	public List<BigInteger> getNotClosedIssuesId(Calendar jobStartTime);
+	public List<BigInteger> getNotClosedIssuesId(Calendar jobStartTime, BigInteger projectId);
 
 	/**
 	 * Evict all caches.

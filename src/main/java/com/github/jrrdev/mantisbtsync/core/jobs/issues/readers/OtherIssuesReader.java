@@ -80,7 +80,7 @@ public class OtherIssuesReader extends AbstractIssuesReader {
 		}
 
 		if (issues == null) {
-			issues = getDao().getNotClosedIssuesId(jobStartTime);
+			issues = getDao().getNotClosedIssuesId(jobStartTime, getProjectId());
 			index = 0;
 		}
 
