@@ -10,7 +10,7 @@ It also supports authentication through an intranet portal before accessing the 
 ## Dependencies
 1. Java 7 or higher
 2. Maven
-3. Spring Boot 1.3.5
+3. Spring Boot 1.4.0
 4. [Codecentric's spring-boot-starter-batch-web 1.3.7](https://github.com/codecentric/spring-boot-starter-batch-web)
 5. mantis-axis-soap-client 1.2.19
 6. Apache HTTP Client 4.5.1
