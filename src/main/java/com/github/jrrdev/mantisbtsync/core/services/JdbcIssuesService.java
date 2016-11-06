@@ -94,6 +94,49 @@ public class JdbcIssuesService implements IssuesDao {
 			+ " AND bug.project_id = ?";
 
 	/**
+	 * SQL query used to delete all handlers stats for a given time.
+	 */
+	private static final String SQL_DELETE_HANDLERS_STAT = "DELETE FROM handlers_stats WHERE compute_date = ?";
+
+	/**
+	 * SQL query used to compute all handlers stats for a given time.
+	 */
+	private static final String SQL_COMPUTE_HANDLERS_STAT = "INSERT INTO handlers_stats (compute_date, project_id, handler_id, status_id, nb_issues) \n"
+			+ " SELECT  ?, \n"
+			+ " 	bug_raw.project_id, \n"
+			+ " 	bug_raw.handler, \n"
+			+ " 	bug_raw.status, \n"
+			+ " 	count(*) \n"
+			+ " FROM ( \n"
+			+ " 	SELECT 	bug.id, bug.project_id, \n"
+			+ " 		NULLIF(IFNULL(hist_handler.old_value, CAST(bug.handler_id as CHAR(20))), 0) as handler, \n"
+			+ " 		NULLIF(IFNULL(hist_status.old_value, CAST(bug.status_id as CHAR(20))), 0) as status \n"
+			+ " 	FROM mantis_bug_table as bug \n"
+			+ " 	LEFT JOIN mantis_bug_history_table as hist_handler \n"
+			+ " 	ON (bug.id = hist_handler.bug_id \n"
+			+ " 		AND hist_handler.field_name = 'handler_id' \n"
+			+ " 		AND hist_handler.date_modified > ? \n"
+			+ " 		AND NOT EXISTS (SELECT 1 \n"
+			+ " 				FROM mantis_bug_history_table as hist2 \n"
+			+ " 				WHERE hist2.bug_id = bug.id \n"
+			+ " 				AND hist2.field_name = hist_handler.field_name \n"
+			+ " 				AND hist2.date_modified > ? \n"
+			+ " 				AND hist2.date_modified < hist_handler.date_modified)) \n"
+			+ " 	LEFT JOIN mantis_bug_history_table as hist_status \n"
+			+ " 	ON (bug.id = hist_status.bug_id \n"
+			+ " 		AND hist_status.field_name = 'status' \n"
+			+ " 		AND hist_status.date_modified > ? \n"
+			+ " 		AND NOT EXISTS (SELECT 1 \n"
+			+ " 				FROM mantis_bug_history_table as hist2 \n"
+			+ " 				WHERE hist2.bug_id = bug.id \n"
+			+ " 				AND hist2.field_name = hist_status.field_name \n"
+			+ " 				AND hist2.date_modified > ? \n"
+			+ " 				AND hist2.date_modified < hist_status.date_modified)) \n"
+			+ " 	WHERE bug.date_submitted <= ? \n"
+			+ " ) as bug_raw \n"
+			+ " GROUP BY bug_raw.project_id, bug_raw.handler, bug_raw.status";
+
+	/**
 	 * JDBC template.
 	 */
 	@Autowired
@@ -302,6 +345,18 @@ public class JdbcIssuesService implements IssuesDao {
 	public List<BigInteger> getNotClosedIssuesId(final Calendar jobStartTime, final BigInteger projectId) {
 		final java.sql.Timestamp time = new java.sql.Timestamp(jobStartTime.getTimeInMillis());
 		return jdbcTemplate.queryForList(SQL_GET_NOT_CLOSED_ISSUES_ID, BigInteger.class, time, projectId);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * @see com.github.jrrdev.mantisbtsync.core.services.IssuesDao#computeHandlersStat(java.util.Calendar)
+	 */
+	@Override
+	public void computeHandlersStat(final Calendar date) {
+		final java.sql.Timestamp time = new java.sql.Timestamp(date.getTimeInMillis());
+
+		jdbcTemplate.update(SQL_DELETE_HANDLERS_STAT, time);
+		jdbcTemplate.update(SQL_COMPUTE_HANDLERS_STAT, time, time, time, time, time, time);
 	}
 
 	/**

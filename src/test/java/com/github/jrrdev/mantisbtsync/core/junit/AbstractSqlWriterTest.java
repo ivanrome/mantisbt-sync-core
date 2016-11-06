@@ -84,6 +84,7 @@ public abstract class AbstractSqlWriterTest {
 	@Before
 	public void preparaDatabase() {
 		lauchOperation(deleteAllFrom(
+				"handlers_stats",
 				"mantis_bug_history_table",
 				"mantis_custom_field_string_table",
 				"mantis_bugnote_table",
@@ -92,6 +93,7 @@ public abstract class AbstractSqlWriterTest {
 				"mantis_custom_field_table",
 				"mantis_category_table",
 				"mantis_project_user_list_table",
+				"organization",
 				"mantis_user_table",
 				"mantis_project_version_table",
 				"mantis_project_hierarchy_table",

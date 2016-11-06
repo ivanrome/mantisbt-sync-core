@@ -10,7 +10,7 @@ It also supports authentication through an intranet portal before accessing the 
 ## Dependencies
 1. Java 7 or higher
 2. Maven
-3. Spring Boot 1.3.2
+3. Spring Boot 1.4.0
 4. [Codecentric's spring-boot-starter-batch-web 1.3.7](https://github.com/codecentric/spring-boot-starter-batch-web)
 5. mantis-axis-soap-client 1.2.19
 6. Apache HTTP Client 4.5.1
@@ -229,6 +229,29 @@ To launch the job with curl :
 curl --silent -X POST 'http://localhost:8080/batch/operations/jobs/forceSyncIssuesJob' --data "jobParameters=mantis.username=foo,mantis.password=foopasswd,mantis.issues_id=1;2"; echo
 ```
 
+#### Statistic computation
+
+A job to compute the number of issues in a project by handler at a given time is available through handlersStatJob job.
+It will add a line in the handler_stat table with :
+
+* the date
+* the project id
+* the handler id
+* the status id
+* the number of issues
+
+Note : if a user doesn't handle any issue, no line will be inserted.
+
+Job parameters (all mandatory) are :
+
+* mantis.computeDate : computation date time. Can be in the past. Must be formatted as "yyyy-MM-dd'T'HH:mm:ss"
+
+To launch the job with curl :
+
+```Shell
+curl --silent -X POST 'http://localhost:8080/batch/operations/jobs/handlersStatJob' --data "jobParameters=mantis.computeDate=2016-11-06T23:27:11"; echo
+```
+
 ## Roadmap
 
 * Change portal authentication from HTTP Client to headless Selenium
@@ -236,8 +259,9 @@ curl --silent -X POST 'http://localhost:8080/batch/operations/jobs/forceSyncIssu
 
 ## Related projects
 
-* [Docker image for MySQL and core batch](https://github.com/jrrdev/mantisbt-sync-docker)
-* Simple cron for periodic sync scheduling : done ([see here](https://github.com/jrrdev/mantisbt-sync-docker))
-* Batch to calculate indicators : _work in progress_
+* [Docker image for MySQL and core batch](https://github.com/jrrdev/mantisbt-sync-docker) : done
+* [Simple cron for periodic sync scheduling](https://github.com/jrrdev/mantisbt-sync-cron) : done
+* Jobs to calculate issues statistics : done
+* [REST API to perform issues monitoring](https://github.com/jrrdev/mantisbt-sync-REST) : done
 * Web UI for batch administration and scheduling : _not started_
 * Sync to JIRA : _not started_
