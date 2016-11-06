@@ -117,7 +117,7 @@ public interface IssuesDao {
 
 	/**
 	 * Compute the number of issues by project, handler and status.
-	 * The result is stored directly in a table.
+	 * The result is stored directly in the handlers_stats table.
 	 *
 	 * @param date
 	 * 			The calculation date

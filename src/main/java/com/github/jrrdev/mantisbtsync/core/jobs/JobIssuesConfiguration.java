@@ -47,6 +47,7 @@ import com.github.jrrdev.mantisbtsync.core.jobs.issues.listener.CacheEvictionLis
 import com.github.jrrdev.mantisbtsync.core.jobs.issues.processors.IssuesProcessor;
 import com.github.jrrdev.mantisbtsync.core.jobs.issues.readers.OpenIssuesReader;
 import com.github.jrrdev.mantisbtsync.core.jobs.issues.readers.OtherIssuesReader;
+import com.github.jrrdev.mantisbtsync.core.jobs.issues.tasklets.HandlersStatTasklet;
 import com.github.jrrdev.mantisbtsync.core.jobs.issues.tasklets.IssuesLastRunExtractorTasklet;
 
 /**
@@ -179,6 +180,31 @@ public class JobIssuesConfiguration {
 				.listener(closeIssuesListener)
 				.flow(authIssuesStep)
 				.next(fileIssuesSyncStep)
+				.end()
+				.build();
+	}
+
+	/**
+	 * Build the handlersStatJob job. This job will compute the number of issues by project,
+	 * handler and status in the handlers_stats table.
+	 *
+	 * Parameters for this job are :
+	 * 	- mantis.computeDate
+	 * 		The computing date, passed as "yyyy-MM-dd'T'HH:mm:ss".
+	 *
+	 * @param jobs
+	 * 			Job build factory
+	 * @param handlersStatStep
+	 * 			The step launching the computation
+	 * @return the job
+	 */
+	@Bean
+	public Job handlersStatJob(final JobBuilderFactory jobs,
+			final Step handlersStatStep) {
+
+		return jobs.get("handlersStatJob")
+				.incrementer(new RunIdIncrementer())
+				.flow(handlersStatStep)
 				.end()
 				.build();
 	}
@@ -358,6 +384,25 @@ public class JobIssuesConfiguration {
 				.processor(compositeIssuesProcessor)
 				.writer(compositeIssuesWriter)
 				.listener(cacheEvictionListener)
+				.build();
+	}
+
+	/**
+	 * The step launching the computation of the number of issues by project,
+	 * handler and status.
+	 *
+	 * @param stepBuilderFactory
+	 * 			The step builder factory
+	 * @param mantisHandlersStatTasklet
+	 * 			The tasklet
+	 * @return
+	 */
+	@Bean
+	public Step handlersStatStep(final StepBuilderFactory stepBuilderFactory,
+			final HandlersStatTasklet mantisHandlersStatTasklet) {
+
+		return stepBuilderFactory.get("handlersStatStep")
+				.tasklet(mantisHandlersStatTasklet)
 				.build();
 	}
 

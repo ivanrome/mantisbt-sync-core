@@ -23,12 +23,17 @@
  */
 package com.github.jrrdev.mantisbtsync.core.jobs.issues;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.core.explore.JobExplorer;
 import org.springframework.batch.core.listener.ExecutionContextPromotionListener;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import com.github.jrrdev.mantisbtsync.core.jobs.issues.tasklets.HandlersStatTasklet;
 import com.github.jrrdev.mantisbtsync.core.jobs.issues.tasklets.IssuesLastRunExtractorTasklet;
 
 /**
@@ -67,6 +72,28 @@ public class IssuesTaskletsConfiguration {
 		final ExecutionContextPromotionListener listener = new ExecutionContextPromotionListener();
 		listener.setKeys(new String[] {"mantis.update.last_job_run", "mantis.update.current_job_run"});
 		return listener;
+	}
+
+	/**
+	 * Tasklet launching the computation of the number of issues by project,
+	 * handler and status.
+	 *
+	 * @param computeDate
+	 * 		The computation date. For string conversion, should be passed as "yyyy-MM-dd'T'HH:mm:ss".
+	 * @return the tasklet
+	 * @throws ParseException
+	 * 			Thrown if the format is incorrect
+	 */
+	@Bean
+	@StepScope
+	public HandlersStatTasklet mantisHandlersStatTasklet(
+			@Value("#{jobParameters['mantis.computeDate']}") final String computeDate) throws ParseException {
+
+		final SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+
+		final HandlersStatTasklet tasklet = new HandlersStatTasklet();
+		tasklet.setComputeDate(formatter.parse(computeDate));
+		return tasklet;
 	}
 
 }
