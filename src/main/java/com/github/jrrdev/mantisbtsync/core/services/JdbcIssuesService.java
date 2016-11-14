@@ -88,10 +88,12 @@ public class JdbcIssuesService implements IssuesDao {
 	/**
 	 * SQL query used to get all issues that are still open and not synced since a given datetime.
 	 */
-	private static final String SQL_GET_NOT_CLOSED_ISSUES_ID = "SELECT bug.id FROM mantis_bug_table bug\n"
+	private static final String SQL_GET_NOT_CLOSED_ISSUES_ID = "SELECT distinct bug.id\n"
+			+ " FROM mantis_bug_table bug\n"
+			+ " LEFT JOIN mantis_project_hierarchy_table pht ON pht.child_id = bug.project_id\n"
 			+ " WHERE bug.status_id <> 90\n"
 			+ " AND bug.last_sync <= ?"
-			+ " AND bug.project_id = ?";
+			+ " AND (bug.project_id = ? OR pht.parent_id = ?)";
 
 	/**
 	 * SQL query used to delete all handlers stats for a given time.
@@ -344,7 +346,8 @@ public class JdbcIssuesService implements IssuesDao {
 	@Override
 	public List<BigInteger> getNotClosedIssuesId(final Calendar jobStartTime, final BigInteger projectId) {
 		final java.sql.Timestamp time = new java.sql.Timestamp(jobStartTime.getTimeInMillis());
-		return jdbcTemplate.queryForList(SQL_GET_NOT_CLOSED_ISSUES_ID, BigInteger.class, time, projectId);
+		return jdbcTemplate.queryForList(SQL_GET_NOT_CLOSED_ISSUES_ID, BigInteger.class,
+				time, projectId, projectId);
 	}
 
 	/**

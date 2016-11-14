@@ -391,6 +391,50 @@ public class JdbcIssuesServiceTest extends AbstractSqlWriterTest {
 	}
 
 	/**
+	 * Tests that issues of a subproject are retrieved.
+	 *
+	 * Test method for {@link com.github.jrrdev.mantisbtsync.core.services.JdbcIssuesService#getNotClosedIssuesId(java.util.Calendar)}.
+	 */
+	@Test
+	public void testGetNotClosedIssuesIdSubProject() {
+
+		final Calendar cal = Calendar.getInstance();
+
+		final Timestamp before = new java.sql.Timestamp(cal.getTimeInMillis());
+
+		final Operation op = sequenceOf(
+				insertInto("mantis_project_table")
+				.columns("id", "name")
+				.values(1, "project_parent")
+				.values(2, "project_child")
+				.build(),
+
+				insertInto("mantis_project_hierarchy_table")
+				.columns("parent_id", "child_id")
+				.values(1, 2)
+				.build(),
+
+				insertInto("mantis_enum_status")
+				.columns("id", "name")
+				.values(1, "Open")
+				.values(90, "Close")
+				.build(),
+
+				insertInto("mantis_bug_table")
+				.columns("id", "project_id", "summary", "last_sync", "status_id")
+				.values(1, 2, "sum", before, 1)
+				.build());
+
+		lauchOperation(op);
+
+		cal.add(Calendar.MINUTE, 5);
+
+		final List<BigInteger> list = dao.getNotClosedIssuesId(cal, BigInteger.ONE);
+		assertEquals(1, list.size());
+		assertEquals(BigInteger.ONE, list.get(0));
+	}
+
+	/**
 	 * Test for correct project assignment when computing handler stats.
 	 *
 	 * Test method for {@link JdbcIssuesService#computeHandlersStat(Calendar)}.
