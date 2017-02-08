@@ -93,7 +93,6 @@ public abstract class AbstractSqlWriterTest {
 				"mantis_custom_field_table",
 				"mantis_category_table",
 				"mantis_project_user_list_table",
-				"organization",
 				"mantis_user_table",
 				"mantis_project_version_table",
 				"mantis_project_hierarchy_table",
